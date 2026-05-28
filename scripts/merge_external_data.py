@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LATEST_PATH = ROOT / "data" / "latest.json"
 AI_DEMAND_PATH = ROOT / "data" / "ai-demand.json"
+NVIDIA_PATH = ROOT / "data" / "nvidia.json"
 BIG_TECH_CAPEX_PATH = ROOT / "data" / "big-tech-capex.json"
 POLYMARKET_PATH = ROOT / "data" / "polymarket.json"
 
@@ -50,6 +51,7 @@ def merge():
         raise RuntimeError("data/latest.json not found")
 
     ai_demand = read_json(AI_DEMAND_PATH)
+    nvidia = read_json(NVIDIA_PATH)
     big_tech_capex = read_json(BIG_TECH_CAPEX_PATH)
     polymarket = read_json(POLYMARKET_PATH)
     merged = []
@@ -68,7 +70,10 @@ def merge():
     ]
 
     demand_indicators = []
-    if ai_demand:
+    if nvidia:
+        demand_indicators.extend(nvidia.get("indicators", []))
+        merged.append("nvidia")
+    elif ai_demand:
         demand_indicators.extend(ai_demand.get("indicators", []))
         merged.append("ai-demand")
     if big_tech_capex:

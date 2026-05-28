@@ -92,7 +92,7 @@ const sampleData = {
   ]
 };
 
-const dataVersion = "11";
+const dataVersion = "12";
 
 function dataUrl(path) {
   return `${path}?v=${dataVersion}`;
@@ -123,6 +123,7 @@ const helpText = {
   RRPONTSYD: "マネーマーケット資金がFRBに退避している残高です。多い時は余剰流動性のクッションになります。250B割れで注意、100B割れで高リスク、25B割れでクッション枯渇を警戒します。",
   WRESBAL: "銀行がFRBに置いている準備預金です。金融システムの余裕を示します。3.2T割れで注意、3.0T割れで高リスク、2.8T割れで流動性の薄さを強く警戒します。",
   "NVDA-DC-GROWTH": "NVIDIAのデータセンター売上成長率です。AIインフラ需要の代表指標です。高成長なら信用拡大を支えますが、+30%台以下へ急減速するとAI投資の前提が弱くなります。",
+  "NVDA-REVENUE": "NVIDIAの四半期総売上です。Data Centerだけではありませんが、AI需要全体の勢いを見る補助指標です。前年比や前四半期比が急減速すると注意です。",
   "NVDA-GROSS-MARGIN": "NVIDIAの収益性を見る指標です。粗利率が高いほどAI半導体の価格決定力が強い状態です。70%割れで注意、65%割れで競争や在庫圧力を警戒します。",
   "NVDA-REVENUE-OUTLOOK": "次四半期の売上ガイダンスです。AI需要の先行ヒントとして見ます。前四半期比で大きく鈍化、または市場期待を下回る場合はAI需要の減速シグナルです。",
   "POLYMARKET-AI-BUBBLE": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。"
@@ -190,11 +191,19 @@ async function loadData() {
   try {
     const response = await fetch(dataUrl("data/latest.json"), { cache: "no-store" });
     if (!response.ok) throw new Error("latest.json not found");
-    const data = await response.json();
+    let data = await response.json();
+    try {
+      const nvidiaResponse = await fetch(dataUrl("data/nvidia.json"), { cache: "no-store" });
+      if (!nvidiaResponse.ok) throw new Error("nvidia.json not found");
+      if (!(data.externalDataMerged ?? []).includes("nvidia") && !(data.externalDataMerged ?? []).includes("ai-demand")) {
+        data = mergeAiDemand(data, await nvidiaResponse.json());
+      }
+    } catch {
+    }
     try {
       const aiResponse = await fetch(dataUrl("data/ai-demand.json"), { cache: "no-store" });
       if (!aiResponse.ok) throw new Error("ai-demand.json not found");
-      if (!(data.externalDataMerged ?? []).includes("ai-demand")) {
+      if (!(data.externalDataMerged ?? []).includes("nvidia") && !(data.externalDataMerged ?? []).includes("ai-demand")) {
         data = mergeAiDemand(data, await aiResponse.json());
       }
     } catch {

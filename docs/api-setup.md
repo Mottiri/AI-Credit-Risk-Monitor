@@ -36,7 +36,18 @@ Initial FRED series candidates:
 | `DGS10` | 10-year Treasury yield |
 | `DGS2` | 2-year Treasury yield |
 
-## 2. LINE Messaging API
+## 2. SEC Data
+
+NVIDIA demand data and Big Tech Capex use public SEC endpoints. No API key is required.
+
+```bash
+python3 scripts/fetch_nvidia.py
+python3 scripts/fetch_big_tech_capex.py
+```
+
+If SEC rate limits requests in the future, set `SEC_USER_AGENT` to a contactable identifier such as `AI-Credit-Risk-Monitor/1.0 your-email@example.com`.
+
+## 3. LINE Messaging API
 
 1. Create a LINE Developers account.
 2. Create a provider.
@@ -49,15 +60,15 @@ Initial FRED series candidates:
 
 LINE Notify is no longer the recommended path, so this project should use the Messaging API.
 
-## 3. Later automation
+## 4. Later automation
 
 For personal use, the simplest deployment is:
 
 ```text
 GitHub Actions daily job
-  -> fetch FRED data
+  -> fetch FRED / SEC / Polymarket data
   -> compute score
-  -> ask Codex/OpenAI for analysis text
+  -> generate rule-based analysis text
   -> commit data/latest.json
   -> GitHub Pages updates the dashboard
   -> send LINE only when risk changes or new data arrives
