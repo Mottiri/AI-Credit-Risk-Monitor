@@ -92,6 +92,12 @@ const sampleData = {
   ]
 };
 
+const dataVersion = "4";
+
+function dataUrl(path) {
+  return `${path}?v=${dataVersion}`;
+}
+
 function getRiskMeta(score) {
   if (score >= 80) return { emoji: "🔴", label: "Danger", phase: "信用収縮警戒", className: "risk-danger" };
   if (score >= 60) return { emoji: "🟠", label: "High Risk", phase: "高めの監視局面", className: "risk-high" };
@@ -177,11 +183,11 @@ function generateAnalysis(data) {
 
 async function loadData() {
   try {
-    const response = await fetch("data/latest.json", { cache: "no-store" });
+    const response = await fetch(dataUrl("data/latest.json"), { cache: "no-store" });
     if (!response.ok) throw new Error("latest.json not found");
     const data = await response.json();
     try {
-      const aiResponse = await fetch("data/ai-demand.json", { cache: "no-store" });
+      const aiResponse = await fetch(dataUrl("data/ai-demand.json"), { cache: "no-store" });
       if (!aiResponse.ok) throw new Error("ai-demand.json not found");
       if (!(data.externalDataMerged ?? []).includes("ai-demand")) {
         data = mergeAiDemand(data, await aiResponse.json());
@@ -189,7 +195,7 @@ async function loadData() {
     } catch {
     }
     try {
-      const polymarketResponse = await fetch("data/polymarket.json", { cache: "no-store" });
+      const polymarketResponse = await fetch(dataUrl("data/polymarket.json"), { cache: "no-store" });
       if (!polymarketResponse.ok) throw new Error("polymarket.json not found");
       if (!(data.externalDataMerged ?? []).includes("polymarket")) {
         data = mergePolymarket(data, await polymarketResponse.json());
