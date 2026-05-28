@@ -215,7 +215,8 @@ h3 {
 
 .signal-card {
   min-height: 148px;
-  padding: 16px;
+  overflow: hidden;
+  padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
@@ -232,11 +233,13 @@ h3 {
 .signal-actions {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  flex: 0 0 auto;
+  gap: 6px;
 }
 
 .signal-emoji {
-  font-size: 24px;
+  font-size: 20px;
+  line-height: 1;
 }
 
 .help-button {
