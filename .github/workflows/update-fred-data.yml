@@ -29,6 +29,9 @@ jobs:
       - name: Fetch Polymarket data
         run: python3 scripts/fetch_polymarket.py
 
+      - name: Merge dashboard data
+        run: python3 scripts/merge_external_data.py
+
       - name: Commit updated data
         run: |
           if git diff --quiet -- data/latest.json data/polymarket.json; then

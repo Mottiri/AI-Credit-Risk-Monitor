@@ -54,7 +54,7 @@ Polymarket prediction-market data does not require an API key for this read-only
 python3 scripts/fetch_polymarket.py
 ```
 
-This writes `data/polymarket.json`, which the dashboard merges with the main data. The prediction-market signal has only a small weight in the total score and is mainly used to detect fast changes in market psychology.
+This writes `data/polymarket.json`. `scripts/merge_external_data.py` then merges AI Demand and Polymarket data into `data/latest.json` so GitHub Pages can render the full dashboard from the main data file. The prediction-market signal has only a small weight in the total score and is mainly used to detect fast changes in market psychology.
 
 ## Automate data updates
 

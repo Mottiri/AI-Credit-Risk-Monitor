@@ -4,7 +4,7 @@ This project can update FRED-backed indicators and Polymarket odds automatically
 
 ## What Is Automated
 
-The workflow in `.github/workflows/update-fred-data.yml` runs `scripts/fetch_fred.py` and `scripts/fetch_polymarket.py`. It commits fresh `data/latest.json` and `data/polymarket.json` files when values change.
+The workflow in `.github/workflows/update-fred-data.yml` runs `scripts/fetch_fred.py`, `scripts/fetch_polymarket.py`, and `scripts/merge_external_data.py`. It commits fresh `data/latest.json` and `data/polymarket.json` files when values change.
 
 Current automated blocks:
 

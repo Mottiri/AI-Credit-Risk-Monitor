@@ -183,13 +183,17 @@ async function loadData() {
     try {
       const aiResponse = await fetch("data/ai-demand.json", { cache: "no-store" });
       if (!aiResponse.ok) throw new Error("ai-demand.json not found");
-      data = mergeAiDemand(data, await aiResponse.json());
+      if (!(data.externalDataMerged ?? []).includes("ai-demand")) {
+        data = mergeAiDemand(data, await aiResponse.json());
+      }
     } catch {
     }
     try {
       const polymarketResponse = await fetch("data/polymarket.json", { cache: "no-store" });
       if (!polymarketResponse.ok) throw new Error("polymarket.json not found");
-      data = mergePolymarket(data, await polymarketResponse.json());
+      if (!(data.externalDataMerged ?? []).includes("polymarket")) {
+        data = mergePolymarket(data, await polymarketResponse.json());
+      }
     } catch {
     }
     return data;
