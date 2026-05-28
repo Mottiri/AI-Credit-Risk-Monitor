@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LATEST_PATH = ROOT / "data" / "latest.json"
 AI_DEMAND_PATH = ROOT / "data" / "ai-demand.json"
+BIG_TECH_CAPEX_PATH = ROOT / "data" / "big-tech-capex.json"
 POLYMARKET_PATH = ROOT / "data" / "polymarket.json"
 
 
@@ -26,12 +27,30 @@ def replace_signal(signals, incoming):
     return [signal for signal in signals if signal.get("key") != incoming.get("key")] + [incoming]
 
 
+def demand_signal(items):
+    avg = average_score(items)
+    if avg >= 70:
+        emoji, value = "🔴", "AI需要リスク上昇"
+    elif avg >= 40:
+        emoji, value = "🟡", "AI投資の減速に注意"
+    else:
+        emoji, value = "🟢", "AI需要・投資は強い"
+    return {
+        "key": "demand",
+        "label": "AI Demand",
+        "emoji": emoji,
+        "value": value,
+        "help": "NVIDIAの需要指標とBig Techの設備投資を見ます。Big Tech CapexはAIデータセンター投資のproxyです。売上成長や設備投資が急減速すると、信用拡大を正当化しにくくなります。",
+    }
+
+
 def merge():
     latest = read_json(LATEST_PATH)
     if latest is None:
         raise RuntimeError("data/latest.json not found")
 
     ai_demand = read_json(AI_DEMAND_PATH)
+    big_tech_capex = read_json(BIG_TECH_CAPEX_PATH)
     polymarket = read_json(POLYMARKET_PATH)
     merged = []
 
@@ -48,15 +67,20 @@ def merge():
         if signal.get("key") not in ("demand", "prediction")
     ]
 
+    demand_indicators = []
     if ai_demand:
-        ai_indicators = ai_demand.get("indicators", [])
-        demand_score = average_score(ai_indicators)
+        demand_indicators.extend(ai_demand.get("indicators", []))
+        merged.append("ai-demand")
+    if big_tech_capex:
+        demand_indicators.extend(big_tech_capex.get("indicators", []))
+        merged.append("big-tech-capex")
+
+    if demand_indicators:
+        demand_score = average_score(demand_indicators)
         if score_history:
             score_history[-1]["score"] = round(score_history[-1]["score"] * 0.9 + demand_score * 0.1)
-        indicators.extend(ai_indicators)
-        if ai_demand.get("signal"):
-            signals = replace_signal(signals, ai_demand["signal"])
-        merged.append("ai-demand")
+        indicators.extend(demand_indicators)
+        signals = replace_signal(signals, demand_signal(demand_indicators))
 
     if polymarket:
         prediction_indicators = polymarket.get("indicators", [])

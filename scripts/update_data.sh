@@ -3,6 +3,7 @@ set -eu
 
 python3 scripts/fetch_fred.py
 python3 scripts/fetch_polymarket.py
+python3 scripts/fetch_big_tech_capex.py
 python3 scripts/merge_external_data.py
 
-printf '%s\n' 'Updated data/latest.json and data/polymarket.json.'
+printf '%s\n' 'Updated data/latest.json, data/polymarket.json, and data/big-tech-capex.json.'

@@ -92,7 +92,7 @@ const sampleData = {
   ]
 };
 
-const dataVersion = "4";
+const dataVersion = "11";
 
 function dataUrl(path) {
   return `${path}?v=${dataVersion}`;
@@ -156,8 +156,12 @@ function generateAnalysis(data) {
   const predictionText = prediction
     ? `予測市場ではAIバブル崩壊確率が${prediction.latest}、24時間変化は${prediction.previousChange}です`
     : "予測市場データは未接続です";
+  const bigTechCapex = data.indicators.find(item => item.id === "BIGTECH-CAPEX-TOTAL");
+  const capexText = bigTechCapex
+    ? `Big Tech 4社のCapex合計は${bigTechCapex.latest}、前年比${bigTechCapex.yoy}で、AIインフラ投資はまだ強い状態です`
+    : "Big Tech Capexデータは未接続です";
 
-  const main = `${meta.phase}です。${creditText}。一方で、ハイイールドスプレッドや金融ストレスは危機的な急拡大までは示しておらず、現時点では「崩壊直前」ではなく「信用面の過熱を監視する段階」と見ます。${predictionText}。${direction}。AI需要とBig Techの設備投資が強い間は信用拡大が正当化されやすい一方、貸出の急減速、スプレッド拡大、AI Capexの下方修正、予測市場での急なリスク再評価が重なる場合は警戒度を引き上げます。`;
+  const main = `${meta.phase}です。${creditText}。一方で、ハイイールドスプレッドや金融ストレスは危機的な急拡大までは示しておらず、現時点では「崩壊直前」ではなく「信用面の過熱を監視する段階」と見ます。${capexText}。${predictionText}。${direction}。AI需要とBig Techの設備投資が強い間は信用拡大が正当化されやすい一方、貸出の急減速、スプレッド拡大、AI Capexの下方修正、予測市場での急なリスク再評価が重なる場合は警戒度を引き上げます。`;
 
   return {
     main,
@@ -169,6 +173,7 @@ function generateAnalysis(data) {
     down: [
       "金融ストレス指数はまだ危機局面を示していない",
       "NVIDIA Data Center成長はAI需要の強さを示している",
+      bigTechCapex ? `Big Tech Capex合計が前年比${bigTechCapex.yoy}` : "Big Tech Capexデータは未接続",
       "VIXとHYスプレッドは急激な信用収縮までは示していない"
     ],
     watch: [

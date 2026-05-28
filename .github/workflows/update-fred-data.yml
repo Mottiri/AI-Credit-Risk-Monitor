@@ -29,17 +29,20 @@ jobs:
       - name: Fetch Polymarket data
         run: python3 scripts/fetch_polymarket.py
 
+      - name: Fetch Big Tech Capex data
+        run: python3 scripts/fetch_big_tech_capex.py
+
       - name: Merge dashboard data
         run: python3 scripts/merge_external_data.py
 
       - name: Commit updated data
         run: |
-          if git diff --quiet -- data/latest.json data/polymarket.json; then
+          if git diff --quiet -- data/latest.json data/polymarket.json data/big-tech-capex.json; then
             echo "No data changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/latest.json data/polymarket.json
+          git add data/latest.json data/polymarket.json data/big-tech-capex.json
           git commit -m "Update market data"
           git push

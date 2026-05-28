@@ -1,10 +1,10 @@
 # Automation
 
-This project can update FRED-backed indicators and Polymarket odds automatically with GitHub Actions.
+This project can update FRED-backed indicators, SEC Big Tech Capex, and Polymarket odds automatically with GitHub Actions.
 
 ## What Is Automated
 
-The workflow in `.github/workflows/update-fred-data.yml` runs `scripts/fetch_fred.py`, `scripts/fetch_polymarket.py`, and `scripts/merge_external_data.py`. It commits fresh `data/latest.json` and `data/polymarket.json` files when values change.
+The workflow in `.github/workflows/update-fred-data.yml` runs `scripts/fetch_fred.py`, `scripts/fetch_polymarket.py`, `scripts/fetch_big_tech_capex.py`, and `scripts/merge_external_data.py`. It commits fresh `data/latest.json`, `data/polymarket.json`, and `data/big-tech-capex.json` files when values change.
 
 Current automated blocks:
 
@@ -12,9 +12,10 @@ Current automated blocks:
 - Market Stress
 - Rates
 - Liquidity
+- AI Demand, partially automated through Big Tech Capex
 - Prediction Market
 
-AI Demand is still maintained manually in `data/ai-demand.json` because the cleanest source is quarterly earnings data, not a stable FRED-style time series.
+The NVIDIA portion of AI Demand is still maintained manually in `data/ai-demand.json`. Big Tech Capex is automatically fetched from SEC Companyfacts.
 
 ## GitHub Setup
 
