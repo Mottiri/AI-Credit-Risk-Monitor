@@ -1,0 +1,65 @@
+{
+  "updatedAt": "2026-05-28",
+  "source": "NVIDIA Q1 FY2027 results, May 20 2026",
+  "sourceUrl": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-Financial-Results-for-First-Quarter-Fiscal-2027/default.aspx",
+  "signal": {
+    "key": "demand",
+    "label": "AI Demand",
+    "emoji": "🟢",
+    "value": "NVIDIA需要は強い",
+    "help": "NVIDIAやBig TechのAI関連売上・Capexを見ます。売上成長や設備投資計画が急減速すると、信用拡大を正当化しにくくなります。現段階はNVIDIA公式決算を手動入力しています。"
+  },
+  "indicators": [
+    {
+      "id": "NVDA-DC-GROWTH",
+      "name": "NVIDIA Data Center Revenue Growth",
+      "help": "NVIDIAのデータセンター売上成長率です。AIインフラ需要の代表指標です。高成長なら信用拡大を支えますが、+30%台以下へ急減速するとAI投資の前提が弱くなります。",
+      "latest": "+92% YoY",
+      "latestRaw": 92,
+      "date": "2026-05-20",
+      "previousChange": "+21% QoQ",
+      "previousChangeRaw": 21,
+      "yoy": "+92%",
+      "yoyRaw": 92,
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 20,
+      "nextRelease": "Quarterly",
+      "block": "demand"
+    },
+    {
+      "id": "NVDA-GROSS-MARGIN",
+      "name": "NVIDIA Non-GAAP Gross Margin",
+      "help": "NVIDIAの収益性を見る指標です。粗利率が高いほどAI半導体の価格決定力が強い状態です。70%割れで注意、65%割れで競争や在庫圧力を警戒します。",
+      "latest": "75.0%",
+      "latestRaw": 75.0,
+      "date": "2026-05-20",
+      "previousChange": "-0.1pt QoQ",
+      "previousChangeRaw": -0.1,
+      "yoy": "+14.2pt",
+      "yoyRaw": 14.2,
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 20,
+      "nextRelease": "Quarterly",
+      "block": "demand"
+    },
+    {
+      "id": "NVDA-REVENUE-OUTLOOK",
+      "name": "NVIDIA Next Quarter Revenue Outlook",
+      "help": "次四半期の売上ガイダンスです。AI需要の先行ヒントとして見ます。前四半期比で大きく鈍化、または市場期待を下回る場合はAI需要の減速シグナルです。",
+      "latest": "$91.0B",
+      "latestRaw": 91.0,
+      "date": "2026-05-20",
+      "previousChange": "+11.5% vs Q1",
+      "previousChangeRaw": 11.5,
+      "yoy": "n/a",
+      "yoyRaw": null,
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 20,
+      "nextRelease": "Quarterly",
+      "block": "demand"
+    }
+  ]
+}

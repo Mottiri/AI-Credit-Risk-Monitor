@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Credit Risk Monitor</title>
+    <link rel="stylesheet" href="styles.css?v=2" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Personal Dashboard</p>
+          <h1>AI Credit Risk Monitor</h1>
+        </div>
+        <div class="topbar-actions">
+          <div class="updated">
+            <span>最終更新</span>
+            <strong id="last-updated">--</strong>
+          </div>
+          <button class="icon-button" id="refresh-button" aria-label="データを再読み込み" title="データを再読み込み">
+            <span aria-hidden="true">↻</span>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero-grid" aria-label="総合判定">
+          <article class="panel risk-panel">
+            <div class="risk-head">
+              <div>
+                <p class="section-label">総合危険度</p>
+                <div class="score-line">
+                  <span id="risk-emoji">🟠</span>
+                  <strong id="risk-score">--</strong>
+                  <span>/ 100</span>
+                </div>
+              </div>
+              <span class="risk-badge" id="risk-label">Loading</span>
+            </div>
+            <div class="sparkline-wrap" id="sparkline"></div>
+            <p class="status-text" id="status-summary">データを読み込んでいます。</p>
+          </article>
+
+          <div class="signal-grid" id="signal-grid"></div>
+        </section>
+
+        <section class="content-grid">
+          <article class="panel chart-panel">
+            <div class="panel-title-row">
+              <div>
+                <p class="section-label">Trend</p>
+                <div class="title-with-help">
+                  <h2>総合危険度の推移</h2>
+                  <button class="help-button" type="button" aria-label="総合危険度の推移の説明" data-tooltip="AI信用リスクを0〜100で合成したスコアの推移です。信用拡大を重めに見つつ、市場ストレス・金利も加味します。60超で高めの監視、80超で危険水準です。短期間で急上昇する場合も警戒します。">?</button>
+                </div>
+              </div>
+              <span class="mini-note">0-100 score</span>
+            </div>
+            <div class="chart-area" id="risk-chart"></div>
+          </article>
+
+          <article class="panel chart-panel">
+            <div class="panel-title-row">
+              <div>
+                <p class="section-label">Credit Expansion</p>
+                <div class="title-with-help">
+                  <h2>LNFACBM027SBOG YoY</h2>
+                  <button class="help-button" type="button" aria-label="LNFACBM027SBOG YoYの説明" data-tooltip="銀行からノンバンク金融機関への貸出残高の前年比です。private credit fundなどへの資金供給のproxyとして見ます。前年比+20%超は過熱、高水準からの急減速や残高減少は信用収縮の警戒です。">?</button>
+                </div>
+              </div>
+              <span class="mini-note">前年比</span>
+            </div>
+            <div class="chart-area" id="credit-chart"></div>
+          </article>
+        </section>
+
+        <section class="analysis-grid">
+          <article class="panel analysis-panel">
+            <div class="panel-title-row">
+              <div>
+                <p class="section-label">Codex Analysis</p>
+                <h2>現状分析</h2>
+              </div>
+              <span class="risk-badge" id="phase-label">--</span>
+            </div>
+            <p id="analysis-main"></p>
+            <div class="factor-grid">
+              <div>
+                <h3>リスクを上げた要因</h3>
+                <ul id="risk-up-list"></ul>
+              </div>
+              <div>
+                <h3>リスクを下げた要因</h3>
+                <ul id="risk-down-list"></ul>
+              </div>
+              <div>
+                <h3>次に見るポイント</h3>
+                <ul id="watch-list"></ul>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel table-panel">
+          <div class="panel-title-row">
+            <div>
+              <p class="section-label">Indicators</p>
+              <h2>主要指標</h2>
+            </div>
+            <span class="mini-note">Live FRED data</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>指標</th>
+                  <th>最新</th>
+                  <th>前回比</th>
+                  <th>前年比</th>
+                  <th>危険度</th>
+                  <th>次回更新</th>
+                </tr>
+              </thead>
+              <tbody id="indicator-table"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js?v=2"></script>
+  </body>
+</html>
