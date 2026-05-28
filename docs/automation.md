@@ -1,10 +1,10 @@
 # Automation
 
-This project can update FRED-backed indicators automatically with GitHub Actions.
+This project can update FRED-backed indicators and Polymarket odds automatically with GitHub Actions.
 
 ## What Is Automated
 
-The workflow in `.github/workflows/update-fred-data.yml` runs `scripts/fetch_fred.py` and commits a fresh `data/latest.json` when FRED values change.
+The workflow in `.github/workflows/update-fred-data.yml` runs `scripts/fetch_fred.py` and `scripts/fetch_polymarket.py`. It commits fresh `data/latest.json` and `data/polymarket.json` files when values change.
 
 Current automated blocks:
 
@@ -12,6 +12,7 @@ Current automated blocks:
 - Market Stress
 - Rates
 - Liquidity
+- Prediction Market
 
 AI Demand is still maintained manually in `data/ai-demand.json` because the cleanest source is quarterly earnings data, not a stable FRED-style time series.
 
@@ -26,7 +27,7 @@ FRED_API_KEY=your_actual_fred_key
 ```
 
 4. Open `Actions` and enable workflows if GitHub asks.
-5. Run `Update FRED Data` manually once with `workflow_dispatch`.
+5. Run `Update Market Data` manually once with `workflow_dispatch`.
 
 The scheduled run is weekdays at `22:15 UTC`, which is `07:15 Japan time` the next morning.
 

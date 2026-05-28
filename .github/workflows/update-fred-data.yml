@@ -1,4 +1,4 @@
-name: Update FRED Data
+name: Update Market Data
 
 on:
   workflow_dispatch:
@@ -26,14 +26,17 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python3 scripts/fetch_fred.py
 
+      - name: Fetch Polymarket data
+        run: python3 scripts/fetch_polymarket.py
+
       - name: Commit updated data
         run: |
-          if git diff --quiet -- data/latest.json; then
-            echo "No FRED data changes."
+          if git diff --quiet -- data/latest.json data/polymarket.json; then
+            echo "No data changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/latest.json
-          git commit -m "Update FRED data"
+          git add data/latest.json data/polymarket.json
+          git commit -m "Update market data"
           git push

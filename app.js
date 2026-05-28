@@ -19,7 +19,8 @@ const sampleData = {
     { key: "stress", label: "Market Stress", emoji: "🟡", value: "ストレス指標は小幅上昇", help: "HYスプレッド、金融ストレス指数、VIXなどで市場が信用リスクを織り込み始めているかを見ます。同時に上昇すると危険度が上がります。" },
     { key: "demand", label: "AI Demand", emoji: "🟢", value: "AI需要・業績は強い", help: "NVIDIAやBig TechのAI関連売上・Capexを見ます。売上成長や設備投資計画が急減速すると、信用拡大を正当化しにくくなります。" },
     { key: "rates", label: "Rates", emoji: "🟠", value: "金利環境は重い", help: "長短金利や借入コストを見ます。高金利が続くほど、AIデータセンターやprivate creditの資金調達負担が増えます。" },
-    { key: "liquidity", label: "Liquidity", emoji: "🟡", value: "流動性は中立から注意", help: "TGA、RRP、準備預金などの市場流動性を見ます。流動性が細ると、高レバレッジ投資や信用市場が不安定になりやすいです。" }
+    { key: "liquidity", label: "Liquidity", emoji: "🟡", value: "流動性は中立から注意", help: "TGA、RRP、準備預金などの市場流動性を見ます。流動性が細ると、高レバレッジ投資や信用市場が不安定になりやすいです。" },
+    { key: "prediction", label: "Prediction Market", emoji: "🟡", value: "予測市場は中程度", help: "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。" }
   ],
   indicators: [
     {
@@ -104,6 +105,7 @@ const helpText = {
   demand: "NVIDIAやBig TechのAI関連売上・Capexを見ます。売上成長や設備投資計画が急減速すると、信用拡大を正当化しにくくなります。",
   rates: "長短金利や借入コストを見ます。高金利が続くほど、AIデータセンターやprivate creditの資金調達負担が増えます。",
   liquidity: "TGA、RRP、準備預金などの市場流動性を見ます。流動性が細ると、高レバレッジ投資や信用市場が不安定になりやすいです。",
+  prediction: "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。",
   LNFACBM027SBOG: "銀行からノンバンク金融機関への貸出残高です。AI/private creditへお金が流れているかを見るproxyです。前年比+20%超は、経済成長よりかなり速く信用が膨らんでいる目安。高止まりは過熱、急減速や残高減少は信用収縮に注意です。",
   BAMLH0A0HYM2: "信用力が低めの企業が借りる時の追加金利です。4%超で投資家がリスクを意識、5.5%超で信用不安がはっきり、7%超でデフォルトや景気悪化を強く織り込む水準です。",
   STLFSI4: "金融市場全体の体温計のような指数です。マイナスなら平常、0超で平均よりストレス高め、0.8超で複数市場に不安、1.6超でかなり強いストレスと見ます。",
@@ -116,7 +118,8 @@ const helpText = {
   WRESBAL: "銀行がFRBに置いている準備預金です。金融システムの余裕を示します。3.2T割れで注意、3.0T割れで高リスク、2.8T割れで流動性の薄さを強く警戒します。",
   "NVDA-DC-GROWTH": "NVIDIAのデータセンター売上成長率です。AIインフラ需要の代表指標です。高成長なら信用拡大を支えますが、+30%台以下へ急減速するとAI投資の前提が弱くなります。",
   "NVDA-GROSS-MARGIN": "NVIDIAの収益性を見る指標です。粗利率が高いほどAI半導体の価格決定力が強い状態です。70%割れで注意、65%割れで競争や在庫圧力を警戒します。",
-  "NVDA-REVENUE-OUTLOOK": "次四半期の売上ガイダンスです。AI需要の先行ヒントとして見ます。前四半期比で大きく鈍化、または市場期待を下回る場合はAI需要の減速シグナルです。"
+  "NVDA-REVENUE-OUTLOOK": "次四半期の売上ガイダンスです。AI需要の先行ヒントとして見ます。前四半期比で大きく鈍化、または市場期待を下回る場合はAI需要の減速シグナルです。",
+  "POLYMARKET-AI-BUBBLE": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。"
 };
 
 function helpButton(text) {
@@ -143,8 +146,12 @@ function generateAnalysis(data) {
   const creditText = creditYoy >= 20
     ? "ノンバンク向け貸出の前年比は高水準で、AIインフラ投資を支える信用拡大が続いている可能性があります"
     : "ノンバンク向け貸出の伸びは過熱水準からはやや離れています";
+  const prediction = data.indicators.find(item => item.id === "POLYMARKET-AI-BUBBLE");
+  const predictionText = prediction
+    ? `予測市場ではAIバブル崩壊確率が${prediction.latest}、24時間変化は${prediction.previousChange}です`
+    : "予測市場データは未接続です";
 
-  const main = `${meta.phase}です。${creditText}。一方で、ハイイールドスプレッドや金融ストレスは危機的な急拡大までは示しておらず、現時点では「崩壊直前」ではなく「信用面の過熱を監視する段階」と見ます。${direction}。AI需要とBig Techの設備投資が強い間は信用拡大が正当化されやすい一方、貸出の急減速、スプレッド拡大、AI Capexの下方修正が重なる場合は警戒度を引き上げます。`;
+  const main = `${meta.phase}です。${creditText}。一方で、ハイイールドスプレッドや金融ストレスは危機的な急拡大までは示しておらず、現時点では「崩壊直前」ではなく「信用面の過熱を監視する段階」と見ます。${predictionText}。${direction}。AI需要とBig Techの設備投資が強い間は信用拡大が正当化されやすい一方、貸出の急減速、スプレッド拡大、AI Capexの下方修正、予測市場での急なリスク再評価が重なる場合は警戒度を引き上げます。`;
 
   return {
     main,
@@ -162,6 +169,7 @@ function generateAnalysis(data) {
       "LNFACBM027SBOGの高止まり、または残高減少への転換",
       "Big TechのAI Capexガイダンス下方修正",
       "HYスプレッドとSTLFSI4の同時悪化",
+      "PolymarketのAIバブル確率が24hで+5pt以上、または7日で+10pt以上に急上昇",
       "NVIDIA Data Center売上成長率と粗利率の鈍化"
     ]
   };
@@ -175,10 +183,16 @@ async function loadData() {
     try {
       const aiResponse = await fetch("data/ai-demand.json", { cache: "no-store" });
       if (!aiResponse.ok) throw new Error("ai-demand.json not found");
-      return mergeAiDemand(data, await aiResponse.json());
+      data = mergeAiDemand(data, await aiResponse.json());
     } catch {
-      return data;
     }
+    try {
+      const polymarketResponse = await fetch("data/polymarket.json", { cache: "no-store" });
+      if (!polymarketResponse.ok) throw new Error("polymarket.json not found");
+      data = mergePolymarket(data, await polymarketResponse.json());
+    } catch {
+    }
+    return data;
   } catch {
     return sampleData;
   }
@@ -206,6 +220,30 @@ function mergeAiDemand(data, aiDemand) {
     ...data,
     scoreHistory,
     signals: data.signals.map(signal => signal.key === "demand" ? aiDemand.signal : signal),
+    indicators
+  };
+}
+
+function mergePolymarket(data, polymarket) {
+  const indicators = [
+    ...data.indicators.filter(item => item.block !== "prediction"),
+    ...(polymarket.indicators ?? [])
+  ];
+  const predictionScore = (polymarket.indicators ?? [])
+    .map(item => item.riskScore)
+    .find(score => Number.isFinite(score)) ?? 30;
+
+  const scoreHistory = data.scoreHistory.map(item => ({ ...item }));
+  if (scoreHistory.length) {
+    const latest = scoreHistory.at(-1);
+    latest.score = Math.round(latest.score * 0.95 + predictionScore * 0.05);
+  }
+
+  const withoutPrediction = data.signals.filter(signal => signal.key !== "prediction");
+  return {
+    ...data,
+    scoreHistory,
+    signals: [...withoutPrediction, polymarket.signal],
     indicators
   };
 }
