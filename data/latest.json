@@ -1,53 +1,53 @@
 {
-  "updatedAt": "2026-05-28T14:02+09:00",
+  "updatedAt": "2026-05-29T23:42+00:00",
   "scoreHistory": [
     {
       "date": "2025-05",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-06",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-07",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-08",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-09",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-10",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-11",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-12",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2026-01",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2026-02",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2026-03",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2026-04",
-      "score": 54
+      "score": 53
     }
   ],
   "creditYoy": [
@@ -81,23 +81,23 @@
     },
     {
       "date": "2025-12",
-      "value": 52.38
+      "value": 52.32
     },
     {
       "date": "2026-01",
-      "value": 33.26
+      "value": 33.06
     },
     {
       "date": "2026-02",
-      "value": 33.9
+      "value": 33.67
     },
     {
       "date": "2026-03",
-      "value": 32.09
+      "value": 32.02
     },
     {
       "date": "2026-04",
-      "value": 26.49
+      "value": 26.51
     }
   ],
   "signals": [
@@ -125,8 +125,8 @@
     {
       "key": "liquidity",
       "label": "Liquidity",
-      "emoji": "🟡",
-      "value": "注意シグナル",
+      "emoji": "🟠",
+      "value": "高めの監視局面",
       "help": "TGA、RRP、準備預金などで市場流動性を見ます。TGA上昇、RRP低下、準備預金低下が重なると、信用市場が不安定になりやすいです。"
     },
     {
@@ -140,7 +140,7 @@
       "key": "prediction",
       "label": "Prediction Market",
       "emoji": "🟡",
-      "value": "AIバブル崩壊予測 23.4%",
+      "value": "AIバブル崩壊予測 22.8%",
       "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
     }
   ],
@@ -150,12 +150,12 @@
       "name": "Loans to Nondepository Financial Institutions",
       "help": "銀行からノンバンク金融機関への貸出残高です。AI/private creditへお金が流れているかを見るproxyです。前年比+20%超は、経済成長よりかなり速く信用が膨らんでいる目安。高止まりは過熱、急減速や残高減少は信用収縮に注意です。",
       "latest": "1.97T",
-      "latestRaw": 1972.3518,
+      "latestRaw": 1972.7057,
       "date": "2026-04-01",
-      "previousChange": "+1.3%",
-      "previousChangeRaw": 25.477300000000014,
+      "previousChange": "+1.4%",
+      "previousChangeRaw": 26.954700000000003,
       "yoy": "+26.5%",
-      "yoyRaw": 26.49168308403034,
+      "yoyRaw": 26.51437954550513,
       "risk": "🔴",
       "riskClass": "risk-danger",
       "riskScore": 90,
@@ -168,9 +168,9 @@
       "help": "信用力が低めの企業が借りる時の追加金利です。4%超で投資家がリスクを意識、5.5%超で信用不安がはっきり、7%超でデフォルトや景気悪化を強く織り込む水準です。",
       "latest": "2.72%",
       "latestRaw": 2.72,
-      "date": "2026-05-26",
-      "previousChange": "-0.02pt",
-      "previousChangeRaw": -0.020000000000000018,
+      "date": "2026-05-28",
+      "previousChange": "+0.01pt",
+      "previousChangeRaw": 0.010000000000000231,
       "yoy": "-18.1%",
       "yoyRaw": -18.072289156626496,
       "risk": "🟢",
@@ -200,13 +200,13 @@
       "id": "VIXCLS",
       "name": "CBOE Volatility Index",
       "help": "株式市場の不安度を見る指数です。20超で不安定、30超で投資家がかなり警戒、40超で急落・危機局面に近い水準です。HYスプレッドや金融ストレスと同時に上がると重要です。",
-      "latest": "17.01",
-      "latestRaw": 17.01,
-      "date": "2026-05-26",
-      "previousChange": "+0.42",
-      "previousChangeRaw": 0.4200000000000017,
-      "yoy": "-8.4%",
-      "yoyRaw": -8.400646203554107,
+      "latest": "15.74",
+      "latestRaw": 15.74,
+      "date": "2026-05-28",
+      "previousChange": "-0.55",
+      "previousChangeRaw": -0.5499999999999989,
+      "yoy": "-15.2%",
+      "yoyRaw": -15.239633817985998,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
@@ -217,16 +217,16 @@
       "id": "DGS10",
       "name": "10-Year Treasury Yield",
       "help": "米10年国債利回りです。長期の借入コストの目安です。4.5%超で資金調達が重くなり始め、5%超でデータセンター投資の採算に圧力、5.5%超で借金依存の成長にかなり厳しい水準です。",
-      "latest": "4.50%",
-      "latestRaw": 4.5,
-      "date": "2026-05-26",
-      "previousChange": "-0.06pt",
-      "previousChangeRaw": -0.05999999999999961,
-      "yoy": "+2.0%",
-      "yoyRaw": 2.0408163265306145,
-      "risk": "🟡",
-      "riskClass": "risk-watch",
-      "riskScore": 45,
+      "latest": "4.45%",
+      "latestRaw": 4.45,
+      "date": "2026-05-28",
+      "previousChange": "-0.03pt",
+      "previousChangeRaw": -0.03000000000000025,
+      "yoy": "+0.9%",
+      "yoyRaw": 0.9070294784580435,
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 20,
       "nextRelease": "Daily",
       "block": "rates"
     },
@@ -234,13 +234,13 @@
       "id": "DGS2",
       "name": "2-Year Treasury Yield",
       "help": "米2年国債利回りです。今後数年の高金利見通しに敏感です。高止まりすると短期借入や借り換えコストが重くなり、AIインフラやprivate creditの負担になります。",
-      "latest": "4.01%",
-      "latestRaw": 4.01,
-      "date": "2026-05-26",
-      "previousChange": "-0.12pt",
-      "previousChangeRaw": -0.1200000000000001,
-      "yoy": "+3.1%",
-      "yoyRaw": 3.084832904884305,
+      "latest": "3.99%",
+      "latestRaw": 3.99,
+      "date": "2026-05-28",
+      "previousChange": "-0.01pt",
+      "previousChangeRaw": -0.009999999999999787,
+      "yoy": "+2.6%",
+      "yoyRaw": 2.570694087403602,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
@@ -251,16 +251,16 @@
       "id": "WTREGEN",
       "name": "Treasury General Account at the Fed",
       "help": "米財務省のFRB口座残高です。TGAが増えると、市場から資金を吸い上げやすくなります。800B超で注意、1T超で高リスク、1.2T超で流動性の重さを強く警戒します。",
-      "latest": "781B",
-      "latestRaw": 781293.0,
-      "date": "2026-05-20",
-      "previousChange": "-57B",
-      "previousChangeRaw": -57291.0,
-      "yoy": "+67.2%",
-      "yoyRaw": 67.22737819025522,
-      "risk": "🟢",
-      "riskClass": "risk-low",
-      "riskScore": 20,
+      "latest": "830B",
+      "latestRaw": 830296.0,
+      "date": "2026-05-27",
+      "previousChange": "+49B",
+      "previousChangeRaw": 49003.0,
+      "yoy": "+77.7%",
+      "yoyRaw": 77.71594421280639,
+      "risk": "🟡",
+      "riskClass": "risk-watch",
+      "riskScore": 45,
       "nextRelease": "Weekly",
       "block": "liquidity"
     },
@@ -268,13 +268,13 @@
       "id": "RRPONTSYD",
       "name": "Overnight Reverse Repurchase Agreements",
       "help": "マネーマーケット資金がFRBに退避している残高です。多い時は余剰流動性のクッションになります。250B割れで注意、100B割れで高リスク、25B割れでクッション枯渇を警戒します。",
-      "latest": "2B",
-      "latestRaw": 1.853,
-      "date": "2026-05-27",
-      "previousChange": "+0.1B",
-      "previousChangeRaw": 0.06600000000000006,
-      "yoy": "-99.4%",
-      "yoyRaw": -99.41297040775272,
+      "latest": "12B",
+      "latestRaw": 11.677,
+      "date": "2026-05-29",
+      "previousChange": "+11B",
+      "previousChangeRaw": 10.514,
+      "yoy": "-96.3%",
+      "yoyRaw": -96.30073149019347,
       "risk": "🔴",
       "riskClass": "risk-danger",
       "riskScore": 90,
@@ -285,13 +285,13 @@
       "id": "WRESBAL",
       "name": "Reserve Balances with Federal Reserve Banks",
       "help": "銀行がFRBに置いている準備預金です。金融システムの余裕を示します。3.2T割れで注意、3.0T割れで高リスク、2.8T割れで流動性の薄さを強く警戒します。",
-      "latest": "3.13T",
-      "latestRaw": 3129562.0,
-      "date": "2026-05-20",
-      "previousChange": "+27B",
-      "previousChangeRaw": 26752.0,
-      "yoy": "-4.3%",
-      "yoyRaw": -4.31408207698688,
+      "latest": "3.07T",
+      "latestRaw": 3066560.0,
+      "date": "2026-05-27",
+      "previousChange": "-63B",
+      "previousChangeRaw": -63002.0,
+      "yoy": "-6.2%",
+      "yoyRaw": -6.240359364666648,
       "risk": "🟡",
       "riskClass": "risk-watch",
       "riskScore": 45,
@@ -452,76 +452,76 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "23.4%",
-      "latestRaw": 23.45,
-      "date": "2026-05-28T04:56:59.340079Z",
-      "previousChange": "+2.0pt / 24h",
-      "previousChangeRaw": 2.0,
-      "yoy": "+2.5pt / 7d",
-      "yoyRaw": 2.45,
+      "latest": "22.8%",
+      "latestRaw": 22.75,
+      "date": "2026-05-29T23:27:17.454605Z",
+      "previousChange": "+1.1pt / 24h",
+      "previousChangeRaw": 1.05,
+      "yoy": "+1.4pt / 7d",
+      "yoyRaw": 1.4000000000000001,
       "risk": "🟡",
       "riskClass": "risk-watch",
       "riskScore": 45,
       "nextRelease": "Live",
       "block": "prediction",
-      "volume24h": "$3.5K",
-      "volume1wk": "$9.0K",
+      "volume24h": "$1.8K",
+      "volume1wk": "$7.9K",
       "totalVolume": "$2.3M",
-      "liquidity": "$14.9K",
-      "bestBid": 0.223,
-      "bestAsk": 0.246,
-      "spread": 0.023,
-      "oneMonthChange": 12.75
+      "liquidity": "$13.0K",
+      "bestBid": 0.206,
+      "bestAsk": 0.249,
+      "spread": 0.043,
+      "oneMonthChange": 0.8500000000000001
     }
   ],
   "baseScoreHistory": [
     {
       "date": "2025-05",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-06",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-07",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-08",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-09",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-10",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-11",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2025-12",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2026-01",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2026-02",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2026-03",
-      "score": 57
+      "score": 56
     },
     {
       "date": "2026-04",
-      "score": 57
+      "score": 56
     }
   ],
   "externalDataMerged": [
