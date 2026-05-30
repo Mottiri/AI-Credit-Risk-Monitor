@@ -2,8 +2,10 @@
 import json
 import os
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
@@ -137,8 +139,21 @@ def fred_observations(series_id, api_key):
             "limit": 420,
         }
     )
-    with urlopen(f"{FRED_BASE_URL}?{params}", timeout=30) as response:
-        payload = json.loads(response.read().decode("utf-8"))
+    last_error = None
+    for attempt in range(4):
+        try:
+            with urlopen(f"{FRED_BASE_URL}?{params}", timeout=30) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+            break
+        except (HTTPError, URLError, TimeoutError) as exc:
+            last_error = exc
+            retryable_http = isinstance(exc, HTTPError) and exc.code in {429, 500, 502, 503, 504}
+            retryable_url = isinstance(exc, (URLError, TimeoutError))
+            if attempt == 3 or not (retryable_http or retryable_url):
+                raise
+            time.sleep(2 * (attempt + 1))
+    else:
+        raise last_error
 
     observations = []
     for obs in reversed(payload.get("observations", [])):

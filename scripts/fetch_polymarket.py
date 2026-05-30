@@ -162,7 +162,7 @@ def main():
                 "risk": risk,
                 "riskClass": risk_class,
                 "riskScore": risk_score,
-                "nextRelease": "Live",
+                "nextRelease": "Scheduled",
                 "block": "prediction",
                 "volume24h": format_usd(volume_24h),
                 "volume1wk": format_usd(volume_1wk),
