@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Credit Risk Monitor</title>
-    <link rel="stylesheet" href="styles.css?v=10" />
+    <link rel="stylesheet" href="styles.css?v=11" />
   </head>
   <body>
     <div class="app-shell">
@@ -26,6 +26,12 @@
       </header>
 
       <main>
+        <nav class="tab-nav" aria-label="Dashboard sections">
+          <button class="tab-button is-active" type="button" data-tab="ai">AIバブル監視</button>
+          <button class="tab-button" type="button" data-tab="macro">マクロ経済</button>
+        </nav>
+
+        <div class="tab-panel is-active" id="ai-panel">
         <section class="hero-grid" aria-label="総合判定">
           <article class="panel risk-panel">
             <div class="risk-head">
@@ -127,9 +133,114 @@
             </table>
           </div>
         </section>
+        </div>
+
+        <div class="tab-panel" id="macro-panel">
+          <section class="hero-grid" aria-label="マクロ総合判定">
+            <article class="panel risk-panel">
+              <div class="risk-head">
+                <div>
+                  <p class="section-label">株式マクロ環境</p>
+                  <div class="score-line">
+                    <span id="macro-emoji">🟠</span>
+                    <strong id="macro-score">--</strong>
+                    <span>/ 100</span>
+                  </div>
+                </div>
+                <span class="risk-badge" id="macro-label">Loading</span>
+              </div>
+              <div class="sparkline-wrap" id="macro-sparkline"></div>
+              <p class="status-text" id="macro-status-summary">データを読み込んでいます。</p>
+            </article>
+
+            <div class="signal-grid macro-signal-grid" id="macro-signal-grid"></div>
+          </section>
+
+          <section class="content-grid">
+            <article class="panel chart-panel">
+              <div class="panel-title-row">
+                <div>
+                  <p class="section-label">Macro Trend</p>
+                  <div class="title-with-help">
+                    <h2>株式マクロ警戒度の推移</h2>
+                    <button class="help-button" type="button" aria-label="株式マクロ警戒度の推移の説明" data-tooltip="CPI/PPIなどのインフレ、金利、雇用、VIXを0〜100で合成したスコアです。高いほど株式市場にとってマクロ環境が重いことを示します。">?</button>
+                  </div>
+                </div>
+                <span class="mini-note">0-100 score</span>
+              </div>
+              <div class="chart-area" id="macro-risk-chart"></div>
+            </article>
+
+            <article class="panel chart-panel">
+              <div class="panel-title-row">
+                <div>
+                  <p class="section-label">Inflation</p>
+                  <div class="title-with-help">
+                    <h2>CPI YoY</h2>
+                    <button class="help-button" type="button" aria-label="CPI YoYの説明" data-tooltip="CPIの前年比です。3%超で利下げ期待が後退しやすく、4%超で株式市場には高めの警戒、5%超でかなり強い逆風と見ます。">?</button>
+                  </div>
+                </div>
+                <span class="mini-note">前年比</span>
+              </div>
+              <div class="chart-area" id="macro-cpi-chart"></div>
+            </article>
+          </section>
+
+          <section class="analysis-grid">
+            <article class="panel analysis-panel">
+              <div class="panel-title-row">
+                <div>
+                  <p class="section-label">Rule-Based Analysis</p>
+                  <h2>マクロ現状分析</h2>
+                </div>
+                <span class="risk-badge" id="macro-phase-label">--</span>
+              </div>
+              <p id="macro-analysis-main"></p>
+              <div class="factor-grid">
+                <div>
+                  <h3>株式に逆風の要因</h3>
+                  <ul id="macro-risk-up-list"></ul>
+                </div>
+                <div>
+                  <h3>株式を支える要因</h3>
+                  <ul id="macro-risk-down-list"></ul>
+                </div>
+                <div>
+                  <h3>次に見るポイント</h3>
+                  <ul id="macro-watch-list"></ul>
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <section class="panel table-panel">
+            <div class="panel-title-row">
+              <div>
+                <p class="section-label">Macro Indicators</p>
+                <h2>マクロ主要指標</h2>
+              </div>
+              <span class="mini-note">FRED data</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>指標</th>
+                    <th>最新</th>
+                    <th>前回比</th>
+                    <th>前年比</th>
+                    <th>警戒度</th>
+                    <th>次回更新</th>
+                  </tr>
+                </thead>
+                <tbody id="macro-indicator-table"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
       </main>
     </div>
 
-    <script src="app.js?v=13"></script>
+    <script src="app.js?v=14"></script>
   </body>
 </html>

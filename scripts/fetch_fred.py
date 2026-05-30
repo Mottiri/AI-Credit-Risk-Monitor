@@ -14,7 +14,7 @@ FRED_BASE_URL = "https://api.stlouisfed.org/fred/series/observations"
 ROOT = Path(__file__).resolve().parents[1]
 OUT_PATH = ROOT / "data" / "latest.json"
 
-SERIES = [
+AI_SERIES = [
     {
         "id": "LNFACBM027SBOG",
         "name": "Loans to Nondepository Financial Institutions",
@@ -113,6 +113,100 @@ SERIES = [
         "higher_is_risk": False,
         "change_unit": "B",
         "risk_thresholds": {"watch": 3200000, "high": 3000000, "danger": 2800000},
+    },
+]
+
+MACRO_SERIES = [
+    {
+        "id": "CPIAUCSL",
+        "name": "Consumer Price Index",
+        "help": "米国の消費者物価指数です。前年比が3%を超えるとインフレ再燃を意識しやすく、4%超で株式市場には金利高止まりリスク、5%超でかなり強い逆風と見ます。",
+        "unit": "",
+        "frequency": "Monthly",
+        "block": "inflation",
+        "higher_is_risk": True,
+        "change_unit": "%",
+        "risk_basis": "yoy",
+        "risk_thresholds": {"watch": 3.0, "high": 4.0, "danger": 5.0},
+    },
+    {
+        "id": "CPILFESL",
+        "name": "Core CPI",
+        "help": "食品とエネルギーを除いた物価指数です。粘着的なインフレを見るため重要です。前年比3%超で注意、4%超で金融引き締め長期化、5%超で株式市場には強い逆風と見ます。",
+        "unit": "",
+        "frequency": "Monthly",
+        "block": "inflation",
+        "higher_is_risk": True,
+        "change_unit": "%",
+        "risk_basis": "yoy",
+        "risk_thresholds": {"watch": 3.0, "high": 4.0, "danger": 5.0},
+    },
+    {
+        "id": "PPIACO",
+        "name": "Producer Price Index",
+        "help": "企業側の仕入れ・生産コストを見る物価指数です。CPIに先行してインフレ圧力を示すことがあります。前年比3%超で注意、5%超で高リスク、8%超で強いインフレ圧力と見ます。",
+        "unit": "",
+        "frequency": "Monthly",
+        "block": "inflation",
+        "higher_is_risk": True,
+        "change_unit": "%",
+        "risk_basis": "yoy",
+        "risk_thresholds": {"watch": 3.0, "high": 5.0, "danger": 8.0},
+    },
+    {
+        "id": "DGS10",
+        "name": "10-Year Treasury Yield",
+        "help": "株式の割引率に効く長期金利です。4.5%超でバリュエーションの重荷、5%超で成長株に強い圧力、5.5%超でかなり厳しい金利環境と見ます。",
+        "unit": "%",
+        "frequency": "Daily",
+        "block": "rates",
+        "higher_is_risk": True,
+        "change_unit": "pt",
+        "risk_thresholds": {"watch": 4.5, "high": 5.0, "danger": 5.5},
+    },
+    {
+        "id": "DGS2",
+        "name": "2-Year Treasury Yield",
+        "help": "政策金利見通しに敏感な短期金利です。高止まりすると利下げ期待が後退し、株式市場には逆風です。4.5%超で注意、5%超で高リスク、5.5%超で危険水準と見ます。",
+        "unit": "%",
+        "frequency": "Daily",
+        "block": "rates",
+        "higher_is_risk": True,
+        "change_unit": "pt",
+        "risk_thresholds": {"watch": 4.5, "high": 5.0, "danger": 5.5},
+    },
+    {
+        "id": "FEDFUNDS",
+        "name": "Effective Federal Funds Rate",
+        "help": "米国の実効政策金利です。高いほど株式市場にとっては資金調達・割引率の重荷です。4.5%超で注意、5%超で高リスク、5.5%超でかなり強い逆風と見ます。",
+        "unit": "%",
+        "frequency": "Monthly",
+        "block": "rates",
+        "higher_is_risk": True,
+        "change_unit": "pt",
+        "risk_thresholds": {"watch": 4.5, "high": 5.0, "danger": 5.5},
+    },
+    {
+        "id": "UNRATE",
+        "name": "Unemployment Rate",
+        "help": "米国の失業率です。低すぎる時は利下げしにくく、高すぎる時は景気悪化懸念になります。ここでは景気悪化リスクとして4.5%超で注意、5%超で高リスク、6%超で危険水準と見ます。",
+        "unit": "%",
+        "frequency": "Monthly",
+        "block": "growth",
+        "higher_is_risk": True,
+        "change_unit": "pt",
+        "risk_thresholds": {"watch": 4.5, "high": 5.0, "danger": 6.0},
+    },
+    {
+        "id": "VIXCLS",
+        "name": "CBOE Volatility Index",
+        "help": "株式市場の不安度を見る指数です。20超で不安定、30超で投資家がかなり警戒、40超で急落・危機局面に近い水準です。",
+        "unit": "",
+        "frequency": "Daily",
+        "block": "volatility",
+        "higher_is_risk": True,
+        "change_unit": "",
+        "risk_thresholds": {"watch": 20, "high": 30, "danger": 40},
     },
 ]
 
@@ -250,7 +344,15 @@ def build_indicator(config, observations):
     latest_value = latest["value"]
     previous_change = latest_value - previous["value"]
     yoy = pct_change(latest_value, year_ago["value"]) if year_ago else None
-    risk_basis = yoy if config["id"] == "LNFACBM027SBOG" and yoy is not None else latest_value
+    risk_basis_type = config.get("risk_basis", "latest")
+    if risk_basis_type == "yoy" and yoy is not None:
+        risk_basis = yoy
+    elif risk_basis_type == "previous_change":
+        risk_basis = previous_change
+    elif config["id"] == "LNFACBM027SBOG" and yoy is not None:
+        risk_basis = yoy
+    else:
+        risk_basis = latest_value
     if config.get("higher_is_risk", True):
         risk, risk_class, score = risk_for_value(risk_basis, config["risk_thresholds"])
     else:
@@ -292,6 +394,19 @@ def build_credit_yoy(observations):
     return points[-12:]
 
 
+def build_yoy_series(observations):
+    points = []
+    for index, obs in enumerate(observations):
+        if index < 12:
+            continue
+        year_ago = observations[index - 12]
+        yoy = pct_change(obs["value"], year_ago["value"])
+        if yoy is None:
+            continue
+        points.append({"date": obs["date"][:7], "value": round(yoy, 2)})
+    return points[-12:]
+
+
 def signal_for_block(label, key, indicators):
     help_by_key = {
         "credit": "銀行からノンバンク金融機関への貸出など、信用仲介の拡大を見ます。前年比が高止まりすると過熱、急減速や残高減少に転じると信用収縮リスクです。",
@@ -310,6 +425,27 @@ def signal_for_block(label, key, indicators):
         emoji, text = "🟡", "注意シグナル"
     else:
         emoji, text = "🟢", "落ち着いた状態"
+    return {"key": key, "label": label, "emoji": emoji, "value": text, "help": help_by_key.get(key, "")}
+
+
+def macro_signal_for_block(label, key, indicators):
+    help_by_key = {
+        "inflation": "CPI、Core CPI、PPIでインフレ圧力を見ます。物価が強いほど利下げ期待が後退し、株式市場には逆風になりやすいです。",
+        "rates": "10年金利、2年金利、政策金利で割引率と資金調達コストを見ます。高止まりするほど株式のバリュエーションには重くなります。",
+        "growth": "失業率などで景気悪化リスクを見ます。雇用が急に悪化すると企業業績への警戒が強まります。",
+        "volatility": "VIXで株式市場の不安度を見ます。急上昇は市場がリスクを再評価しているサインです。",
+    }
+    if not indicators:
+        return {"key": key, "label": label, "emoji": "⚪", "value": "データなし", "help": help_by_key.get(key, "")}
+    avg = sum(item["riskScore"] for item in indicators) / len(indicators)
+    if avg >= 80:
+        emoji, text = "🔴", "株式に強い逆風"
+    elif avg >= 60:
+        emoji, text = "🟠", "高めの警戒"
+    elif avg >= 35:
+        emoji, text = "🟡", "注意シグナル"
+    else:
+        emoji, text = "🟢", "株式に比較的落ち着き"
     return {"key": key, "label": label, "emoji": emoji, "value": text, "help": help_by_key.get(key, "")}
 
 
@@ -335,6 +471,26 @@ def weighted_score(indicators):
     return round(score)
 
 
+def weighted_macro_score(indicators):
+    blocks = {
+        "inflation": [item for item in indicators if item["block"] == "inflation"],
+        "rates": [item for item in indicators if item["block"] == "rates"],
+        "growth": [item for item in indicators if item["block"] == "growth"],
+        "volatility": [item for item in indicators if item["block"] == "volatility"],
+    }
+    block_scores = {}
+    for key, items in blocks.items():
+        block_scores[key] = sum(item["riskScore"] for item in items) / len(items) if items else 30
+
+    score = (
+        block_scores["inflation"] * 0.35
+        + block_scores["rates"] * 0.30
+        + block_scores["growth"] * 0.20
+        + block_scores["volatility"] * 0.15
+    )
+    return round(score)
+
+
 def score_from_credit_yoy(yoy_value, non_credit_score):
     risk_score = risk_for_value(
         yoy_value,
@@ -352,10 +508,15 @@ def main():
 
     fetched = {}
     indicators = []
-    for config in SERIES:
-        observations = fred_observations(config["id"], api_key)
-        fetched[config["id"]] = observations
-        indicators.append(build_indicator(config, observations))
+    macro_indicators = []
+    for config in AI_SERIES + MACRO_SERIES:
+        if config["id"] not in fetched:
+            fetched[config["id"]] = fred_observations(config["id"], api_key)
+        indicator = build_indicator(config, fetched[config["id"]])
+        if config in AI_SERIES:
+            indicators.append(indicator)
+        else:
+            macro_indicators.append(indicator)
 
     credit_yoy = build_credit_yoy(fetched["LNFACBM027SBOG"])
     current_score = weighted_score(indicators)
@@ -384,12 +545,48 @@ def main():
         signal_for_block("Liquidity", "liquidity", liquidity_items),
     ]
 
+    macro_score = weighted_macro_score(macro_indicators)
+    macro_cpi_yoy = build_yoy_series(fetched["CPIAUCSL"])
+    non_inflation_macro_score = round(
+        (
+            macro_score
+            - (
+                sum(item["riskScore"] for item in macro_indicators if item["block"] == "inflation")
+                / len([item for item in macro_indicators if item["block"] == "inflation"])
+            )
+            * 0.35
+        )
+        / 0.65
+    )
+    macro_score_history = [
+        {
+            "date": point["date"],
+            "score": round(risk_for_value(point["value"], {"watch": 3.0, "high": 4.0, "danger": 5.0})[2] * 0.35 + non_inflation_macro_score * 0.65),
+        }
+        for point in macro_cpi_yoy
+    ]
+    if macro_score_history:
+        macro_score_history[-1]["score"] = macro_score
+
+    macro_signals = [
+        macro_signal_for_block("Inflation", "inflation", [item for item in macro_indicators if item["block"] == "inflation"]),
+        macro_signal_for_block("Rates", "rates", [item for item in macro_indicators if item["block"] == "rates"]),
+        macro_signal_for_block("Growth", "growth", [item for item in macro_indicators if item["block"] == "growth"]),
+        macro_signal_for_block("Market Volatility", "volatility", [item for item in macro_indicators if item["block"] == "volatility"]),
+    ]
+
     output = {
         "updatedAt": datetime.now(timezone.utc).astimezone().isoformat(timespec="minutes"),
         "scoreHistory": score_history[-12:],
         "creditYoy": credit_yoy,
         "signals": signals,
         "indicators": indicators,
+        "macro": {
+            "scoreHistory": macro_score_history[-12:],
+            "cpiYoy": macro_cpi_yoy,
+            "signals": macro_signals,
+            "indicators": macro_indicators,
+        },
     }
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)

@@ -92,7 +92,7 @@ const sampleData = {
   ]
 };
 
-const dataVersion = "13";
+const dataVersion = "14";
 
 function dataUrl(path) {
   return `${path}?v=${dataVersion}`;
@@ -102,6 +102,13 @@ function getRiskMeta(score) {
   if (score >= 80) return { emoji: "🔴", label: "Danger", phase: "信用収縮警戒", className: "risk-danger" };
   if (score >= 60) return { emoji: "🟠", label: "High Risk", phase: "高めの監視局面", className: "risk-high" };
   if (score >= 35) return { emoji: "🟡", label: "Watch", phase: "注意局面", className: "risk-watch" };
+  return { emoji: "🟢", label: "Calm", phase: "平常", className: "risk-low" };
+}
+
+function getMacroRiskMeta(score) {
+  if (score >= 75) return { emoji: "🔴", label: "Danger", phase: "株式に強い逆風", className: "risk-danger" };
+  if (score >= 55) return { emoji: "🟠", label: "High Watch", phase: "高めの警戒局面", className: "risk-high" };
+  if (score >= 25) return { emoji: "🟡", label: "Watch", phase: "注意局面", className: "risk-watch" };
   return { emoji: "🟢", label: "Calm", phase: "平常", className: "risk-low" };
 }
 
@@ -126,7 +133,12 @@ const helpText = {
   "NVDA-REVENUE": "NVIDIAの四半期総売上です。Data Centerだけではありませんが、AI需要全体の勢いを見る補助指標です。前年比や前四半期比が急減速すると注意です。",
   "NVDA-GROSS-MARGIN": "NVIDIAの収益性を見る指標です。粗利率が高いほどAI半導体の価格決定力が強い状態です。70%割れで注意、65%割れで競争や在庫圧力を警戒します。",
   "NVDA-REVENUE-OUTLOOK": "次四半期の売上ガイダンスです。AI需要の先行ヒントとして見ます。前四半期比で大きく鈍化、または市場期待を下回る場合はAI需要の減速シグナルです。",
-  "POLYMARKET-AI-BUBBLE": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。"
+  "POLYMARKET-AI-BUBBLE": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
+  CPIAUCSL: "米国の消費者物価指数です。前年比が3%を超えるとインフレ再燃を意識しやすく、4%超で株式市場には金利高止まりリスク、5%超でかなり強い逆風と見ます。",
+  CPILFESL: "食品とエネルギーを除いた物価指数です。粘着的なインフレを見るため重要です。前年比3%超で注意、4%超で金融引き締め長期化、5%超で株式市場には強い逆風と見ます。",
+  PPIACO: "企業側の仕入れ・生産コストを見る物価指数です。CPIに先行してインフレ圧力を示すことがあります。前年比3%超で注意、5%超で高リスク、8%超で強いインフレ圧力と見ます。",
+  FEDFUNDS: "米国の実効政策金利です。高いほど株式市場にとっては資金調達・割引率の重荷です。4.5%超で注意、5%超で高リスク、5.5%超でかなり強い逆風と見ます。",
+  UNRATE: "米国の失業率です。低すぎる時は利下げしにくく、高すぎる時は景気悪化懸念になります。ここでは景気悪化リスクとして4.5%超で注意、5%超で高リスク、6%超で危険水準と見ます。"
 };
 
 function helpButton(text) {
@@ -183,6 +195,79 @@ function generateAnalysis(data) {
       "HYスプレッドとSTLFSI4の同時悪化",
       "PolymarketのAIバブル確率が24hで+5pt以上、または7日で+10pt以上に急上昇",
       "NVIDIA Data Center売上成長率と粗利率の鈍化"
+    ]
+  };
+}
+
+function getMacroData(data) {
+  if (data.macro) return data.macro;
+  const macroIndicators = data.indicators.filter(item => ["DGS10", "DGS2", "VIXCLS"].includes(item.id));
+  return {
+    scoreHistory: data.scoreHistory.map(item => ({ ...item })),
+    cpiYoy: [],
+    signals: [
+      { key: "inflation", label: "Inflation", emoji: "⚪", value: "CPI/PPI接続待ち", help: "CPI、Core CPI、PPIでインフレ圧力を見ます。" },
+      { key: "rates", label: "Rates", emoji: "🟡", value: "金利データのみ接続", help: "10年金利、2年金利、政策金利で割引率と資金調達コストを見ます。" },
+      { key: "growth", label: "Growth", emoji: "⚪", value: "雇用データ接続待ち", help: "失業率などで景気悪化リスクを見ます。" },
+      { key: "volatility", label: "Market Volatility", emoji: "🟢", value: "VIXは落ち着き", help: "VIXで株式市場の不安度を見ます。" }
+    ],
+    indicators: macroIndicators
+  };
+}
+
+function generateMacroAnalysis(macro) {
+  const latestScore = macro.scoreHistory.at(-1)?.score ?? 30;
+  const previousScore = macro.scoreHistory.at(-2)?.score ?? latestScore;
+  const delta = latestScore - previousScore;
+  const meta = getMacroRiskMeta(latestScore);
+  const byId = Object.fromEntries(macro.indicators.map(item => [item.id, item]));
+  const cpi = byId.CPIAUCSL;
+  const coreCpi = byId.CPILFESL;
+  const ppi = byId.PPIACO;
+  const dgs10 = byId.DGS10;
+  const fedFunds = byId.FEDFUNDS;
+  const unrate = byId.UNRATE;
+  const vix = byId.VIXCLS;
+  const direction = delta > 2 ? "前回からマクロ警戒度は上昇しています" : delta < -2 ? "前回からマクロ警戒度は低下しています" : "前回から大きな変化はありません";
+
+  const inflationText = cpi
+    ? `CPI前年比は${cpi.yoy}、Core CPIは${coreCpi?.yoy ?? "n/a"}で、インフレが株式市場に与える圧力を確認する局面です`
+    : "CPI/Core CPIデータはまだ接続されていません";
+  const ratesText = dgs10
+    ? `10年金利は${dgs10.latest}、政策金利は${fedFunds?.latest ?? "n/a"}です`
+    : "金利データはまだ接続されていません";
+  const growthText = unrate
+    ? `失業率は${unrate.latest}で、景気悪化リスクの確認材料になります`
+    : "雇用データはまだ接続されていません";
+  const volatilityText = vix
+    ? `VIXは${vix.latest}で、市場心理のストレスを示します`
+    : "VIXデータはまだ接続されていません";
+
+  const up = [];
+  if ((cpi?.yoyRaw ?? 0) >= 3) up.push(`CPI前年比が${cpi.yoy}でインフレ再燃に注意`);
+  if ((coreCpi?.yoyRaw ?? 0) >= 3) up.push(`Core CPI前年比が${coreCpi.yoy}で粘着的な物価圧力に注意`);
+  if ((ppi?.yoyRaw ?? 0) >= 3) up.push(`PPI前年比が${ppi.yoy}で企業コスト上昇に注意`);
+  if ((dgs10?.latestRaw ?? 0) >= 4.5) up.push(`10年金利が${dgs10.latest}で株式バリュエーションの重荷`);
+  if ((fedFunds?.latestRaw ?? 0) >= 4.5) up.push(`政策金利が${fedFunds.latest}で金融環境はまだ引き締まり気味`);
+  if ((unrate?.latestRaw ?? 0) >= 4.5) up.push(`失業率が${unrate.latest}で景気悪化リスクに注意`);
+  if ((vix?.latestRaw ?? 0) >= 20) up.push(`VIXが${vix.latest}で市場心理が不安定`);
+
+  const down = [];
+  if ((cpi?.yoyRaw ?? 99) < 3) down.push(`CPI前年比は${cpi?.yoy ?? "n/a"}で過度なインフレ警戒ではない`);
+  if ((dgs10?.latestRaw ?? 99) < 4.5) down.push(`10年金利は${dgs10?.latest ?? "n/a"}で警戒水準を下回る`);
+  if ((vix?.latestRaw ?? 99) < 20) down.push(`VIXは${vix?.latest ?? "n/a"}で市場心理は比較的落ち着き`);
+  if ((unrate?.latestRaw ?? 99) < 4.5) down.push(`失業率は${unrate?.latest ?? "n/a"}で雇用悪化はまだ限定的`);
+
+  return {
+    main: `${meta.phase}です。${inflationText}。${ratesText}。${growthText}。${volatilityText}。${direction}。株式市場を見るうえでは、インフレ鈍化と金利低下は追い風、インフレ再加速・金利上昇・雇用悪化・VIX上昇が重なる場合は警戒度を引き上げます。`,
+    up: up.length ? up : ["現時点で強い逆風は限定的です"],
+    down: down.length ? down : ["株式を明確に支えるマクロ要因はまだ限定的です"],
+    watch: [
+      "CPI/Core CPI/PPIの前年比が再加速するか",
+      "10年金利が4.5%を明確に上回って定着するか",
+      "失業率の上昇と企業業績見通しの悪化が同時に起きるか",
+      "VIXが20超、30超へ急上昇するか",
+      "利下げ期待が株式市場を支えられるか"
     ]
   };
 }
@@ -306,8 +391,8 @@ function getNextScheduledUpdate(now = new Date()) {
   return `${formatDate(candidate.toISOString())}頃`;
 }
 
-function renderSignals(signals) {
-  document.querySelector("#signal-grid").innerHTML = signals.map(signal => `
+function renderSignals(signals, selector = "#signal-grid") {
+  document.querySelector(selector).innerHTML = signals.map(signal => `
     <article class="signal-card">
       <div class="signal-top">
         <span class="section-label">${signal.key}</span>
@@ -322,8 +407,8 @@ function renderSignals(signals) {
   `).join("");
 }
 
-function renderTable(indicators) {
-  document.querySelector("#indicator-table").innerHTML = indicators.map(item => `
+function renderTable(indicators, selector = "#indicator-table") {
+  document.querySelector(selector).innerHTML = indicators.map(item => `
     <tr>
       <td>
         <div class="indicator-name">
@@ -412,11 +497,29 @@ function renderSparkline(data) {
   renderLineChart("#sparkline", data, "score", { color: "#e66f2d", label: "risk sparkline" });
 }
 
+function initTabs() {
+  document.querySelectorAll(".tab-button").forEach(button => {
+    button.addEventListener("click", () => {
+      const target = button.dataset.tab;
+      document.querySelectorAll(".tab-button").forEach(item => {
+        item.classList.toggle("is-active", item === button);
+      });
+      document.querySelectorAll(".tab-panel").forEach(panel => {
+        panel.classList.toggle("is-active", panel.id === `${target}-panel`);
+      });
+    });
+  });
+}
+
 async function render() {
   const data = await loadData();
+  const macro = getMacroData(data);
   const latestScore = data.scoreHistory.at(-1).score;
   const meta = getRiskMeta(latestScore);
   const analysis = generateAnalysis(data);
+  const macroScore = macro.scoreHistory.at(-1)?.score ?? 30;
+  const macroMeta = getMacroRiskMeta(macroScore);
+  const macroAnalysis = generateMacroAnalysis(macro);
 
   document.querySelector("#last-updated").textContent = formatDate(data.updatedAt);
   document.querySelector("#next-update").textContent = getNextScheduledUpdate();
@@ -435,6 +538,22 @@ async function render() {
   renderList("#risk-up-list", analysis.up);
   renderList("#risk-down-list", analysis.down);
   renderList("#watch-list", analysis.watch);
+
+  document.querySelector("#macro-emoji").textContent = macroMeta.emoji;
+  document.querySelector("#macro-score").textContent = macroScore;
+  document.querySelector("#macro-label").textContent = macroMeta.label;
+  document.querySelector("#macro-phase-label").textContent = macroMeta.phase;
+  document.querySelector("#macro-status-summary").textContent = macroAnalysis.main.split("。").slice(0, 2).join("。") + "。";
+  document.querySelector("#macro-analysis-main").textContent = macroAnalysis.main;
+  renderSignals(macro.signals, "#macro-signal-grid");
+  renderLineChart("#macro-sparkline", macro.scoreHistory, "score", { color: "#2f6fed", label: "macro sparkline" });
+  renderLineChart("#macro-risk-chart", macro.scoreHistory, "score", { color: "#2f6fed", suffix: "", thresholds: true });
+  renderLineChart("#macro-cpi-chart", macro.cpiYoy.length ? macro.cpiYoy : [{ date: "2026-01", value: 0 }], "value", { color: "#e66f2d", suffix: "%" });
+  renderTable(macro.indicators, "#macro-indicator-table");
+  renderList("#macro-risk-up-list", macroAnalysis.up);
+  renderList("#macro-risk-down-list", macroAnalysis.down);
+  renderList("#macro-watch-list", macroAnalysis.watch);
 }
 
+initTabs();
 render();
