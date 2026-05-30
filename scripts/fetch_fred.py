@@ -198,6 +198,65 @@ MACRO_SERIES = [
         "risk_thresholds": {"watch": 4.5, "high": 5.0, "danger": 6.0},
     },
     {
+        "id": "A191RL1Q225SBEA",
+        "name": "Real GDP Growth Rate",
+        "help": "米国の実質GDP成長率、四半期年率です。株式市場では景気の体温計として見ます。0%割れで景気後退リスクに注意、-1%割れで高リスク、-2%割れで企業業績への強い逆風と見ます。",
+        "unit": "%",
+        "frequency": "Quarterly",
+        "block": "growth",
+        "higher_is_risk": False,
+        "change_unit": "pt",
+        "show_yoy": False,
+        "risk_thresholds": {"watch": 0.0, "high": -1.0, "danger": -2.0},
+    },
+    {
+        "id": "PAYEMS",
+        "name": "Nonfarm Payrolls",
+        "help": "米国の非農業部門雇用者数です。前月からの増加幅で雇用の勢いを見ます。+100K割れで注意、0K割れで高リスク、-100K割れで景気後退リスクを強く警戒します。",
+        "unit": "K_PEOPLE",
+        "frequency": "Monthly",
+        "block": "growth",
+        "higher_is_risk": False,
+        "change_unit": "K",
+        "risk_basis": "previous_change",
+        "show_yoy": False,
+        "risk_thresholds": {"watch": 100, "high": 0, "danger": -100},
+    },
+    {
+        "id": "ICSA",
+        "name": "Initial Jobless Claims",
+        "help": "新規失業保険申請件数です。雇用悪化の早めのサインとして見ます。250K超で注意、300K超で高リスク、350K超で景気悪化を強く警戒します。",
+        "unit": "K_RAW",
+        "frequency": "Weekly",
+        "block": "growth",
+        "higher_is_risk": True,
+        "change_unit": "K_RAW",
+        "risk_thresholds": {"watch": 250000, "high": 300000, "danger": 350000},
+    },
+    {
+        "id": "RSAFS",
+        "name": "Retail Sales",
+        "help": "米国の小売売上高です。消費の強さを見ます。前年比0%割れで注意、-2%割れで高リスク、-5%割れで消費悪化を強く警戒します。",
+        "unit": "M",
+        "frequency": "Monthly",
+        "block": "growth",
+        "higher_is_risk": False,
+        "change_unit": "%",
+        "risk_basis": "yoy",
+        "risk_thresholds": {"watch": 0.0, "high": -2.0, "danger": -5.0},
+    },
+    {
+        "id": "T10YIE",
+        "name": "10-Year Breakeven Inflation Rate",
+        "help": "市場が織り込む10年期待インフレ率です。2.5%超でインフレ期待の高まりに注意、3%超で高リスク、3.5%超で金利上昇圧力を強く警戒します。",
+        "unit": "%",
+        "frequency": "Daily",
+        "block": "inflation",
+        "higher_is_risk": True,
+        "change_unit": "pt",
+        "risk_thresholds": {"watch": 2.5, "high": 3.0, "danger": 3.5},
+    },
+    {
         "id": "VIXCLS",
         "name": "CBOE Volatility Index",
         "help": "株式市場の不安度を見る指数です。20超で不安定、30超で投資家がかなり警戒、40超で急落・危機局面に近い水準です。",
@@ -304,6 +363,10 @@ def risk_for_low_value(value, thresholds):
 
 
 def format_value(value, unit):
+    if unit == "K_PEOPLE":
+        return f"{value / 1000:.1f}M"
+    if unit == "K_RAW":
+        return f"{value / 1000:.0f}K"
     if unit == "M":
         billions = value / 1000
         if abs(billions) >= 1000:
@@ -333,6 +396,10 @@ def format_change(value, unit, source_unit=None):
         if abs(display_value) >= 10:
             return f"{sign}{display_value:.0f}B"
         return f"{sign}{display_value:.1f}B"
+    if unit == "K":
+        return f"{sign}{value:.0f}K"
+    if unit == "K_RAW":
+        return f"{sign}{value / 1000:.0f}K"
     return f"{sign}{value:.2f}"
 
 
@@ -371,8 +438,8 @@ def build_indicator(config, observations):
             config["unit"],
         ),
         "previousChangeRaw": previous_change,
-        "yoy": format_change(yoy, "%") if yoy is not None else "n/a",
-        "yoyRaw": yoy,
+        "yoy": format_change(yoy, "%") if yoy is not None and config.get("show_yoy", True) else "n/a",
+        "yoyRaw": yoy if config.get("show_yoy", True) else None,
         "risk": risk,
         "riskClass": risk_class,
         "riskScore": score,
@@ -432,7 +499,7 @@ def macro_signal_for_block(label, key, indicators):
     help_by_key = {
         "inflation": "CPI、Core CPI、PPIでインフレ圧力を見ます。物価が強いほど利下げ期待が後退し、株式市場には逆風になりやすいです。",
         "rates": "10年金利、2年金利、政策金利で割引率と資金調達コストを見ます。高止まりするほど株式のバリュエーションには重くなります。",
-        "growth": "失業率などで景気悪化リスクを見ます。雇用が急に悪化すると企業業績への警戒が強まります。",
+        "growth": "実質GDP成長率と失業率で景気悪化リスクを見ます。成長率の失速や雇用悪化は企業業績への警戒につながります。",
         "volatility": "VIXで株式市場の不安度を見ます。急上昇は市場がリスクを再評価しているサインです。",
     }
     if not indicators:

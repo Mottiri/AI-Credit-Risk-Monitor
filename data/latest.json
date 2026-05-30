@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-30T14:14+09:00",
+  "updatedAt": "2026-05-30T15:02+09:00",
   "scoreHistory": [
     {
       "date": "2025-05",
@@ -140,7 +140,7 @@
       "key": "prediction",
       "label": "Prediction Market",
       "emoji": "🟡",
-      "value": "AIバブル崩壊予測 22.2%",
+      "value": "AIバブル崩壊予測 21.3%",
       "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
     }
   ],
@@ -452,13 +452,13 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "22.2%",
-      "latestRaw": 22.2,
-      "date": "2026-05-30T05:02:12.960282Z",
-      "previousChange": "+0.1pt / 24h",
-      "previousChangeRaw": 0.1,
-      "yoy": "+1.1pt / 7d",
-      "yoyRaw": 1.05,
+      "latest": "21.3%",
+      "latestRaw": 21.349999999999998,
+      "date": "2026-05-30T05:53:37.999826Z",
+      "previousChange": "-0.7pt / 24h",
+      "previousChangeRaw": -0.65,
+      "yoy": "+0.2pt / 7d",
+      "yoyRaw": 0.2,
       "risk": "🟡",
       "riskClass": "risk-watch",
       "riskScore": 45,
@@ -467,11 +467,11 @@
       "volume24h": "$1.8K",
       "volume1wk": "$7.9K",
       "totalVolume": "$2.3M",
-      "liquidity": "$13.3K",
+      "liquidity": "$13.6K",
       "bestBid": 0.205,
-      "bestAsk": 0.239,
-      "spread": 0.034,
-      "oneMonthChange": 6.3
+      "bestAsk": 0.222,
+      "spread": 0.017,
+      "oneMonthChange": 5.45
     }
   ],
   "macro": {
@@ -522,7 +522,7 @@
       },
       {
         "date": "2026-04",
-        "score": 31
+        "score": 28
       }
     ],
     "cpiYoy": [
@@ -595,7 +595,7 @@
         "label": "Growth",
         "emoji": "🟢",
         "value": "株式に比較的落ち着き",
-        "help": "失業率などで景気悪化リスクを見ます。雇用が急に悪化すると企業業績への警戒が強まります。"
+        "help": "実質GDP成長率と失業率で景気悪化リスクを見ます。成長率の失速や雇用悪化は企業業績への警戒につながります。"
       },
       {
         "key": "volatility",
@@ -724,6 +724,91 @@
         "riskScore": 20,
         "nextRelease": "Monthly",
         "block": "growth"
+      },
+      {
+        "id": "A191RL1Q225SBEA",
+        "name": "Real GDP Growth Rate",
+        "help": "米国の実質GDP成長率、四半期年率です。株式市場では景気の体温計として見ます。0%割れで景気後退リスクに注意、-1%割れで高リスク、-2%割れで企業業績への強い逆風と見ます。",
+        "latest": "1.60%",
+        "latestRaw": 1.6,
+        "date": "2026-01-01",
+        "previousChange": "+1.10pt",
+        "previousChangeRaw": 1.1,
+        "yoy": "n/a",
+        "yoyRaw": null,
+        "risk": "🟢",
+        "riskClass": "risk-low",
+        "riskScore": 20,
+        "nextRelease": "Quarterly",
+        "block": "growth"
+      },
+      {
+        "id": "PAYEMS",
+        "name": "Nonfarm Payrolls",
+        "help": "米国の非農業部門雇用者数です。前月からの増加幅で雇用の勢いを見ます。+100K割れで注意、0K割れで高リスク、-100K割れで景気後退リスクを強く警戒します。",
+        "latest": "158.7M",
+        "latestRaw": 158736.0,
+        "date": "2026-04-01",
+        "previousChange": "+115K",
+        "previousChangeRaw": 115.0,
+        "yoy": "n/a",
+        "yoyRaw": null,
+        "risk": "🟢",
+        "riskClass": "risk-low",
+        "riskScore": 20,
+        "nextRelease": "Monthly",
+        "block": "growth"
+      },
+      {
+        "id": "ICSA",
+        "name": "Initial Jobless Claims",
+        "help": "新規失業保険申請件数です。雇用悪化の早めのサインとして見ます。250K超で注意、300K超で高リスク、350K超で景気悪化を強く警戒します。",
+        "latest": "215K",
+        "latestRaw": 215000.0,
+        "date": "2026-05-23",
+        "previousChange": "+5K",
+        "previousChangeRaw": 5000.0,
+        "yoy": "-11.9%",
+        "yoyRaw": -11.88524590163934,
+        "risk": "🟢",
+        "riskClass": "risk-low",
+        "riskScore": 20,
+        "nextRelease": "Weekly",
+        "block": "growth"
+      },
+      {
+        "id": "RSAFS",
+        "name": "Retail Sales",
+        "help": "米国の小売売上高です。消費の強さを見ます。前年比0%割れで注意、-2%割れで高リスク、-5%割れで消費悪化を強く警戒します。",
+        "latest": "757B",
+        "latestRaw": 757085.0,
+        "date": "2026-04-01",
+        "previousChange": "+0.5%",
+        "previousChangeRaw": 3715.0,
+        "yoy": "+4.9%",
+        "yoyRaw": 4.873507936661858,
+        "risk": "🟢",
+        "riskClass": "risk-low",
+        "riskScore": 20,
+        "nextRelease": "Monthly",
+        "block": "growth"
+      },
+      {
+        "id": "T10YIE",
+        "name": "10-Year Breakeven Inflation Rate",
+        "help": "市場が織り込む10年期待インフレ率です。2.5%超でインフレ期待の高まりに注意、3%超で高リスク、3.5%超で金利上昇圧力を強く警戒します。",
+        "latest": "2.39%",
+        "latestRaw": 2.39,
+        "date": "2026-05-28",
+        "previousChange": "0.00pt",
+        "previousChangeRaw": 0.0,
+        "yoy": "+2.1%",
+        "yoyRaw": 2.1367521367521514,
+        "risk": "🟢",
+        "riskClass": "risk-low",
+        "riskScore": 20,
+        "nextRelease": "Daily",
+        "block": "inflation"
       },
       {
         "id": "VIXCLS",

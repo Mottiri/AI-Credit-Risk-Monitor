@@ -138,7 +138,14 @@ const helpText = {
   CPILFESL: "食品とエネルギーを除いた物価指数です。粘着的なインフレを見るため重要です。前年比3%超で注意、4%超で金融引き締め長期化、5%超で株式市場には強い逆風と見ます。",
   PPIACO: "企業側の仕入れ・生産コストを見る物価指数です。CPIに先行してインフレ圧力を示すことがあります。前年比3%超で注意、5%超で高リスク、8%超で強いインフレ圧力と見ます。",
   FEDFUNDS: "米国の実効政策金利です。高いほど株式市場にとっては資金調達・割引率の重荷です。4.5%超で注意、5%超で高リスク、5.5%超でかなり強い逆風と見ます。",
-  UNRATE: "米国の失業率です。低すぎる時は利下げしにくく、高すぎる時は景気悪化懸念になります。ここでは景気悪化リスクとして4.5%超で注意、5%超で高リスク、6%超で危険水準と見ます。"
+  UNRATE: "米国の失業率です。低すぎる時は利下げしにくく、高すぎる時は景気悪化懸念になります。ここでは景気悪化リスクとして4.5%超で注意、5%超で高リスク、6%超で危険水準と見ます。",
+  A191RL1Q225SBEA: "米国の実質GDP成長率、四半期年率です。株式市場では景気の体温計として見ます。0%割れで景気後退リスクに注意、-1%割れで高リスク、-2%割れで企業業績への強い逆風と見ます。",
+  PAYEMS: "米国の非農業部門雇用者数です。前月からの増加幅で雇用の勢いを見ます。+100K割れで注意、0K割れで高リスク、-100K割れで景気後退リスクを強く警戒します。",
+  ICSA: "新規失業保険申請件数です。雇用悪化の早めのサインとして見ます。250K超で注意、300K超で高リスク、350K超で景気悪化を強く警戒します。",
+  RSAFS: "米国の小売売上高です。消費の強さを見ます。前年比0%割れで注意、-2%割れで高リスク、-5%割れで消費悪化を強く警戒します。",
+  T10YIE: "市場が織り込む10年期待インフレ率です。2.5%超でインフレ期待の高まりに注意、3%超で高リスク、3.5%超で金利上昇圧力を強く警戒します。",
+  "BIGTECH-REVENUE-TOTAL": "Big Tech 4社の四半期売上合計です。株式市場では企業業績の底堅さを見る材料です。前年比が5%割れで注意、0%割れで業績悪化リスクを強く警戒します。",
+  "BIGTECH-OPERATING-MARGIN": "Big Tech 4社の営業利益率です。売上だけでなく収益性が保たれているかを見ます。22%割れで注意、15%割れで企業利益への強い逆風と見ます。"
 };
 
 function helpButton(text) {
@@ -208,7 +215,7 @@ function getMacroData(data) {
     signals: [
       { key: "inflation", label: "Inflation", emoji: "⚪", value: "CPI/PPI接続待ち", help: "CPI、Core CPI、PPIでインフレ圧力を見ます。" },
       { key: "rates", label: "Rates", emoji: "🟡", value: "金利データのみ接続", help: "10年金利、2年金利、政策金利で割引率と資金調達コストを見ます。" },
-      { key: "growth", label: "Growth", emoji: "⚪", value: "雇用データ接続待ち", help: "失業率などで景気悪化リスクを見ます。" },
+      { key: "growth", label: "Growth", emoji: "⚪", value: "GDP/雇用データ接続待ち", help: "実質GDP成長率と失業率で景気悪化リスクを見ます。" },
       { key: "volatility", label: "Market Volatility", emoji: "🟢", value: "VIXは落ち着き", help: "VIXで株式市場の不安度を見ます。" }
     ],
     indicators: macroIndicators
@@ -227,45 +234,70 @@ function generateMacroAnalysis(macro) {
   const dgs10 = byId.DGS10;
   const fedFunds = byId.FEDFUNDS;
   const unrate = byId.UNRATE;
+  const gdpGrowth = byId.A191RL1Q225SBEA;
+  const payrolls = byId.PAYEMS;
+  const joblessClaims = byId.ICSA;
+  const retailSales = byId.RSAFS;
+  const breakevenInflation = byId.T10YIE;
+  const bigTechRevenue = byId["BIGTECH-REVENUE-TOTAL"];
+  const bigTechMargin = byId["BIGTECH-OPERATING-MARGIN"];
   const vix = byId.VIXCLS;
   const direction = delta > 2 ? "前回からマクロ警戒度は上昇しています" : delta < -2 ? "前回からマクロ警戒度は低下しています" : "前回から大きな変化はありません";
 
   const inflationText = cpi
-    ? `CPI前年比は${cpi.yoy}、Core CPIは${coreCpi?.yoy ?? "n/a"}で、インフレが株式市場に与える圧力を確認する局面です`
+    ? `CPI前年比は${cpi.yoy}、Core CPIは${coreCpi?.yoy ?? "n/a"}、10年期待インフレ率は${breakevenInflation?.latest ?? "n/a"}で、インフレが株式市場に与える圧力を確認する局面です`
     : "CPI/Core CPIデータはまだ接続されていません";
   const ratesText = dgs10
     ? `10年金利は${dgs10.latest}、政策金利は${fedFunds?.latest ?? "n/a"}です`
     : "金利データはまだ接続されていません";
   const growthText = unrate
-    ? `失業率は${unrate.latest}で、景気悪化リスクの確認材料になります`
+    ? `実質GDP成長率は${gdpGrowth?.latest ?? "n/a"}、雇用者数の前月比は${payrolls?.previousChange ?? "n/a"}、失業保険申請は${joblessClaims?.latest ?? "n/a"}、小売売上前年比は${retailSales?.yoy ?? "n/a"}です`
     : "雇用データはまだ接続されていません";
   const volatilityText = vix
     ? `VIXは${vix.latest}で、市場心理のストレスを示します`
     : "VIXデータはまだ接続されていません";
+  const earningsText = bigTechRevenue
+    ? `Big Tech売上合計は${bigTechRevenue.latest}、前年比${bigTechRevenue.yoy}、営業利益率は${bigTechMargin?.latest ?? "n/a"}です`
+    : "SEC企業業績データはまだ接続されていません";
 
   const up = [];
   if ((cpi?.yoyRaw ?? 0) >= 3) up.push(`CPI前年比が${cpi.yoy}でインフレ再燃に注意`);
   if ((coreCpi?.yoyRaw ?? 0) >= 3) up.push(`Core CPI前年比が${coreCpi.yoy}で粘着的な物価圧力に注意`);
   if ((ppi?.yoyRaw ?? 0) >= 3) up.push(`PPI前年比が${ppi.yoy}で企業コスト上昇に注意`);
+  if ((breakevenInflation?.latestRaw ?? 0) >= 2.5) up.push(`10年期待インフレ率が${breakevenInflation.latest}で金利上昇圧力に注意`);
   if ((dgs10?.latestRaw ?? 0) >= 4.5) up.push(`10年金利が${dgs10.latest}で株式バリュエーションの重荷`);
   if ((fedFunds?.latestRaw ?? 0) >= 4.5) up.push(`政策金利が${fedFunds.latest}で金融環境はまだ引き締まり気味`);
   if ((unrate?.latestRaw ?? 0) >= 4.5) up.push(`失業率が${unrate.latest}で景気悪化リスクに注意`);
+  if ((gdpGrowth?.latestRaw ?? 99) < 0) up.push(`実質GDP成長率が${gdpGrowth.latest}で景気減速に注意`);
+  if ((payrolls?.previousChangeRaw ?? 999) < 100) up.push(`雇用者数の前月比が${payrolls.previousChange}で雇用の勢いに注意`);
+  if ((joblessClaims?.latestRaw ?? 0) >= 250000) up.push(`新規失業保険申請が${joblessClaims.latest}で雇用悪化の早期サインに注意`);
+  if ((retailSales?.yoyRaw ?? 99) < 0) up.push(`小売売上前年比が${retailSales.yoy}で消費減速に注意`);
+  if ((bigTechRevenue?.yoyRaw ?? 99) < 5) up.push(`Big Tech売上前年比が${bigTechRevenue.yoy}で企業業績の鈍化に注意`);
+  if ((bigTechMargin?.latestRaw ?? 99) < 22) up.push(`Big Tech営業利益率が${bigTechMargin.latest}で収益性低下に注意`);
   if ((vix?.latestRaw ?? 0) >= 20) up.push(`VIXが${vix.latest}で市場心理が不安定`);
 
   const down = [];
   if ((cpi?.yoyRaw ?? 99) < 3) down.push(`CPI前年比は${cpi?.yoy ?? "n/a"}で過度なインフレ警戒ではない`);
+  if ((breakevenInflation?.latestRaw ?? 99) < 2.5) down.push(`10年期待インフレ率は${breakevenInflation?.latest ?? "n/a"}で市場のインフレ期待は抑制的`);
   if ((dgs10?.latestRaw ?? 99) < 4.5) down.push(`10年金利は${dgs10?.latest ?? "n/a"}で警戒水準を下回る`);
   if ((vix?.latestRaw ?? 99) < 20) down.push(`VIXは${vix?.latest ?? "n/a"}で市場心理は比較的落ち着き`);
   if ((unrate?.latestRaw ?? 99) < 4.5) down.push(`失業率は${unrate?.latest ?? "n/a"}で雇用悪化はまだ限定的`);
+  if ((gdpGrowth?.latestRaw ?? -99) >= 1.5) down.push(`実質GDP成長率は${gdpGrowth.latest}で景気はまだ底堅い`);
+  if ((retailSales?.yoyRaw ?? -99) >= 2) down.push(`小売売上前年比は${retailSales.yoy}で消費は底堅い`);
+  if ((bigTechRevenue?.yoyRaw ?? -99) >= 5) down.push(`Big Tech売上前年比は${bigTechRevenue.yoy}で企業業績は底堅い`);
+  if ((bigTechMargin?.latestRaw ?? 0) >= 22) down.push(`Big Tech営業利益率は${bigTechMargin.latest}で収益性は維持されている`);
 
   return {
-    main: `${meta.phase}です。${inflationText}。${ratesText}。${growthText}。${volatilityText}。${direction}。株式市場を見るうえでは、インフレ鈍化と金利低下は追い風、インフレ再加速・金利上昇・雇用悪化・VIX上昇が重なる場合は警戒度を引き上げます。`,
+    main: `${meta.phase}です。${inflationText}。${ratesText}。${growthText}。${earningsText}。${volatilityText}。${direction}。株式市場を見るうえでは、インフレ鈍化と金利低下は追い風、インフレ再加速・金利上昇・雇用悪化・企業業績鈍化・VIX上昇が重なる場合は警戒度を引き上げます。`,
     up: up.length ? up : ["現時点で強い逆風は限定的です"],
     down: down.length ? down : ["株式を明確に支えるマクロ要因はまだ限定的です"],
     watch: [
       "CPI/Core CPI/PPIの前年比が再加速するか",
+      "10年期待インフレ率が2.5%を超えて上昇するか",
       "10年金利が4.5%を明確に上回って定着するか",
-      "失業率の上昇と企業業績見通しの悪化が同時に起きるか",
+      "GDP成長率の鈍化、雇用者数の減速、失業保険申請の増加が同時に起きるか",
+      "小売売上が前年比マイナスへ転じるか",
+      "Big Techの売上成長率と営業利益率が同時に悪化するか",
       "VIXが20超、30超へ急上昇するか",
       "利下げ期待が株式市場を支えられるか"
     ]

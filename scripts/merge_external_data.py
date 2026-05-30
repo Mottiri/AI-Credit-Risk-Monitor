@@ -45,6 +45,23 @@ def demand_signal(items):
     }
 
 
+def macro_earnings_signal(items):
+    avg = average_score(items)
+    if avg >= 70:
+        emoji, value = "🔴", "企業業績に強い逆風"
+    elif avg >= 40:
+        emoji, value = "🟡", "企業業績の鈍化に注意"
+    else:
+        emoji, value = "🟢", "企業業績は底堅い"
+    return {
+        "key": "earnings",
+        "label": "Corporate Earnings",
+        "emoji": emoji,
+        "value": value,
+        "help": "SEC CompanyfactsからBig Techの売上成長率と営業利益率を見ます。マクロ環境が株式市場に効いているかを企業業績側から確認します。",
+    }
+
+
 def merge():
     latest = read_json(LATEST_PATH)
     if latest is None:
@@ -96,6 +113,24 @@ def merge():
         if polymarket.get("signal"):
             signals = replace_signal(signals, polymarket["signal"])
         merged.append("polymarket")
+
+    if big_tech_capex and latest.get("macro"):
+        macro_indicators = big_tech_capex.get("macroIndicators", [])
+        if macro_indicators:
+            latest["macro"]["indicators"] = [
+                item
+                for item in latest["macro"].get("indicators", [])
+                if item.get("block") != "earnings"
+            ] + macro_indicators
+            latest["macro"]["signals"] = replace_signal(
+                latest["macro"].get("signals", []),
+                macro_earnings_signal(macro_indicators),
+            )
+            if latest["macro"].get("scoreHistory"):
+                earnings_score = average_score(macro_indicators)
+                latest["macro"]["scoreHistory"][-1]["score"] = round(
+                    latest["macro"]["scoreHistory"][-1]["score"] * 0.9 + earnings_score * 0.1
+                )
 
     latest["baseScoreHistory"] = base_score_history
     latest["scoreHistory"] = score_history

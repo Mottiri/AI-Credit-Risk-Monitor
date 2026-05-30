@@ -23,6 +23,8 @@ COMPANIES = [
         "cik": "0000789019",
         "fiscal_start": "07-01",
         "tags": ["PaymentsToAcquirePropertyPlantAndEquipment"],
+        "revenue_tags": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"],
+        "operating_income_tags": ["OperatingIncomeLoss"],
     },
     {
         "ticker": "GOOGL",
@@ -30,6 +32,8 @@ COMPANIES = [
         "cik": "0001652044",
         "fiscal_start": "01-01",
         "tags": ["PaymentsToAcquirePropertyPlantAndEquipment"],
+        "revenue_tags": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"],
+        "operating_income_tags": ["OperatingIncomeLoss"],
     },
     {
         "ticker": "META",
@@ -37,6 +41,8 @@ COMPANIES = [
         "cik": "0001326801",
         "fiscal_start": "01-01",
         "tags": ["PaymentsToAcquirePropertyPlantAndEquipment"],
+        "revenue_tags": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"],
+        "operating_income_tags": ["OperatingIncomeLoss"],
     },
     {
         "ticker": "AMZN",
@@ -47,6 +53,8 @@ COMPANIES = [
             "PaymentsToAcquireProductiveAssets",
             "PaymentsToAcquirePropertyPlantAndEquipment",
         ],
+        "revenue_tags": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"],
+        "operating_income_tags": ["OperatingIncomeLoss"],
     },
 ]
 
@@ -107,6 +115,15 @@ def latest_by_key(items, key_fn):
 
 def extract_quarterly_capex(company, facts):
     tag, units = preferred_units(facts.get("facts", {}), company["tags"])
+    return tag, extract_quarterly_usd(company, tag, units)
+
+
+def extract_quarterly_usd_fact(company, facts, tags):
+    tag, units = preferred_units(facts.get("facts", {}), tags)
+    return tag, extract_quarterly_usd(company, tag, units)
+
+
+def extract_quarterly_usd(company, tag, units):
     candidates = [
         item
         for item in units
@@ -168,7 +185,7 @@ def extract_quarterly_capex(company, facts):
             previous_value = float(item["val"])
             previous_end = end
 
-    return tag, dict(sorted(quarterly.items(), key=lambda entry: quarter_sort_key(entry[0])))
+    return dict(sorted(quarterly.items(), key=lambda entry: quarter_sort_key(entry[0])))
 
 
 def pct_change(current, previous):
@@ -270,18 +287,106 @@ def signal_from_indicators(indicators):
     }
 
 
+def risk_for_revenue_growth(yoy):
+    if yoy is not None and yoy < 0:
+        return "🔴", "risk-danger", 80
+    if yoy is not None and yoy < 5:
+        return "🟡", "risk-watch", 45
+    return "🟢", "risk-low", 20
+
+
+def risk_for_operating_margin(margin):
+    if margin < 15:
+        return "🔴", "risk-danger", 80
+    if margin < 22:
+        return "🟡", "risk-watch", 45
+    return "🟢", "risk-low", 20
+
+
+def sec_macro_indicators(latest_label, revenue_totals, operating_income_totals):
+    labels = sorted(set(revenue_totals) & set(operating_income_totals), key=quarter_sort_key)
+    latest_value = revenue_totals[latest_label]
+    previous_label = labels[labels.index(latest_label) - 1] if labels.index(latest_label) > 0 else None
+    year_ago_label = f"{int(latest_label[:4]) - 1}Q{latest_label[-1]}"
+    revenue_qoq = pct_change(latest_value, revenue_totals.get(previous_label))
+    revenue_yoy = pct_change(latest_value, revenue_totals.get(year_ago_label))
+    operating_income = operating_income_totals[latest_label]
+    operating_margin = operating_income / latest_value * 100 if latest_value else 0
+    margin_previous = (
+        operating_income_totals[previous_label] / revenue_totals[previous_label] * 100
+        if previous_label and revenue_totals.get(previous_label)
+        else None
+    )
+    margin_change = operating_margin - margin_previous if margin_previous is not None else None
+    revenue_risk, revenue_class, revenue_score = risk_for_revenue_growth(revenue_yoy)
+    margin_risk, margin_class, margin_score = risk_for_operating_margin(operating_margin)
+    return [
+        {
+            "id": "BIGTECH-REVENUE-TOTAL",
+            "name": "Microsoft + Alphabet + Meta + Amazon Revenue",
+            "help": "Big Tech 4社の四半期売上合計です。株式市場では企業業績の底堅さを見る材料です。前年比が5%割れで注意、0%割れで業績悪化リスクを強く警戒します。",
+            "latest": format_usd(latest_value),
+            "latestRaw": latest_value,
+            "date": latest_label,
+            "previousChange": format_pct(revenue_qoq),
+            "previousChangeRaw": revenue_qoq,
+            "yoy": format_pct(revenue_yoy),
+            "yoyRaw": revenue_yoy,
+            "risk": revenue_risk,
+            "riskClass": revenue_class,
+            "riskScore": revenue_score,
+            "nextRelease": "Quarterly",
+            "block": "earnings",
+        },
+        {
+            "id": "BIGTECH-OPERATING-MARGIN",
+            "name": "Microsoft + Alphabet + Meta + Amazon Operating Margin",
+            "help": "Big Tech 4社の営業利益率です。売上だけでなく収益性が保たれているかを見ます。22%割れで注意、15%割れで企業利益への強い逆風と見ます。",
+            "latest": f"{operating_margin:.1f}%",
+            "latestRaw": operating_margin,
+            "date": latest_label,
+            "previousChange": format_point(margin_change),
+            "previousChangeRaw": margin_change,
+            "yoy": "n/a",
+            "yoyRaw": None,
+            "risk": margin_risk,
+            "riskClass": margin_class,
+            "riskScore": margin_score,
+            "nextRelease": "Quarterly",
+            "block": "earnings",
+        },
+    ]
+
+
+def format_point(value):
+    if value is None:
+        return "n/a"
+    sign = "+" if value > 0 else ""
+    return f"{sign}{value:.1f}pt"
+
+
 def main():
     company_series = {}
+    revenue_series = {}
+    operating_income_series = {}
     company_tags = {}
     for index, company in enumerate(COMPANIES):
         if index:
             time.sleep(0.2)
         facts = fetch_companyfacts(company["cik"])
         tag, quarterly = extract_quarterly_capex(company, facts)
+        revenue_tag, revenue_quarterly = extract_quarterly_usd_fact(company, facts, company["revenue_tags"])
+        operating_tag, operating_quarterly = extract_quarterly_usd_fact(company, facts, company["operating_income_tags"])
         if not quarterly:
             raise RuntimeError(f"No quarterly capex extracted for {company['ticker']}")
         company_series[company["ticker"]] = quarterly
-        company_tags[company["ticker"]] = tag
+        revenue_series[company["ticker"]] = revenue_quarterly
+        operating_income_series[company["ticker"]] = operating_quarterly
+        company_tags[company["ticker"]] = {
+            "capex": tag,
+            "revenue": revenue_tag,
+            "operatingIncome": operating_tag,
+        }
 
     common_labels = sorted(
         set.intersection(*(set(series.keys()) for series in company_series.values())),
@@ -293,6 +398,24 @@ def main():
     totals = {
         label: sum(company_series[company["ticker"]][label]["value"] for company in COMPANIES)
         for label in common_labels
+    }
+    revenue_common_labels = sorted(
+        set.intersection(*(set(series.keys()) for series in revenue_series.values())),
+        key=quarter_sort_key,
+    )
+    operating_common_labels = sorted(
+        set.intersection(*(set(series.keys()) for series in operating_income_series.values())),
+        key=quarter_sort_key,
+    )
+    fundamentals_common_labels = sorted(set(revenue_common_labels) & set(operating_common_labels), key=quarter_sort_key)
+    fundamentals_latest_label = fundamentals_common_labels[-1]
+    revenue_totals = {
+        label: sum(revenue_series[company["ticker"]][label]["value"] for company in COMPANIES)
+        for label in fundamentals_common_labels
+    }
+    operating_income_totals = {
+        label: sum(operating_income_series[company["ticker"]][label]["value"] for company in COMPANIES)
+        for label in fundamentals_common_labels
     }
 
     indicators = [total_indicator(latest_label, totals)]
@@ -309,11 +432,21 @@ def main():
         "source": "SEC Companyfacts API",
         "sourceUrl": "https://www.sec.gov/edgar/sec-api-documentation",
         "latestQuarter": latest_label,
+        "fundamentalsLatestQuarter": fundamentals_latest_label,
         "signal": signal_from_indicators(indicators),
         "indicators": indicators,
+        "macroIndicators": sec_macro_indicators(fundamentals_latest_label, revenue_totals, operating_income_totals),
         "history": [
             {"date": label, "value": round(totals[label], 2)}
             for label in common_labels[-12:]
+        ],
+        "fundamentalsHistory": [
+            {
+                "date": label,
+                "revenue": round(revenue_totals[label], 2),
+                "operatingIncome": round(operating_income_totals[label], 2),
+            }
+            for label in fundamentals_common_labels[-12:]
         ],
         "companyTags": company_tags,
     }
