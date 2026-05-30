@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Credit Risk Monitor</title>
-    <link rel="stylesheet" href="styles.css?v=9" />
+    <link rel="stylesheet" href="styles.css?v=10" />
   </head>
   <body>
     <div class="app-shell">
@@ -18,9 +18,10 @@
             <span>最終更新</span>
             <strong id="last-updated">--</strong>
           </div>
-          <button class="icon-button" id="refresh-button" aria-label="データを再読み込み" title="データを再読み込み">
-            <span aria-hidden="true">↻</span>
-          </button>
+          <div class="updated">
+            <span>次回更新予定</span>
+            <strong id="next-update">--</strong>
+          </div>
         </div>
       </header>
 
@@ -129,6 +130,6 @@
       </main>
     </div>
 
-    <script src="app.js?v=12"></script>
+    <script src="app.js?v=13"></script>
   </body>
 </html>

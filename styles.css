@@ -75,6 +75,7 @@ h3 {
 .topbar-actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -491,6 +492,11 @@ td small {
 
   .topbar-actions {
     justify-content: space-between;
+  }
+
+  .updated {
+    flex: 1 1 160px;
+    min-width: 0;
   }
 
   .signal-grid,

@@ -92,7 +92,7 @@ const sampleData = {
   ]
 };
 
-const dataVersion = "12";
+const dataVersion = "13";
 
 function dataUrl(path) {
   return `${path}?v=${dataVersion}`;
@@ -282,6 +282,30 @@ function formatDate(value) {
   }).format(new Date(value));
 }
 
+function getNextScheduledUpdate(now = new Date()) {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+  const parts = Object.fromEntries(formatter.formatToParts(now).map(part => [part.type, part.value]));
+  const jstToday = new Date(`${parts.year}-${parts.month}-${parts.day}T00:00:00+09:00`);
+  const currentMinutes = Number(parts.hour) * 60 + Number(parts.minute);
+  const scheduledMinutes = 7 * 60 + 15;
+  let candidate = new Date(jstToday.getTime() + (currentMinutes < scheduledMinutes ? 0 : 1) * 24 * 60 * 60 * 1000);
+
+  while (candidate.getDay() === 0 || candidate.getDay() === 6) {
+    candidate = new Date(candidate.getTime() + 24 * 60 * 60 * 1000);
+  }
+
+  candidate = new Date(candidate.getTime() + scheduledMinutes * 60 * 1000);
+  return `${formatDate(candidate.toISOString())}頃`;
+}
+
 function renderSignals(signals) {
   document.querySelector("#signal-grid").innerHTML = signals.map(signal => `
     <article class="signal-card">
@@ -395,6 +419,7 @@ async function render() {
   const analysis = generateAnalysis(data);
 
   document.querySelector("#last-updated").textContent = formatDate(data.updatedAt);
+  document.querySelector("#next-update").textContent = getNextScheduledUpdate();
   document.querySelector("#risk-emoji").textContent = meta.emoji;
   document.querySelector("#risk-score").textContent = latestScore;
   document.querySelector("#risk-label").textContent = meta.label;
@@ -412,5 +437,4 @@ async function render() {
   renderList("#watch-list", analysis.watch);
 }
 
-document.querySelector("#refresh-button").addEventListener("click", render);
 render();
