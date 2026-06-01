@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2026-05-30T15:02+09:00",
+  "updatedAt": "2026-06-01T23:44+00:00",
   "source": "SEC Companyfacts API",
   "sourceUrl": "https://www.sec.gov/edgar/sec-api-documentation",
   "latestQuarter": "2026Q1",
+  "fundamentalsLatestQuarter": "2025Q1",
   "signal": {
     "key": "demand",
     "label": "AI Demand",
@@ -109,6 +110,42 @@
       "filed": "2026-04-30"
     }
   ],
+  "macroIndicators": [
+    {
+      "id": "BIGTECH-REVENUE-TOTAL",
+      "name": "Microsoft + Alphabet + Meta + Amazon Revenue",
+      "help": "Big Tech 4社の四半期売上合計です。株式市場では企業業績の底堅さを見る材料です。前年比が5%割れで注意、0%割れで業績悪化リスクを強く警戒します。",
+      "latest": "$358.3B",
+      "latestRaw": 358281000000.0,
+      "date": "2025Q1",
+      "previousChange": "-10.9%",
+      "previousChangeRaw": -10.93696399007651,
+      "yoy": "+11.2%",
+      "yoyRaw": 11.210404606335267,
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 20,
+      "nextRelease": "Quarterly",
+      "block": "earnings"
+    },
+    {
+      "id": "BIGTECH-OPERATING-MARGIN",
+      "name": "Microsoft + Alphabet + Meta + Amazon Operating Margin",
+      "help": "Big Tech 4社の営業利益率です。売上だけでなく収益性が保たれているかを見ます。22%割れで注意、15%割れで企業利益への強い逆風と見ます。",
+      "latest": "27.5%",
+      "latestRaw": 27.510808555295984,
+      "date": "2025Q1",
+      "previousChange": "+0.9pt",
+      "previousChangeRaw": 0.864558946816274,
+      "yoy": "n/a",
+      "yoyRaw": null,
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 20,
+      "nextRelease": "Quarterly",
+      "block": "earnings"
+    }
+  ],
   "history": [
     {
       "date": "2023Q2",
@@ -159,10 +196,88 @@
       "value": 129750000000.0
     }
   ],
+  "fundamentalsHistory": [
+    {
+      "date": "2022Q2",
+      "revenue": 271606000000.0,
+      "operatingIncome": 51662000000.0
+    },
+    {
+      "date": "2022Q3",
+      "revenue": 274029000000.0,
+      "operatingIncome": 46842000000.0
+    },
+    {
+      "date": "2022Q4",
+      "revenue": 310164000000.0,
+      "operatingIncome": 47695000000.0
+    },
+    {
+      "date": "2023Q1",
+      "revenue": 278647000000.0,
+      "operatingIncome": 51768000000.0
+    },
+    {
+      "date": "2023Q2",
+      "revenue": 297175000000.0,
+      "operatingIncome": 63165000000.0
+    },
+    {
+      "date": "2023Q3",
+      "revenue": 310439000000.0,
+      "operatingIncome": 73174000000.0
+    },
+    {
+      "date": "2023Q4",
+      "revenue": 358402000000.0,
+      "operatingIncome": 80322000000.0
+    },
+    {
+      "date": "2024Q1",
+      "revenue": 322165000000.0,
+      "operatingIncome": 82178000000.0
+    },
+    {
+      "date": "2024Q2",
+      "revenue": 336517000000.0,
+      "operatingIncome": 84869000000.0
+    },
+    {
+      "date": "2024Q3",
+      "revenue": 353319000000.0,
+      "operatingIncome": 93834000000.0
+    },
+    {
+      "date": "2024Q4",
+      "revenue": 402278000000.0,
+      "operatingIncome": 107192000000.0
+    },
+    {
+      "date": "2025Q1",
+      "revenue": 358281000000.0,
+      "operatingIncome": 98566000000.0
+    }
+  ],
   "companyTags": {
-    "MSFT": "PaymentsToAcquirePropertyPlantAndEquipment",
-    "GOOGL": "PaymentsToAcquirePropertyPlantAndEquipment",
-    "META": "PaymentsToAcquirePropertyPlantAndEquipment",
-    "AMZN": "PaymentsToAcquireProductiveAssets"
+    "MSFT": {
+      "capex": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "revenue": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "operatingIncome": "OperatingIncomeLoss"
+    },
+    "GOOGL": {
+      "capex": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "revenue": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "operatingIncome": "OperatingIncomeLoss"
+    },
+    "META": {
+      "capex": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "revenue": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "operatingIncome": "OperatingIncomeLoss"
+    },
+    "AMZN": {
+      "capex": "PaymentsToAcquireProductiveAssets",
+      "revenue": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "operatingIncome": "OperatingIncomeLoss"
+    }
   }
 }
