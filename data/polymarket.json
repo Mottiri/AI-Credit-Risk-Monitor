@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-06-05T23:38+00:00",
+  "updatedAt": "2026-06-08T23:36+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟡",
-    "value": "AIバブル崩壊予測 23.5%",
+    "value": "AIバブル崩壊予測 22.9%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "23.5%",
-      "latestRaw": 23.549999999999997,
-      "date": "2026-06-05T23:32:15.413503Z",
-      "previousChange": "+2.2pt / 24h",
-      "previousChangeRaw": 2.25,
-      "yoy": "+0.8pt / 7d",
-      "yoyRaw": 0.8,
+      "latest": "22.9%",
+      "latestRaw": 22.85,
+      "date": "2026-06-08T23:27:28.319541Z",
+      "previousChange": "+0.5pt / 24h",
+      "previousChangeRaw": 0.5,
+      "yoy": "-1.8pt / 7d",
+      "yoyRaw": -1.7999999999999998,
       "risk": "🟡",
       "riskClass": "risk-watch",
       "riskScore": 45,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$1.9K",
-      "volume1wk": "$15.1K",
+      "volume24h": "$542",
+      "volume1wk": "$10.2K",
       "totalVolume": "$2.3M",
-      "liquidity": "$17.3K",
-      "bestBid": 0.231,
-      "bestAsk": 0.24,
-      "spread": 0.009,
-      "oneMonthChange": -2.9499999999999997
+      "liquidity": "$18.1K",
+      "bestBid": 0.226,
+      "bestAsk": 0.231,
+      "spread": 0.005,
+      "oneMonthChange": -2.35
     }
   ],
   "history": [
@@ -71,6 +71,11 @@
       "date": "2026-06-05",
       "probability": 23.55,
       "volume24h": 1876.38
+    },
+    {
+      "date": "2026-06-08",
+      "probability": 22.85,
+      "volume24h": 542.11
     }
   ]
 }
