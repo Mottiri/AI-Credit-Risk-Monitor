@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Credit Risk Monitor</title>
-    <link rel="stylesheet" href="styles.css?v=11" />
+    <link rel="stylesheet" href="styles.css?v=12" />
   </head>
   <body>
     <div class="app-shell">
@@ -29,6 +29,7 @@
         <nav class="tab-nav" aria-label="Dashboard sections">
           <button class="tab-button is-active" type="button" data-tab="ai">AIバブル監視</button>
           <button class="tab-button" type="button" data-tab="macro">マクロ経済</button>
+          <button class="tab-button" type="button" data-tab="hype">HYPE</button>
         </nav>
 
         <div class="tab-panel is-active" id="ai-panel">
@@ -238,9 +239,141 @@
             </div>
           </section>
         </div>
+
+        <div class="tab-panel" id="hype-panel">
+          <section class="hero-grid" aria-label="HYPE総合判定">
+            <article class="panel risk-panel">
+              <div class="risk-head">
+                <div>
+                  <p class="section-label">HYPE健全度</p>
+                  <div class="score-line">
+                    <span id="hype-emoji">🟢</span>
+                    <strong id="hype-score">--</strong>
+                    <span>/ 100</span>
+                  </div>
+                </div>
+                <span class="risk-badge" id="hype-label">Loading</span>
+              </div>
+              <div class="sparkline-wrap" id="hype-sparkline"></div>
+              <p class="status-text" id="hype-status-summary">データを読み込んでいます。</p>
+            </article>
+
+            <div class="signal-grid macro-signal-grid" id="hype-signal-grid"></div>
+          </section>
+
+          <section class="content-grid hype-chart-grid">
+            <article class="panel chart-panel">
+              <div class="panel-title-row">
+                <div>
+                  <p class="section-label">Revenue</p>
+                  <div class="title-with-help">
+                    <h2>Revenue 30日推移</h2>
+                    <button class="help-button" type="button" aria-label="Revenue推移の説明" data-tooltip="DeFiLlamaのHyperliquid revenueです。取引所ビジネスとしての収益力を見ます。日々のブレより、7日/30日の方向感を重視します。">?</button>
+                  </div>
+                </div>
+                <span class="mini-note">USD daily</span>
+              </div>
+              <div class="chart-area" id="hype-revenue-chart"></div>
+            </article>
+
+            <article class="panel chart-panel">
+              <div class="panel-title-row">
+                <div>
+                  <p class="section-label">Buyback Pressure</p>
+                  <div class="title-with-help">
+                    <h2>Holders Revenue 30日推移</h2>
+                    <button class="help-button" type="button" aria-label="Holders Revenue推移の説明" data-tooltip="Holders RevenueはHYPEへの価値還元、買い戻し圧力のproxyとして見ます。増加傾向ならファンダ面の支えが強くなります。">?</button>
+                  </div>
+                </div>
+                <span class="mini-note">USD daily</span>
+              </div>
+              <div class="chart-area" id="hype-holders-chart"></div>
+            </article>
+
+            <article class="panel chart-panel">
+              <div class="panel-title-row">
+                <div>
+                  <p class="section-label">DEX Volume</p>
+                  <div class="title-with-help">
+                    <h2>Spot DEX Volume 30日推移</h2>
+                    <button class="help-button" type="button" aria-label="Spot DEX Volume推移の説明" data-tooltip="DeFiLlamaのHyperliquid spot DEX出来高です。perp以外の取引活動が広がっているかを見る補助指標です。">?</button>
+                  </div>
+                </div>
+                <span class="mini-note">USD daily</span>
+              </div>
+              <div class="chart-area" id="hype-dex-chart"></div>
+            </article>
+
+            <article class="panel chart-panel">
+              <div class="panel-title-row">
+                <div>
+                  <p class="section-label">Fees</p>
+                  <div class="title-with-help">
+                    <h2>Fees 30日推移</h2>
+                    <button class="help-button" type="button" aria-label="Fees推移の説明" data-tooltip="Hyperliquidの取引手数料です。Revenueと合わせて見ることで、取引活動と価値還元の両方を確認します。">?</button>
+                  </div>
+                </div>
+                <span class="mini-note">USD daily</span>
+              </div>
+              <div class="chart-area" id="hype-fees-chart"></div>
+            </article>
+          </section>
+
+          <section class="analysis-grid">
+            <article class="panel analysis-panel">
+              <div class="panel-title-row">
+                <div>
+                  <p class="section-label">Rule-Based Analysis</p>
+                  <h2>HYPE現状分析</h2>
+                </div>
+                <span class="risk-badge" id="hype-phase-label">--</span>
+              </div>
+              <p id="hype-analysis-main"></p>
+              <div class="factor-grid">
+                <div>
+                  <h3>強気材料</h3>
+                  <ul id="hype-up-list"></ul>
+                </div>
+                <div>
+                  <h3>注意材料</h3>
+                  <ul id="hype-risk-list"></ul>
+                </div>
+                <div>
+                  <h3>次に見るポイント</h3>
+                  <ul id="hype-watch-list"></ul>
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <section class="panel table-panel">
+            <div class="panel-title-row">
+              <div>
+                <p class="section-label">HYPE Indicators</p>
+                <h2>HYPE主要指標</h2>
+              </div>
+              <span class="mini-note">Hyperliquid + DeFiLlama</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>指標</th>
+                    <th>最新</th>
+                    <th>前回比</th>
+                    <th>補足</th>
+                    <th>判定</th>
+                    <th>更新</th>
+                  </tr>
+                </thead>
+                <tbody id="hype-indicator-table"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
       </main>
     </div>
 
-    <script src="app.js?v=14"></script>
+    <script src="app.js?v=15"></script>
   </body>
 </html>

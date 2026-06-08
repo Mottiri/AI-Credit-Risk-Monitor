@@ -1,0 +1,828 @@
+{
+  "updatedAt": "2026-06-08T12:43+09:00",
+  "scoreHistory": [
+    {
+      "date": "2026-05-09",
+      "score": 85
+    },
+    {
+      "date": "2026-05-10",
+      "score": 85
+    },
+    {
+      "date": "2026-05-11",
+      "score": 85
+    },
+    {
+      "date": "2026-05-12",
+      "score": 85
+    },
+    {
+      "date": "2026-05-13",
+      "score": 85
+    },
+    {
+      "date": "2026-05-14",
+      "score": 85
+    },
+    {
+      "date": "2026-05-15",
+      "score": 85
+    },
+    {
+      "date": "2026-05-16",
+      "score": 85
+    },
+    {
+      "date": "2026-05-17",
+      "score": 85
+    },
+    {
+      "date": "2026-05-18",
+      "score": 85
+    },
+    {
+      "date": "2026-05-19",
+      "score": 85
+    },
+    {
+      "date": "2026-05-20",
+      "score": 85
+    },
+    {
+      "date": "2026-05-21",
+      "score": 85
+    },
+    {
+      "date": "2026-05-22",
+      "score": 85
+    },
+    {
+      "date": "2026-05-23",
+      "score": 85
+    },
+    {
+      "date": "2026-05-24",
+      "score": 85
+    },
+    {
+      "date": "2026-05-25",
+      "score": 85
+    },
+    {
+      "date": "2026-05-26",
+      "score": 85
+    },
+    {
+      "date": "2026-05-27",
+      "score": 85
+    },
+    {
+      "date": "2026-05-28",
+      "score": 85
+    },
+    {
+      "date": "2026-05-29",
+      "score": 85
+    },
+    {
+      "date": "2026-05-30",
+      "score": 85
+    },
+    {
+      "date": "2026-05-31",
+      "score": 85
+    },
+    {
+      "date": "2026-06-01",
+      "score": 85
+    },
+    {
+      "date": "2026-06-02",
+      "score": 85
+    },
+    {
+      "date": "2026-06-03",
+      "score": 85
+    },
+    {
+      "date": "2026-06-04",
+      "score": 85
+    },
+    {
+      "date": "2026-06-05",
+      "score": 85
+    },
+    {
+      "date": "2026-06-06",
+      "score": 85
+    },
+    {
+      "date": "2026-06-07",
+      "score": 85
+    }
+  ],
+  "signals": [
+    {
+      "key": "revenue",
+      "label": "Revenue",
+      "emoji": "🟢",
+      "value": "24h $2.0M",
+      "help": "HyperliquidのRevenue推移を見ます。30日Revenueが伸びているほどHYPEのファンダは強くなります。"
+    },
+    {
+      "key": "buyback",
+      "label": "Buyback Pressure",
+      "emoji": "🟢",
+      "value": "30d $60.6M",
+      "help": "Holders RevenueをHYPE買い戻し圧力のproxyとして見ます。"
+    },
+    {
+      "key": "market",
+      "label": "Perp Market",
+      "emoji": "🟢",
+      "value": "OI $1.30B / Funding +0.0013%",
+      "help": "HYPE perpのOI、Funding、価格変化を見ます。ロング過熱やショート過熱の確認材料です。"
+    },
+    {
+      "key": "hip3",
+      "label": "HIP-3",
+      "emoji": "🟢",
+      "value": "$1.86B / 24h",
+      "help": "HIP-3市場の出来高とOIを見ます。Hyperliquidがクリプト外の取引需要を取り込めているかを確認します。"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "HYPE-PRICE",
+      "name": "HYPE Perp Mark Price",
+      "help": "Hyperliquid公式APIのHYPE perp mark priceです。短期の市場評価として見ます。",
+      "latest": "$61.19",
+      "latestRaw": 61.192,
+      "previousChange": "+5.69%",
+      "previousChangeRaw": 5.685664939550961,
+      "yoy": "n/a",
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 22,
+      "nextRelease": "Live",
+      "block": "market"
+    },
+    {
+      "id": "HYPE-PERP-OI",
+      "name": "HYPE Perp Open Interest",
+      "help": "HYPE perpの建玉です。価格上昇とOI急増、Funding上昇が重なると短期過熱に注意します。",
+      "latest": "$1.30B",
+      "latestRaw": 1301179135.6833587,
+      "previousChange": "21.26M HYPE",
+      "previousChangeRaw": 21263876.57999998,
+      "yoy": "n/a",
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 22,
+      "nextRelease": "Live",
+      "block": "market"
+    },
+    {
+      "id": "HYPE-FUNDING",
+      "name": "HYPE Perp Funding",
+      "help": "HYPE perpのFundingです。プラスが大きいほどロング過熱、マイナスが大きいほどショート過熱を示しやすいです。",
+      "latest": "+0.0013%",
+      "latestRaw": 1.25e-05,
+      "previousChange": "Live",
+      "previousChangeRaw": null,
+      "yoy": "n/a",
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 22,
+      "nextRelease": "Live",
+      "block": "market"
+    },
+    {
+      "id": "HYPE-PERP-VOLUME",
+      "name": "HYPE Perp 24h Volume",
+      "help": "HYPE perp単体の24時間名目出来高です。流動性と投機需要の強さを見ます。",
+      "latest": "$738.4M",
+      "latestRaw": 738357094.2844106,
+      "previousChange": "24h",
+      "previousChangeRaw": null,
+      "yoy": "n/a",
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 20,
+      "nextRelease": "Live",
+      "block": "market"
+    },
+    {
+      "id": "HL-REVENUE-24H",
+      "name": "Hyperliquid Revenue 24h",
+      "help": "DeFiLlamaのHyperliquid revenueです。取引所ビジネスとしての収益力を見ます。",
+      "latest": "$2.0M",
+      "latestRaw": 2030216,
+      "previousChange": "+11.65%",
+      "previousChangeRaw": 11.65,
+      "yoy": "$60.6M",
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 20,
+      "nextRelease": "Daily",
+      "block": "revenue"
+    },
+    {
+      "id": "HL-HOLDERS-REVENUE-30D",
+      "name": "Holders Revenue / Buyback Pressure 30d",
+      "help": "HYPE保有者への価値還元に近いRevenueです。MVPではbuyback pressureのproxyとして使います。",
+      "latest": "$60.6M",
+      "latestRaw": 60648807,
+      "previousChange": "+34.17%",
+      "previousChangeRaw": 34.17,
+      "yoy": "$1.15B",
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 20,
+      "nextRelease": "Daily",
+      "block": "revenue"
+    },
+    {
+      "id": "HL-DEX-VOLUME-24H",
+      "name": "Hyperliquid Spot DEX Volume 24h",
+      "help": "DeFiLlamaのHyperliquid spot DEX volumeです。perp以外の取引活動を見る補助指標です。",
+      "latest": "$139.6M",
+      "latestRaw": 139607760,
+      "previousChange": "-13.45%",
+      "previousChangeRaw": -13.45,
+      "yoy": "$6.23B",
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 25,
+      "nextRelease": "Daily",
+      "block": "volume"
+    },
+    {
+      "id": "HIP3-VOLUME-24H",
+      "name": "HIP-3 24h Volume",
+      "help": "Hyperliquid公式APIで取得したHIP-3 builder-deployed perpsの24時間出来高合計です。Hyperliquidの非クリプト/拡張市場の成長を見る指標です。",
+      "latest": "$1.86B",
+      "latestRaw": 1861547688.066884,
+      "previousChange": "161 active markets",
+      "previousChangeRaw": 161,
+      "yoy": "$2.93B",
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 25,
+      "nextRelease": "Live",
+      "block": "hip3"
+    }
+  ],
+  "charts": {
+    "revenue": [
+      {
+        "date": "2026-05-09",
+        "value": 913361.0
+      },
+      {
+        "date": "2026-05-10",
+        "value": 1340486.0
+      },
+      {
+        "date": "2026-05-11",
+        "value": 1558778.0
+      },
+      {
+        "date": "2026-05-12",
+        "value": 1470275.0
+      },
+      {
+        "date": "2026-05-13",
+        "value": 1512363.0
+      },
+      {
+        "date": "2026-05-14",
+        "value": 1987976.0
+      },
+      {
+        "date": "2026-05-15",
+        "value": 1933495.0
+      },
+      {
+        "date": "2026-05-16",
+        "value": 1107191.0
+      },
+      {
+        "date": "2026-05-17",
+        "value": 1257690.0
+      },
+      {
+        "date": "2026-05-18",
+        "value": 1943958.0
+      },
+      {
+        "date": "2026-05-19",
+        "value": 1284967.0
+      },
+      {
+        "date": "2026-05-20",
+        "value": 1659677.0
+      },
+      {
+        "date": "2026-05-21",
+        "value": 2051651.0
+      },
+      {
+        "date": "2026-05-22",
+        "value": 1966297.0
+      },
+      {
+        "date": "2026-05-23",
+        "value": 1842256.0
+      },
+      {
+        "date": "2026-05-24",
+        "value": 1670291.0
+      },
+      {
+        "date": "2026-05-25",
+        "value": 1193830.0
+      },
+      {
+        "date": "2026-05-26",
+        "value": 1921504.0
+      },
+      {
+        "date": "2026-05-27",
+        "value": 1787797.0
+      },
+      {
+        "date": "2026-05-28",
+        "value": 2002233.0
+      },
+      {
+        "date": "2026-05-29",
+        "value": 1888461.0
+      },
+      {
+        "date": "2026-05-30",
+        "value": 976509.0
+      },
+      {
+        "date": "2026-05-31",
+        "value": 1310565.0
+      },
+      {
+        "date": "2026-06-01",
+        "value": 2895667.0
+      },
+      {
+        "date": "2026-06-02",
+        "value": 3990732.0
+      },
+      {
+        "date": "2026-06-03",
+        "value": 3504616.0
+      },
+      {
+        "date": "2026-06-04",
+        "value": 4471805.0
+      },
+      {
+        "date": "2026-06-05",
+        "value": 5355849.0
+      },
+      {
+        "date": "2026-06-06",
+        "value": 1818311.0
+      },
+      {
+        "date": "2026-06-07",
+        "value": 2030216.0
+      }
+    ],
+    "holdersRevenue": [
+      {
+        "date": "2026-05-09",
+        "value": 913361.0
+      },
+      {
+        "date": "2026-05-10",
+        "value": 1340486.0
+      },
+      {
+        "date": "2026-05-11",
+        "value": 1558778.0
+      },
+      {
+        "date": "2026-05-12",
+        "value": 1470275.0
+      },
+      {
+        "date": "2026-05-13",
+        "value": 1512363.0
+      },
+      {
+        "date": "2026-05-14",
+        "value": 1987976.0
+      },
+      {
+        "date": "2026-05-15",
+        "value": 1933495.0
+      },
+      {
+        "date": "2026-05-16",
+        "value": 1107191.0
+      },
+      {
+        "date": "2026-05-17",
+        "value": 1257690.0
+      },
+      {
+        "date": "2026-05-18",
+        "value": 1943958.0
+      },
+      {
+        "date": "2026-05-19",
+        "value": 1284967.0
+      },
+      {
+        "date": "2026-05-20",
+        "value": 1659677.0
+      },
+      {
+        "date": "2026-05-21",
+        "value": 2051651.0
+      },
+      {
+        "date": "2026-05-22",
+        "value": 1966297.0
+      },
+      {
+        "date": "2026-05-23",
+        "value": 1842256.0
+      },
+      {
+        "date": "2026-05-24",
+        "value": 1670291.0
+      },
+      {
+        "date": "2026-05-25",
+        "value": 1193830.0
+      },
+      {
+        "date": "2026-05-26",
+        "value": 1921504.0
+      },
+      {
+        "date": "2026-05-27",
+        "value": 1787797.0
+      },
+      {
+        "date": "2026-05-28",
+        "value": 2002233.0
+      },
+      {
+        "date": "2026-05-29",
+        "value": 1888461.0
+      },
+      {
+        "date": "2026-05-30",
+        "value": 976509.0
+      },
+      {
+        "date": "2026-05-31",
+        "value": 1310565.0
+      },
+      {
+        "date": "2026-06-01",
+        "value": 2895667.0
+      },
+      {
+        "date": "2026-06-02",
+        "value": 3990732.0
+      },
+      {
+        "date": "2026-06-03",
+        "value": 3504616.0
+      },
+      {
+        "date": "2026-06-04",
+        "value": 4471805.0
+      },
+      {
+        "date": "2026-06-05",
+        "value": 5355849.0
+      },
+      {
+        "date": "2026-06-06",
+        "value": 1818311.0
+      },
+      {
+        "date": "2026-06-07",
+        "value": 2030216.0
+      }
+    ],
+    "dexVolume": [
+      {
+        "date": "2026-05-09",
+        "value": 71886076.0
+      },
+      {
+        "date": "2026-05-10",
+        "value": 76297993.0
+      },
+      {
+        "date": "2026-05-11",
+        "value": 94198406.0
+      },
+      {
+        "date": "2026-05-12",
+        "value": 98551144.0
+      },
+      {
+        "date": "2026-05-13",
+        "value": 111453205.0
+      },
+      {
+        "date": "2026-05-14",
+        "value": 208016733.0
+      },
+      {
+        "date": "2026-05-15",
+        "value": 192791720.0
+      },
+      {
+        "date": "2026-05-16",
+        "value": 127315216.0
+      },
+      {
+        "date": "2026-05-17",
+        "value": 150653145.0
+      },
+      {
+        "date": "2026-05-18",
+        "value": 175295578.0
+      },
+      {
+        "date": "2026-05-19",
+        "value": 146149107.0
+      },
+      {
+        "date": "2026-05-20",
+        "value": 200435900.0
+      },
+      {
+        "date": "2026-05-21",
+        "value": 336861088.0
+      },
+      {
+        "date": "2026-05-22",
+        "value": 258238117.0
+      },
+      {
+        "date": "2026-05-23",
+        "value": 172897971.0
+      },
+      {
+        "date": "2026-05-24",
+        "value": 248347298.0
+      },
+      {
+        "date": "2026-05-25",
+        "value": 142796016.0
+      },
+      {
+        "date": "2026-05-26",
+        "value": 181351392.0
+      },
+      {
+        "date": "2026-05-27",
+        "value": 196675977.0
+      },
+      {
+        "date": "2026-05-28",
+        "value": 164692066.0
+      },
+      {
+        "date": "2026-05-29",
+        "value": 230370064.0
+      },
+      {
+        "date": "2026-05-30",
+        "value": 136438179.0
+      },
+      {
+        "date": "2026-05-31",
+        "value": 205989849.0
+      },
+      {
+        "date": "2026-06-01",
+        "value": 339125993.0
+      },
+      {
+        "date": "2026-06-02",
+        "value": 343198376.0
+      },
+      {
+        "date": "2026-06-03",
+        "value": 342042619.0
+      },
+      {
+        "date": "2026-06-04",
+        "value": 496643937.0
+      },
+      {
+        "date": "2026-06-05",
+        "value": 479086432.0
+      },
+      {
+        "date": "2026-06-06",
+        "value": 161311111.0
+      },
+      {
+        "date": "2026-06-07",
+        "value": 139607760.0
+      }
+    ],
+    "fees": [
+      {
+        "date": "2026-05-09",
+        "value": 1164239.0
+      },
+      {
+        "date": "2026-05-10",
+        "value": 1674934.0
+      },
+      {
+        "date": "2026-05-11",
+        "value": 2015697.0
+      },
+      {
+        "date": "2026-05-12",
+        "value": 1921388.0
+      },
+      {
+        "date": "2026-05-13",
+        "value": 1974252.0
+      },
+      {
+        "date": "2026-05-14",
+        "value": 2562277.0
+      },
+      {
+        "date": "2026-05-15",
+        "value": 2460816.0
+      },
+      {
+        "date": "2026-05-16",
+        "value": 1354692.0
+      },
+      {
+        "date": "2026-05-17",
+        "value": 1530274.0
+      },
+      {
+        "date": "2026-05-18",
+        "value": 2500337.0
+      },
+      {
+        "date": "2026-05-19",
+        "value": 1670693.0
+      },
+      {
+        "date": "2026-05-20",
+        "value": 2098535.0
+      },
+      {
+        "date": "2026-05-21",
+        "value": 2559617.0
+      },
+      {
+        "date": "2026-05-22",
+        "value": 2432788.0
+      },
+      {
+        "date": "2026-05-23",
+        "value": 2302441.0
+      },
+      {
+        "date": "2026-05-24",
+        "value": 2067517.0
+      },
+      {
+        "date": "2026-05-25",
+        "value": 1554901.0
+      },
+      {
+        "date": "2026-05-26",
+        "value": 2405744.0
+      },
+      {
+        "date": "2026-05-27",
+        "value": 2351344.0
+      },
+      {
+        "date": "2026-05-28",
+        "value": 2533420.0
+      },
+      {
+        "date": "2026-05-29",
+        "value": 2316508.0
+      },
+      {
+        "date": "2026-05-30",
+        "value": 1188147.0
+      },
+      {
+        "date": "2026-05-31",
+        "value": 1666096.0
+      },
+      {
+        "date": "2026-06-01",
+        "value": 3671981.0
+      },
+      {
+        "date": "2026-06-02",
+        "value": 4797328.0
+      },
+      {
+        "date": "2026-06-03",
+        "value": 4284474.0
+      },
+      {
+        "date": "2026-06-04",
+        "value": 5453452.0
+      },
+      {
+        "date": "2026-06-05",
+        "value": 6606830.0
+      },
+      {
+        "date": "2026-06-06",
+        "value": 2193726.0
+      },
+      {
+        "date": "2026-06-07",
+        "value": 2492130.0
+      }
+    ]
+  },
+  "hip3": {
+    "dayNtlVlm": 1861547688.066884,
+    "openInterestUsd": 2933619317.3221464,
+    "marketCount": 190,
+    "activeMarketCount": 161,
+    "topMarkets": [
+      {
+        "name": "xyz:CL",
+        "volume": 342302965.56826395,
+        "openInterestUsd": 248475972.84024,
+        "markPx": 92.712
+      },
+      {
+        "name": "xyz:XYZ100",
+        "volume": 325910330.1674996,
+        "openInterestUsd": 427925894.73340005,
+        "markPx": 29197.0
+      },
+      {
+        "name": "xyz:SP500",
+        "volume": 208153913.9218999,
+        "openInterestUsd": 461642185.9008,
+        "markPx": 7406.4
+      },
+      {
+        "name": "xyz:BRENTOIL",
+        "volume": 182970033.5697693,
+        "openInterestUsd": 357336003.078,
+        "markPx": 95.614
+      },
+      {
+        "name": "xyz:SKHX",
+        "volume": 131510590.90559982,
+        "openInterestUsd": 105234836.07000026,
+        "markPx": 1313.0
+      },
+      {
+        "name": "xyz:MU",
+        "volume": 109918255.06885001,
+        "openInterestUsd": 150843268.0610001,
+        "markPx": 905.75
+      },
+      {
+        "name": "xyz:SILVER",
+        "volume": 79965748.94352,
+        "openInterestUsd": 70296767.1529,
+        "markPx": 67.511
+      },
+      {
+        "name": "xyz:MRVL",
+        "volume": 66315165.3464,
+        "openInterestUsd": 94696505.74159996,
+        "markPx": 282.38
+      }
+    ]
+  },
+  "sources": [
+    "https://api.hyperliquid.xyz/info",
+    "https://api.llama.fi/summary/fees/hyperliquid",
+    "https://api.llama.fi/summary/dexs/hyperliquid"
+  ]
+}

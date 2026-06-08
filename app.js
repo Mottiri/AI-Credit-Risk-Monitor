@@ -92,7 +92,7 @@ const sampleData = {
   ]
 };
 
-const dataVersion = "14";
+const dataVersion = "15";
 
 function dataUrl(path) {
   return `${path}?v=${dataVersion}`;
@@ -110,6 +110,13 @@ function getMacroRiskMeta(score) {
   if (score >= 55) return { emoji: "🟠", label: "High Watch", phase: "高めの警戒局面", className: "risk-high" };
   if (score >= 25) return { emoji: "🟡", label: "Watch", phase: "注意局面", className: "risk-watch" };
   return { emoji: "🟢", label: "Calm", phase: "平常", className: "risk-low" };
+}
+
+function getHypeMeta(score) {
+  if (score >= 75) return { emoji: "🟢", label: "Strong", phase: "ファンダは強い", className: "risk-low" };
+  if (score >= 55) return { emoji: "🟡", label: "Constructive", phase: "概ね良好", className: "risk-watch" };
+  if (score >= 35) return { emoji: "🟠", label: "Watch", phase: "注意局面", className: "risk-high" };
+  return { emoji: "🔴", label: "Weak", phase: "弱含み", className: "risk-danger" };
 }
 
 const helpText = {
@@ -133,6 +140,11 @@ const helpText = {
   "NVDA-REVENUE": "NVIDIAの四半期総売上です。Data Centerだけではありませんが、AI需要全体の勢いを見る補助指標です。前年比や前四半期比が急減速すると注意です。",
   "NVDA-GROSS-MARGIN": "NVIDIAの収益性を見る指標です。粗利率が高いほどAI半導体の価格決定力が強い状態です。70%割れで注意、65%割れで競争や在庫圧力を警戒します。",
   "NVDA-REVENUE-OUTLOOK": "次四半期の売上ガイダンスです。AI需要の先行ヒントとして見ます。前四半期比で大きく鈍化、または市場期待を下回る場合はAI需要の減速シグナルです。",
+  "AVGO-AI-REVENUE": "BroadcomのAI semiconductor revenueです。カスタムAI acceleratorとAI networking需要を見る指標です。前年比+60%割れで注意、+30%割れでAI投資サイクル鈍化を警戒します。",
+  "AVGO-AI-GUIDANCE": "Broadcomの次四半期AI semiconductor revenue見通しです。実績よりも先行性があるため、急な鈍化はAIインフラ投資の警戒シグナルです。",
+  "AVGO-REVENUE": "Broadcomの四半期総売上です。AI半導体だけでなく、VMwareを含む全体の成長とキャッシュ創出力を確認します。前年比や前四半期比が急減速すると注意です。",
+  "AVGO-ADJUSTED-EBITDA-MARGIN": "BroadcomのAdjusted EBITDA marginです。AI半導体とインフラソフトウェアを含む収益性を見ます。50%割れで注意、35%割れで成長投資を支える利益余力の低下を警戒します。",
+  "AVGO-REVENUE-GUIDANCE": "Broadcomの次四半期売上ガイダンスです。AI需要とVMware統合を含む全体の成長見通しです。前年比+15%割れで注意、+5%割れで需要減速を警戒します。",
   "POLYMARKET-AI-BUBBLE": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
   CPIAUCSL: "米国の消費者物価指数です。前年比が3%を超えるとインフレ再燃を意識しやすく、4%超で株式市場には金利高止まりリスク、5%超でかなり強い逆風と見ます。",
   CPILFESL: "食品とエネルギーを除いた物価指数です。粘着的なインフレを見るため重要です。前年比3%超で注意、4%超で金融引き締め長期化、5%超で株式市場には強い逆風と見ます。",
@@ -173,6 +185,7 @@ function generateAnalysis(data) {
     ? "ノンバンク向け貸出の前年比は高水準で、AIインフラ投資を支える信用拡大が続いている可能性があります"
     : "ノンバンク向け貸出の伸びは過熱水準からはやや離れています";
   const prediction = data.indicators.find(item => item.id === "POLYMARKET-AI-BUBBLE");
+  const broadcomAi = data.indicators.find(item => item.id === "AVGO-AI-REVENUE");
   const predictionText = prediction
     ? `予測市場ではAIバブル崩壊確率が${prediction.latest}、24時間変化は${prediction.previousChange}です`
     : "予測市場データは未接続です";
@@ -180,8 +193,11 @@ function generateAnalysis(data) {
   const capexText = bigTechCapex
     ? `Big Tech 4社のCapex合計は${bigTechCapex.latest}、前年比${bigTechCapex.yoy}で、AIインフラ投資はまだ強い状態です`
     : "Big Tech Capexデータは未接続です";
+  const broadcomText = broadcomAi
+    ? `BroadcomのAI semiconductor revenueは${broadcomAi.latest}、前年比${broadcomAi.yoy}で、カスタムAIチップとAIネットワーク需要の確認材料になります`
+    : "Broadcom AI revenueデータは未接続です";
 
-  const main = `${meta.phase}です。${creditText}。一方で、ハイイールドスプレッドや金融ストレスは危機的な急拡大までは示しておらず、現時点では「崩壊直前」ではなく「信用面の過熱を監視する段階」と見ます。${capexText}。${predictionText}。${direction}。AI需要とBig Techの設備投資が強い間は信用拡大が正当化されやすい一方、貸出の急減速、スプレッド拡大、AI Capexの下方修正、予測市場での急なリスク再評価が重なる場合は警戒度を引き上げます。`;
+  const main = `${meta.phase}です。${creditText}。一方で、ハイイールドスプレッドや金融ストレスは危機的な急拡大までは示しておらず、現時点では「崩壊直前」ではなく「信用面の過熱を監視する段階」と見ます。${capexText}。${broadcomText}。${predictionText}。${direction}。AI需要とBig Techの設備投資が強い間は信用拡大が正当化されやすい一方、貸出の急減速、スプレッド拡大、AI Capexの下方修正、Broadcom/NVIDIAのAI需要鈍化、予測市場での急なリスク再評価が重なる場合は警戒度を引き上げます。`;
 
   return {
     main,
@@ -193,6 +209,7 @@ function generateAnalysis(data) {
     down: [
       "金融ストレス指数はまだ危機局面を示していない",
       "NVIDIA Data Center成長はAI需要の強さを示している",
+      broadcomAi ? `Broadcom AI semiconductor revenueが前年比${broadcomAi.yoy}` : "Broadcom AI revenueデータは未接続",
       bigTechCapex ? `Big Tech Capex合計が前年比${bigTechCapex.yoy}` : "Big Tech Capexデータは未接続",
       "VIXとHYスプレッドは急激な信用収縮までは示していない"
     ],
@@ -201,7 +218,8 @@ function generateAnalysis(data) {
       "Big TechのAI Capexガイダンス下方修正",
       "HYスプレッドとSTLFSI4の同時悪化",
       "PolymarketのAIバブル確率が24hで+5pt以上、または7日で+10pt以上に急上昇",
-      "NVIDIA Data Center売上成長率と粗利率の鈍化"
+      "NVIDIA Data Center売上成長率と粗利率の鈍化",
+      "Broadcom AI semiconductor revenueと次四半期ガイダンスの鈍化"
     ]
   };
 }
@@ -339,6 +357,28 @@ async function loadData() {
   }
 }
 
+async function loadHypeData() {
+  try {
+    const response = await fetch(dataUrl("data/hype.json"), { cache: "no-store" });
+    if (!response.ok) throw new Error("hype.json not found");
+    return await response.json();
+  } catch {
+    return {
+      updatedAt: new Date().toISOString(),
+      scoreHistory: [{ date: "2026-06-01", score: 50 }],
+      signals: [
+        { key: "revenue", label: "Revenue", emoji: "⚪", value: "接続待ち", help: "HyperliquidのRevenue推移を見ます。" },
+        { key: "buyback", label: "Buyback Pressure", emoji: "⚪", value: "接続待ち", help: "Holders RevenueをHYPE買い戻し圧力のproxyとして見ます。" },
+        { key: "market", label: "Perp Market", emoji: "⚪", value: "接続待ち", help: "HYPE perpのOI、Funding、価格変化を見ます。" },
+        { key: "hip3", label: "HIP-3", emoji: "⚪", value: "接続待ち", help: "HIP-3市場の出来高とOIを見ます。" }
+      ],
+      indicators: [],
+      charts: { revenue: [], holdersRevenue: [], dexVolume: [], fees: [] },
+      hip3: { topMarkets: [] }
+    };
+  }
+}
+
 function mergeAiDemand(data, aiDemand) {
   const indicators = [
     ...data.indicators.filter(item => item.block !== "demand"),
@@ -397,6 +437,55 @@ function formatDate(value) {
     hour: "2-digit",
     minute: "2-digit"
   }).format(new Date(value));
+}
+
+function formatCompactUsd(value) {
+  if (!Number.isFinite(value)) return "n/a";
+  if (value >= 1_000_000_000) return `$${(value / 1_000_000_000).toFixed(2)}B`;
+  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1_000) return `$${(value / 1_000).toFixed(1)}K`;
+  return `$${value.toFixed(0)}`;
+}
+
+function generateHypeAnalysis(hype) {
+  const byId = Object.fromEntries((hype.indicators ?? []).map(item => [item.id, item]));
+  const latestScore = hype.scoreHistory.at(-1)?.score ?? 50;
+  const meta = getHypeMeta(latestScore);
+  const price = byId["HYPE-PRICE"];
+  const oi = byId["HYPE-PERP-OI"];
+  const funding = byId["HYPE-FUNDING"];
+  const volume = byId["HYPE-PERP-VOLUME"];
+  const revenue = byId["HL-REVENUE-24H"];
+  const holders = byId["HL-HOLDERS-REVENUE-30D"];
+  const hip3 = byId["HIP3-VOLUME-24H"];
+
+  const main = `${meta.phase}です。HYPE価格は${price?.latest ?? "n/a"}、24h変化は${price?.previousChange ?? "n/a"}、OIは${oi?.latest ?? "n/a"}、Fundingは${funding?.latest ?? "n/a"}です。Hyperliquid Revenue 24hは${revenue?.latest ?? "n/a"}、Holders Revenue 30dは${holders?.latest ?? "n/a"}で、HYPEへの価値還元圧力を確認できます。HIP-3出来高は${hip3?.latest ?? "n/a"}で、拡張市場の成長を見る材料になります。RevenueとHolders Revenueが伸び、Fundingが過熱しすぎず、HIP-3/DEX出来高も拡大するならファンダは強いと見ます。`;
+
+  const up = [];
+  if ((revenue?.latestRaw ?? 0) >= 1_000_000) up.push(`Revenue 24hが${revenue.latest}`);
+  if ((holders?.latestRaw ?? 0) >= 50_000_000) up.push(`Holders Revenue 30dが${holders.latest}`);
+  if ((volume?.latestRaw ?? 0) >= 500_000_000) up.push(`HYPE perp出来高24hが${volume.latest}`);
+  if ((hip3?.latestRaw ?? 0) >= 500_000_000) up.push(`HIP-3出来高24hが${hip3.latest}`);
+
+  const risks = [];
+  if ((funding?.latestRaw ?? 0) > 0.00008) risks.push(`Fundingが${funding.latest}でロング過熱に注意`);
+  if ((price?.previousChangeRaw ?? 0) > 8 && (oi?.riskScore ?? 0) >= 45) risks.push("価格上昇とOI増加が重なる場合は短期過熱に注意");
+  if ((revenue?.previousChangeRaw ?? 0) < -20) risks.push(`Revenue前日比が${revenue.previousChange}で収益低下に注意`);
+  if (!risks.length) risks.push("現時点で強い短期過熱シグナルは限定的です");
+
+  return {
+    main,
+    up: up.length ? up : ["Revenue/Holders Revenueの接続後に強気材料を判定します"],
+    risks,
+    watch: [
+      "RevenueとHolders Revenueの7日/30日トレンドが上向くか",
+      "価格上昇とOI急増、Funding上昇が同時に起きていないか",
+      "HYPE perp出来高が価格上昇を伴って増えているか",
+      "HIP-3出来高とアクティブ市場数が増えているか",
+      "Spot DEX Volumeが継続的に増えているか",
+      "Holders Revenueをbuyback pressureのproxyとして見た時に支えが弱まっていないか"
+    ]
+  };
 }
 
 function getNextScheduledUpdate(now = new Date()) {
@@ -490,7 +579,7 @@ function renderLineChart(selector, data, key, options = {}) {
   const pts = pointsFor(data, key);
   const path = pts.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
   const last = pts.at(-1);
-  const valueText = `${last.value}${options.suffix ?? ""}`;
+  const valueText = options.valueFormatter ? options.valueFormatter(last.value) : `${last.value}${options.suffix ?? ""}`;
   const labelX = Math.min(width - 82, last.x + 18);
   const labelY = Math.max(plot.top + 12, Math.min(height - plot.bottom - 8, last.y + 4));
   const labelWidth = Math.max(42, valueText.length * 8 + 16);
@@ -525,6 +614,14 @@ function renderLineChart(selector, data, key, options = {}) {
   `;
 }
 
+function renderUsdLineChart(selector, data, key, options = {}) {
+  renderLineChart(selector, data, key, {
+    ...options,
+    suffix: "",
+    valueFormatter: formatCompactUsd
+  });
+}
+
 function renderSparkline(data) {
   renderLineChart("#sparkline", data, "score", { color: "#e66f2d", label: "risk sparkline" });
 }
@@ -545,6 +642,7 @@ function initTabs() {
 
 async function render() {
   const data = await loadData();
+  const hype = await loadHypeData();
   const macro = getMacroData(data);
   const latestScore = data.scoreHistory.at(-1).score;
   const meta = getRiskMeta(latestScore);
@@ -552,6 +650,9 @@ async function render() {
   const macroScore = macro.scoreHistory.at(-1)?.score ?? 30;
   const macroMeta = getMacroRiskMeta(macroScore);
   const macroAnalysis = generateMacroAnalysis(macro);
+  const hypeScore = hype.scoreHistory.at(-1)?.score ?? 50;
+  const hypeMeta = getHypeMeta(hypeScore);
+  const hypeAnalysis = generateHypeAnalysis(hype);
 
   document.querySelector("#last-updated").textContent = formatDate(data.updatedAt);
   document.querySelector("#next-update").textContent = getNextScheduledUpdate();
@@ -585,6 +686,23 @@ async function render() {
   renderList("#macro-risk-up-list", macroAnalysis.up);
   renderList("#macro-risk-down-list", macroAnalysis.down);
   renderList("#macro-watch-list", macroAnalysis.watch);
+
+  document.querySelector("#hype-emoji").textContent = hypeMeta.emoji;
+  document.querySelector("#hype-score").textContent = hypeScore;
+  document.querySelector("#hype-label").textContent = hypeMeta.label;
+  document.querySelector("#hype-phase-label").textContent = hypeMeta.phase;
+  document.querySelector("#hype-status-summary").textContent = hypeAnalysis.main.split("。").slice(0, 2).join("。") + "。";
+  document.querySelector("#hype-analysis-main").textContent = hypeAnalysis.main;
+  renderSignals(hype.signals, "#hype-signal-grid");
+  renderLineChart("#hype-sparkline", hype.scoreHistory, "score", { color: "#2a9d6f", label: "hype sparkline" });
+  renderUsdLineChart("#hype-revenue-chart", hype.charts.revenue.length ? hype.charts.revenue : [{ date: "2026-06-01", value: 0 }], "value", { color: "#2a9d6f", label: "hype revenue chart" });
+  renderUsdLineChart("#hype-holders-chart", hype.charts.holdersRevenue.length ? hype.charts.holdersRevenue : [{ date: "2026-06-01", value: 0 }], "value", { color: "#d49a1f", label: "hype holders revenue chart" });
+  renderUsdLineChart("#hype-dex-chart", hype.charts.dexVolume.length ? hype.charts.dexVolume : [{ date: "2026-06-01", value: 0 }], "value", { color: "#2f6fed", label: "hype dex volume chart" });
+  renderUsdLineChart("#hype-fees-chart", hype.charts.fees.length ? hype.charts.fees : [{ date: "2026-06-01", value: 0 }], "value", { color: "#e66f2d", label: "hype fees chart" });
+  renderTable(hype.indicators, "#hype-indicator-table");
+  renderList("#hype-up-list", hypeAnalysis.up);
+  renderList("#hype-risk-list", hypeAnalysis.risks);
+  renderList("#hype-watch-list", hypeAnalysis.watch);
 }
 
 initTabs();

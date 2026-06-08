@@ -8,6 +8,7 @@ LATEST_PATH = ROOT / "data" / "latest.json"
 AI_DEMAND_PATH = ROOT / "data" / "ai-demand.json"
 NVIDIA_PATH = ROOT / "data" / "nvidia.json"
 BIG_TECH_CAPEX_PATH = ROOT / "data" / "big-tech-capex.json"
+BROADCOM_PATH = ROOT / "data" / "broadcom.json"
 POLYMARKET_PATH = ROOT / "data" / "polymarket.json"
 
 
@@ -41,7 +42,7 @@ def demand_signal(items):
         "label": "AI Demand",
         "emoji": emoji,
         "value": value,
-        "help": "NVIDIAの需要指標とBig Techの設備投資を見ます。Big Tech CapexはAIデータセンター投資のproxyです。売上成長や設備投資が急減速すると、信用拡大を正当化しにくくなります。",
+        "help": "NVIDIAの需要指標、BroadcomのAI semiconductor revenue、Big Techの設備投資を見ます。売上成長や設備投資が急減速すると、信用拡大を正当化しにくくなります。",
     }
 
 
@@ -70,6 +71,7 @@ def merge():
     ai_demand = read_json(AI_DEMAND_PATH)
     nvidia = read_json(NVIDIA_PATH)
     big_tech_capex = read_json(BIG_TECH_CAPEX_PATH)
+    broadcom = read_json(BROADCOM_PATH)
     polymarket = read_json(POLYMARKET_PATH)
     merged = []
 
@@ -96,6 +98,9 @@ def merge():
     if big_tech_capex:
         demand_indicators.extend(big_tech_capex.get("indicators", []))
         merged.append("big-tech-capex")
+    if broadcom:
+        demand_indicators.extend(broadcom.get("indicators", []))
+        merged.append("broadcom")
 
     if demand_indicators:
         demand_score = average_score(demand_indicators)

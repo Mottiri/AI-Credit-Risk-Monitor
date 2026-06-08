@@ -372,6 +372,10 @@ h3 {
   margin-top: 16px;
 }
 
+.hype-chart-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .chart-panel,
 .analysis-panel,
 .table-panel {
@@ -501,7 +505,8 @@ td small {
 
 @media (max-width: 1100px) {
   .hero-grid,
-  .content-grid {
+  .content-grid,
+  .hype-chart-grid {
     grid-template-columns: 1fr;
   }
 
