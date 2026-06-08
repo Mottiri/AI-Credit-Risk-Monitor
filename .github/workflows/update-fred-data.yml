@@ -24,31 +24,19 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Fetch FRED data
+      - name: Fetch and merge dashboard data
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: python3 scripts/fetch_fred.py
-
-      - name: Fetch Polymarket data
-        run: python3 scripts/fetch_polymarket.py
-
-      - name: Fetch NVIDIA data
-        run: python3 scripts/fetch_nvidia.py
-
-      - name: Fetch Big Tech Capex data
-        run: python3 scripts/fetch_big_tech_capex.py
-
-      - name: Merge dashboard data
-        run: python3 scripts/merge_external_data.py
+        run: sh scripts/update_data.sh
 
       - name: Commit updated data
         run: |
-          if git diff --quiet -- data/latest.json data/polymarket.json data/nvidia.json data/big-tech-capex.json; then
+          if git diff --quiet -- data/*.json; then
             echo "No data changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/latest.json data/polymarket.json data/nvidia.json data/big-tech-capex.json
+          git add data/*.json
           git commit -m "Update market data"
           git push

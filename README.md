@@ -84,6 +84,12 @@ sh scripts/update_data.sh
 
 See `docs/automation.md` for details.
 
+## Cloudflare Worker cache
+
+`workers/data-cache-worker.js` can serve the dashboard JSON through Cloudflare Worker + KV cache. This lets the site read cached data through `/data/*.json` while Cloudflare refreshes those files on a schedule.
+
+See `docs/cloudflare-worker.md` for setup.
+
 ## Data flow
 
 ```text

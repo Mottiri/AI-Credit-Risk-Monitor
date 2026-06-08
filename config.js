@@ -1,0 +1,1 @@
+window.DASHBOARD_DATA_BASE = "";

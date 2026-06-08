@@ -1,0 +1,13 @@
+name = "ai-credit-risk-monitor-data"
+main = "workers/data-cache-worker.js"
+compatibility_date = "2026-06-08"
+
+[vars]
+SOURCE_BASE_URL = "https://raw.githubusercontent.com/Mottiri/AI-Credit-Risk-Monitor/main"
+
+[[kv_namespaces]]
+binding = "DASHBOARD_DATA"
+id = "replace_with_cloudflare_kv_namespace_id"
+
+[triggers]
+crons = ["*/15 * * * *"]

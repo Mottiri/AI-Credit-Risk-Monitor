@@ -95,7 +95,10 @@ const sampleData = {
 const dataVersion = "16";
 
 function dataUrl(path) {
-  return `${path}?v=${dataVersion}`;
+  const configuredBase = String(window.DASHBOARD_DATA_BASE ?? "").replace(/\/$/, "");
+  const cleanPath = String(path).replace(/^\//, "");
+  const url = configuredBase ? `${configuredBase}/${cleanPath}` : cleanPath;
+  return `${url}?v=${dataVersion}`;
 }
 
 function getRiskMeta(score) {
