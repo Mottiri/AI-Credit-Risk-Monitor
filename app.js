@@ -92,7 +92,7 @@ const sampleData = {
   ]
 };
 
-const dataVersion = "16";
+const dataVersion = "17";
 
 function dataUrl(path) {
   const configuredBase = String(window.DASHBOARD_DATA_BASE ?? "").replace(/\/$/, "");
@@ -583,6 +583,24 @@ function pointsFor(data, key, options = {}) {
   });
 }
 
+function labelIndexes(length, maxLabels) {
+  const count = Math.max(2, Math.min(maxLabels, length));
+  return new Set(Array.from({ length: count }, (_, index) => (
+    Math.round((index / Math.max(count - 1, 1)) * (length - 1))
+  )));
+}
+
+function defaultAxisLabel(label) {
+  return String(label).slice(5);
+}
+
+function compactDateTimeLabel(label) {
+  const value = String(label);
+  const match = value.match(/^\d{4}-(\d{2})-(\d{2})\s+(\d{2}:\d{2})/);
+  if (match) return `${match[1]}/${match[2]} ${match[3]}`;
+  return defaultAxisLabel(value);
+}
+
 function renderLineChart(selector, data, key, options = {}) {
   const chart = document.querySelector(selector);
   if (!chart) return;
@@ -609,7 +627,9 @@ function renderLineChart(selector, data, key, options = {}) {
     <rect x="${plot.left}" y="${plot.top + plotHeight * 0.75}" width="${plotWidth}" height="${plotHeight * 0.25}" fill="#e8f6ee" />
   ` : "";
   const pointEvery = Math.max(1, Math.ceil(pts.length / 42));
-  const labelEvery = Math.max(1, Math.ceil(pts.length / 8));
+  const labelIndexSet = labelIndexes(pts.length, options.maxLabels ?? 8);
+  const axisLabelFormatter = options.axisLabelFormatter ?? defaultAxisLabel;
+  const axisLabelFontSize = options.axisLabelFontSize ?? 12;
 
   chart.innerHTML = `
     <svg viewBox="0 0 640 230" role="img" aria-label="${options.label ?? "line chart"}">
@@ -623,10 +643,11 @@ function renderLineChart(selector, data, key, options = {}) {
       </g>
       <path d="${path}" fill="none" stroke="${options.color ?? "#2f6fed"}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
       ${pts.map((point, index) => index % pointEvery === 0 || index === pts.length - 1 ? `<circle cx="${point.x}" cy="${point.y}" r="${pts.length > 80 ? 3 : 5}" fill="${options.color ?? "#2f6fed"}" />` : "").join("")}
-      ${pts.map((point, index) => {
-        const shouldShow = data.length <= 8 || index % labelEvery === 0 || index === data.length - 1;
-        return shouldShow ? `<text x="${point.x}" y="222" text-anchor="middle" fill="#687387" font-size="12">${point.label.slice(5)}</text>` : "";
-      }).join("")}
+      ${pts.map((point, index) => (
+        labelIndexSet.has(index)
+          ? `<text x="${point.x}" y="222" text-anchor="middle" fill="#687387" font-size="${axisLabelFontSize}" font-weight="700">${axisLabelFormatter(point.label)}</text>`
+          : ""
+      )).join("")}
       <g>
         <rect x="${labelX - 8}" y="${labelY - 16}" width="${labelWidth}" height="22" rx="6" fill="#ffffff" stroke="#dfe5ef" />
         <text x="${labelX}" y="${labelY}" fill="${options.color ?? "#2f6fed"}" font-size="14" font-weight="800">${valueText}</text>
@@ -648,7 +669,10 @@ function renderPriceLineChart(selector, data, key, options = {}) {
     ...options,
     suffix: "",
     includeZero: false,
-    valueFormatter: formatPriceUsd
+    valueFormatter: formatPriceUsd,
+    maxLabels: 5,
+    axisLabelFormatter: compactDateTimeLabel,
+    axisLabelFontSize: 11
   });
 }
 
