@@ -92,7 +92,7 @@ const sampleData = {
   ]
 };
 
-const dataVersion = "15";
+const dataVersion = "16";
 
 function dataUrl(path) {
   return `${path}?v=${dataVersion}`;
@@ -374,6 +374,7 @@ async function loadHypeData() {
       ],
       indicators: [],
       charts: { revenue: [], holdersRevenue: [], dexVolume: [], fees: [] },
+      priceCharts: { "1D": [], "7D": [], "30D": [], "90D": [], "1Y": [] },
       hip3: { topMarkets: [] }
     };
   }
@@ -445,6 +446,16 @@ function formatCompactUsd(value) {
   if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
   if (value >= 1_000) return `$${(value / 1_000).toFixed(1)}K`;
   return `$${value.toFixed(0)}`;
+}
+
+function formatPriceUsd(value) {
+  if (!Number.isFinite(value)) return "n/a";
+  return `$${value.toFixed(value >= 100 ? 2 : 3)}`;
+}
+
+function sliceRange(data, range) {
+  const days = { "7D": 7, "30D": 30, "90D": 90, "1Y": 365 }[range] ?? 30;
+  return (data ?? []).slice(-days);
 }
 
 function generateHypeAnalysis(hype) {
@@ -553,13 +564,13 @@ function renderList(selector, items) {
   document.querySelector(selector).innerHTML = items.map(item => `<li>${item}</li>`).join("");
 }
 
-function pointsFor(data, key) {
+function pointsFor(data, key, options = {}) {
   const values = data.map(item => item[key]);
   const width = 640;
   const height = 230;
   const plot = { left: 46, right: 118, top: 24, bottom: 42 };
   const max = Math.max(...values);
-  const min = Math.min(...values, 0);
+  const min = options.includeZero === false ? Math.min(...values) : Math.min(...values, 0);
   const range = max - min || 1;
 
   return data.map((item, index) => {
@@ -571,12 +582,17 @@ function pointsFor(data, key) {
 
 function renderLineChart(selector, data, key, options = {}) {
   const chart = document.querySelector(selector);
+  if (!chart) return;
+  if (!data?.length) {
+    chart.innerHTML = `<div class="empty-chart">No data</div>`;
+    return;
+  }
   const width = 640;
   const height = 230;
   const plot = { left: 46, right: 118, top: 24, bottom: 42 };
   const plotWidth = width - plot.left - plot.right;
   const plotHeight = height - plot.top - plot.bottom;
-  const pts = pointsFor(data, key);
+  const pts = pointsFor(data, key, options);
   const path = pts.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
   const last = pts.at(-1);
   const valueText = options.valueFormatter ? options.valueFormatter(last.value) : `${last.value}${options.suffix ?? ""}`;
@@ -589,6 +605,8 @@ function renderLineChart(selector, data, key, options = {}) {
     <rect x="${plot.left}" y="${plot.top + plotHeight * 0.5}" width="${plotWidth}" height="${plotHeight * 0.25}" fill="#fff8d9" />
     <rect x="${plot.left}" y="${plot.top + plotHeight * 0.75}" width="${plotWidth}" height="${plotHeight * 0.25}" fill="#e8f6ee" />
   ` : "";
+  const pointEvery = Math.max(1, Math.ceil(pts.length / 42));
+  const labelEvery = Math.max(1, Math.ceil(pts.length / 8));
 
   chart.innerHTML = `
     <svg viewBox="0 0 640 230" role="img" aria-label="${options.label ?? "line chart"}">
@@ -601,9 +619,9 @@ function renderLineChart(selector, data, key, options = {}) {
         <line x1="${plot.left}" y1="${plot.top + plotHeight * 0.75}" x2="${plot.left + plotWidth}" y2="${plot.top + plotHeight * 0.75}" />
       </g>
       <path d="${path}" fill="none" stroke="${options.color ?? "#2f6fed"}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-      ${pts.map(point => `<circle cx="${point.x}" cy="${point.y}" r="5" fill="${options.color ?? "#2f6fed"}" />`).join("")}
+      ${pts.map((point, index) => index % pointEvery === 0 || index === pts.length - 1 ? `<circle cx="${point.x}" cy="${point.y}" r="${pts.length > 80 ? 3 : 5}" fill="${options.color ?? "#2f6fed"}" />` : "").join("")}
       ${pts.map((point, index) => {
-        const shouldShow = data.length <= 8 || index % 2 === 0 || index === data.length - 1;
+        const shouldShow = data.length <= 8 || index % labelEvery === 0 || index === data.length - 1;
         return shouldShow ? `<text x="${point.x}" y="222" text-anchor="middle" fill="#687387" font-size="12">${point.label.slice(5)}</text>` : "";
       }).join("")}
       <g>
@@ -619,6 +637,36 @@ function renderUsdLineChart(selector, data, key, options = {}) {
     ...options,
     suffix: "",
     valueFormatter: formatCompactUsd
+  });
+}
+
+function renderPriceLineChart(selector, data, key, options = {}) {
+  renderLineChart(selector, data, key, {
+    ...options,
+    suffix: "",
+    includeZero: false,
+    valueFormatter: formatPriceUsd
+  });
+}
+
+function renderHypeCharts(hype, growthRange = "30D", priceRange = "1D") {
+  const charts = hype.charts ?? {};
+  const priceCharts = hype.priceCharts ?? {};
+  renderPriceLineChart("#hype-price-chart", priceCharts[priceRange] ?? [], "value", { color: "#2a9d6f", label: "hype price chart" });
+  renderUsdLineChart("#hype-revenue-chart", sliceRange(charts.revenue, growthRange), "value", { color: "#2a9d6f", label: "hype revenue chart" });
+  renderUsdLineChart("#hype-holders-chart", sliceRange(charts.holdersRevenue, growthRange), "value", { color: "#d49a1f", label: "hype holders revenue chart" });
+  renderUsdLineChart("#hype-dex-chart", sliceRange(charts.dexVolume, growthRange), "value", { color: "#2f6fed", label: "hype dex volume chart" });
+  renderUsdLineChart("#hype-fees-chart", sliceRange(charts.fees, growthRange), "value", { color: "#e66f2d", label: "hype fees chart" });
+}
+
+function setupRangeControl(selector, onChange) {
+  const root = document.querySelector(selector);
+  if (!root) return;
+  root.querySelectorAll(".range-button").forEach(button => {
+    button.addEventListener("click", () => {
+      root.querySelectorAll(".range-button").forEach(item => item.classList.toggle("is-active", item === button));
+      onChange(button.dataset.range);
+    });
   });
 }
 
@@ -695,10 +743,17 @@ async function render() {
   document.querySelector("#hype-analysis-main").textContent = hypeAnalysis.main;
   renderSignals(hype.signals, "#hype-signal-grid");
   renderLineChart("#hype-sparkline", hype.scoreHistory, "score", { color: "#2a9d6f", label: "hype sparkline" });
-  renderUsdLineChart("#hype-revenue-chart", hype.charts.revenue.length ? hype.charts.revenue : [{ date: "2026-06-01", value: 0 }], "value", { color: "#2a9d6f", label: "hype revenue chart" });
-  renderUsdLineChart("#hype-holders-chart", hype.charts.holdersRevenue.length ? hype.charts.holdersRevenue : [{ date: "2026-06-01", value: 0 }], "value", { color: "#d49a1f", label: "hype holders revenue chart" });
-  renderUsdLineChart("#hype-dex-chart", hype.charts.dexVolume.length ? hype.charts.dexVolume : [{ date: "2026-06-01", value: 0 }], "value", { color: "#2f6fed", label: "hype dex volume chart" });
-  renderUsdLineChart("#hype-fees-chart", hype.charts.fees.length ? hype.charts.fees : [{ date: "2026-06-01", value: 0 }], "value", { color: "#e66f2d", label: "hype fees chart" });
+  let hypeGrowthRange = "30D";
+  let hypePriceRange = "1D";
+  renderHypeCharts(hype, hypeGrowthRange, hypePriceRange);
+  setupRangeControl("#hype-growth-range", range => {
+    hypeGrowthRange = range;
+    renderHypeCharts(hype, hypeGrowthRange, hypePriceRange);
+  });
+  setupRangeControl("#hype-price-range", range => {
+    hypePriceRange = range;
+    renderHypeCharts(hype, hypeGrowthRange, hypePriceRange);
+  });
   renderTable(hype.indicators, "#hype-indicator-table");
   renderList("#hype-up-list", hypeAnalysis.up);
   renderList("#hype-risk-list", hypeAnalysis.risks);

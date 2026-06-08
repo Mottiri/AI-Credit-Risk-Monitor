@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -111,7 +112,7 @@ def strength_score(hype_ctx, revenue_summary, holders_summary, hip3):
     return max(0, min(100, round(score)))
 
 
-def chart_from_llama(summary, days=30):
+def chart_from_llama(summary, days=365):
     chart = summary.get("totalDataChart", [])[-days:]
     return [
         {
@@ -119,6 +120,34 @@ def chart_from_llama(summary, days=30):
             "value": float(point[1] or 0),
         }
         for point in chart
+    ]
+
+
+def candle_chart(interval, days=None, hours=None):
+    now = int(time.time() * 1000)
+    lookback_ms = int((hours * 60 * 60 if hours is not None else days * 24 * 60 * 60) * 1000)
+    candles = post_hyperliquid(
+        {
+            "type": "candleSnapshot",
+            "req": {
+                "coin": "HYPE",
+                "interval": interval,
+                "startTime": now - lookback_ms,
+                "endTime": now,
+            },
+        }
+    )
+    return [
+        {
+            "date": datetime.fromtimestamp(item["t"] / 1000, timezone.utc).strftime("%Y-%m-%d %H:%M"),
+            "value": float(item["c"]),
+            "open": float(item["o"]),
+            "high": float(item["h"]),
+            "low": float(item["l"]),
+            "close": float(item["c"]),
+            "volume": float(item.get("v") or 0),
+        }
+        for item in candles
     ]
 
 
@@ -188,7 +217,7 @@ def build():
 
     score_history = [
         {"date": item["date"], "score": score}
-        for item in chart_from_llama(revenue, 30)
+        for item in chart_from_llama(revenue, 365)
     ]
 
     indicators = [
@@ -351,10 +380,17 @@ def build():
         "signals": signals,
         "indicators": indicators,
         "charts": {
-            "revenue": chart_from_llama(revenue, 30),
-            "holdersRevenue": chart_from_llama(holders, 30),
-            "dexVolume": chart_from_llama(dex_volume, 30),
-            "fees": chart_from_llama(fees, 30),
+            "revenue": chart_from_llama(revenue, 365),
+            "holdersRevenue": chart_from_llama(holders, 365),
+            "dexVolume": chart_from_llama(dex_volume, 365),
+            "fees": chart_from_llama(fees, 365),
+        },
+        "priceCharts": {
+            "1D": candle_chart("5m", hours=24),
+            "7D": candle_chart("1h", days=7),
+            "30D": candle_chart("4h", days=30),
+            "90D": candle_chart("4h", days=90),
+            "1Y": candle_chart("1d", days=365),
         },
         "hip3": hip3,
         "sources": [

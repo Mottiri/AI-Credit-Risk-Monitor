@@ -376,6 +376,55 @@ h3 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.chart-wide {
+  grid-column: 1 / -1;
+}
+
+.hype-range-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  min-height: 40px;
+}
+
+.range-control {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-soft);
+}
+
+.range-button {
+  min-width: 44px;
+  min-height: 30px;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.range-button.is-active {
+  background: var(--text);
+  color: #ffffff;
+}
+
+.empty-chart {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .chart-panel,
 .analysis-panel,
 .table-panel {

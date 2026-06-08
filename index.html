@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Credit Risk Monitor</title>
-    <link rel="stylesheet" href="styles.css?v=12" />
+    <link rel="stylesheet" href="styles.css?v=13" />
   </head>
   <body>
     <div class="app-shell">
@@ -262,6 +262,36 @@
           </section>
 
           <section class="content-grid hype-chart-grid">
+            <article class="panel chart-panel chart-wide">
+              <div class="panel-title-row">
+                <div>
+                  <p class="section-label">Price</p>
+                  <div class="title-with-help">
+                    <h2>HYPE価格チャート</h2>
+                    <button class="help-button" type="button" aria-label="HYPE価格チャートの説明" data-tooltip="Hyperliquid公式APIのHYPE perpローソク足から終値を表示します。1Dは5分足、7Dは1時間足、30D/90Dは4時間足、1Yは日足です。">?</button>
+                  </div>
+                </div>
+                <div class="range-control" id="hype-price-range" aria-label="HYPE価格チャート期間">
+                  <button class="range-button is-active" type="button" data-range="1D">1D</button>
+                  <button class="range-button" type="button" data-range="7D">7D</button>
+                  <button class="range-button" type="button" data-range="30D">30D</button>
+                  <button class="range-button" type="button" data-range="90D">90D</button>
+                  <button class="range-button" type="button" data-range="1Y">1Y</button>
+                </div>
+              </div>
+              <div class="chart-area" id="hype-price-chart"></div>
+            </article>
+
+            <div class="chart-wide hype-range-row">
+              <p class="section-label">Revenue chart range</p>
+              <div class="range-control" id="hype-growth-range" aria-label="HYPE成長グラフ期間">
+                <button class="range-button" type="button" data-range="7D">7D</button>
+                <button class="range-button is-active" type="button" data-range="30D">30D</button>
+                <button class="range-button" type="button" data-range="90D">90D</button>
+                <button class="range-button" type="button" data-range="1Y">1Y</button>
+              </div>
+            </div>
+
             <article class="panel chart-panel">
               <div class="panel-title-row">
                 <div>
@@ -374,6 +404,6 @@
       </main>
     </div>
 
-    <script src="app.js?v=15"></script>
+    <script src="app.js?v=16"></script>
   </body>
 </html>
