@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-06-10T23:50+00:00",
+  "updatedAt": "2026-06-11T23:53+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟡",
-    "value": "AIバブル崩壊予測 25.3%",
+    "value": "AIバブル崩壊予測 24.7%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "25.3%",
-      "latestRaw": 25.3,
-      "date": "2026-06-10T23:44:38.325635Z",
-      "previousChange": "-0.1pt / 24h",
-      "previousChangeRaw": -0.05,
-      "yoy": "+2.5pt / 7d",
-      "yoyRaw": 2.5,
+      "latest": "24.7%",
+      "latestRaw": 24.7,
+      "date": "2026-06-11T23:46:11.058245Z",
+      "previousChange": "-0.7pt / 24h",
+      "previousChangeRaw": -0.7000000000000001,
+      "yoy": "+3.4pt / 7d",
+      "yoyRaw": 3.4000000000000004,
       "risk": "🟡",
       "riskClass": "risk-watch",
       "riskScore": 45,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$467",
-      "volume1wk": "$9.9K",
+      "volume24h": "$2.3K",
+      "volume1wk": "$9.7K",
       "totalVolume": "$2.3M",
-      "liquidity": "$15.5K",
-      "bestBid": 0.238,
-      "bestAsk": 0.268,
-      "spread": 0.03,
-      "oneMonthChange": -1.15
+      "liquidity": "$16.0K",
+      "bestBid": 0.24,
+      "bestAsk": 0.254,
+      "spread": 0.014,
+      "oneMonthChange": -0.95
     }
   ],
   "history": [
@@ -86,6 +86,11 @@
       "date": "2026-06-10",
       "probability": 25.3,
       "volume24h": 466.89
+    },
+    {
+      "date": "2026-06-11",
+      "probability": 24.7,
+      "volume24h": 2331.91
     }
   ]
 }
