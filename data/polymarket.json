@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-06-16T23:48+00:00",
+  "updatedAt": "2026-06-17T23:50+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟡",
-    "value": "AIバブル崩壊予測 20.6%",
+    "value": "AIバブル崩壊予測 21.3%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "20.6%",
-      "latestRaw": 20.65,
-      "date": "2026-06-16T23:41:50.437297Z",
-      "previousChange": "+0.2pt / 24h",
-      "previousChangeRaw": 0.2,
-      "yoy": "-4.7pt / 7d",
-      "yoyRaw": -4.7,
+      "latest": "21.3%",
+      "latestRaw": 21.349999999999998,
+      "date": "2026-06-17T23:45:10.519017Z",
+      "previousChange": "+0.7pt / 24h",
+      "previousChangeRaw": 0.7000000000000001,
+      "yoy": "-3.9pt / 7d",
+      "yoyRaw": -3.85,
       "risk": "🟡",
       "riskClass": "risk-watch",
       "riskScore": 45,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$354",
+      "volume24h": "$394",
       "volume1wk": "$7.1K",
       "totalVolume": "$2.3M",
-      "liquidity": "$14.6K",
-      "bestBid": 0.204,
-      "bestAsk": 0.209,
-      "spread": 0.005,
-      "oneMonthChange": -1.4000000000000001
+      "liquidity": "$14.4K",
+      "bestBid": 0.205,
+      "bestAsk": 0.222,
+      "spread": 0.017,
+      "oneMonthChange": -0.8500000000000001
     }
   ],
   "history": [
@@ -101,6 +101,11 @@
       "date": "2026-06-16",
       "probability": 20.65,
       "volume24h": 353.71
+    },
+    {
+      "date": "2026-06-17",
+      "probability": 21.35,
+      "volume24h": 393.75
     }
   ]
 }
