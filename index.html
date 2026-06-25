@@ -242,41 +242,26 @@
         </div>
 
         <div class="tab-panel" id="semi-panel">
-          <section class="hero-grid" aria-label="半導体サイクル総合判定">
-            <article class="panel risk-panel">
-              <div class="risk-head">
+          <section class="semi-phase-layout" aria-label="半導体サイクル現在地">
+            <article class="panel semi-phase-panel">
+              <div class="panel-title-row">
                 <div>
-                  <p class="section-label">半導体サイクル熱量</p>
-                  <div class="score-line">
-                    <span id="semi-emoji">🟡</span>
-                    <strong id="semi-score">--</strong>
-                    <span>/ 100</span>
-                  </div>
+                  <p class="section-label">Current Position</p>
+                  <h2>現在の半導体サイクル位置</h2>
                 </div>
                 <span class="risk-badge" id="semi-label">Loading</span>
               </div>
-              <div class="sparkline-wrap" id="semi-sparkline"></div>
+              <div class="cycle-position">
+                <span id="semi-emoji">🟡</span>
+                <strong id="semi-phase-name">--</strong>
+              </div>
               <p class="status-text" id="semi-status-summary">データを読み込んでいます。</p>
             </article>
 
             <div class="signal-grid macro-signal-grid" id="semi-signal-grid"></div>
           </section>
 
-          <section class="content-grid">
-            <article class="panel chart-panel">
-              <div class="panel-title-row">
-                <div>
-                  <p class="section-label">Cycle Position</p>
-                  <div class="title-with-help">
-                    <h2>現在フェーズ</h2>
-                    <button class="help-button" type="button" aria-label="半導体サイクルフェーズの説明" data-tooltip="Recovery、Demand Acceleration、Supply Shortage、Capacity Expansion、Overbuild Risk、Downturnのどこに近いかを、需要・メモリ・装置・在庫から判定します。">?</button>
-                  </div>
-                </div>
-                <span class="mini-note">0-100 heat</span>
-              </div>
-              <div class="chart-area" id="semi-cycle-chart"></div>
-            </article>
-
+          <section class="analysis-grid">
             <article class="panel chart-panel">
               <div class="panel-title-row">
                 <div>

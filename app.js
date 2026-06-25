@@ -816,14 +816,12 @@ async function render() {
   renderList("#macro-watch-list", macroAnalysis.watch);
 
   document.querySelector("#semi-emoji").textContent = semiMeta.emoji;
-  document.querySelector("#semi-score").textContent = semiScore;
   document.querySelector("#semi-label").textContent = semiMeta.label;
+  document.querySelector("#semi-phase-name").textContent = semi.phase ?? "Loading";
   document.querySelector("#semi-phase-label").textContent = semiMeta.phase;
   document.querySelector("#semi-status-summary").textContent = semiAnalysis.main.split("。").slice(0, 2).join("。") + "。";
   document.querySelector("#semi-analysis-main").textContent = semiAnalysis.main;
   renderSignals(semi.signals, "#semi-signal-grid");
-  renderLineChart("#semi-sparkline", semi.scoreHistory, "score", { color: "#7b68ee", label: "semiconductor cycle sparkline" });
-  renderLineChart("#semi-cycle-chart", semi.scoreHistory, "score", { color: "#7b68ee", suffix: "", thresholds: true, maxLabels: 6 });
   renderInvestmentMap(semi.investmentMap);
   renderTable(semi.indicators, "#semi-indicator-table");
   renderList("#semi-up-list", semiAnalysis.up);

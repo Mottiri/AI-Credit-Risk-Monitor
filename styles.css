@@ -376,6 +376,32 @@ h3 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.semi-phase-layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(520px, 2.1fr);
+  gap: 16px;
+}
+
+.semi-phase-panel {
+  padding: 20px;
+}
+
+.cycle-position {
+  display: grid;
+  gap: 8px;
+  margin: 24px 0 18px;
+}
+
+.cycle-position span {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.cycle-position strong {
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.05;
+}
+
 .chart-wide {
   grid-column: 1 / -1;
 }
@@ -605,7 +631,8 @@ td small {
 @media (max-width: 1100px) {
   .hero-grid,
   .content-grid,
-  .hype-chart-grid {
+  .hype-chart-grid,
+  .semi-phase-layout {
     grid-template-columns: 1fr;
   }
 
