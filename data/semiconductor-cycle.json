@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-25T16:10+09:00",
+  "updatedAt": "2026-06-25T17:03+09:00",
   "phase": "Capacity Expansion",
   "phaseDescription": "AI需要を背景に供給能力を増やす局面",
   "scoreHistory": [
@@ -17,7 +17,7 @@
     },
     {
       "date": "Capacity",
-      "score": 69
+      "score": 68
     }
   ],
   "signals": [
@@ -76,6 +76,13 @@
       "emoji": "🟡",
       "value": "受注残proxyを確認",
       "help": "直接の新規受注や受注残が取れない場合、SECのRPO、契約負債、繰延収益などをproxyとして使います。装置株では受注増と利益率改善が揃うかを重視します。"
+    },
+    {
+      "key": "BUYER",
+      "label": "Buyer Stress",
+      "emoji": "🟠",
+      "value": "買い手側ストレス 65/100",
+      "help": "ハイパースケーラーなどAI投資の買い手側が株価・FCF・Capex面で重くなっていないかを見ます。買い手が弱く、供給側だけが強い場合は、後のCapex減速・発注延期リスクを警戒します。"
     }
   ],
   "indicators": [
@@ -296,6 +303,44 @@
       "block": "memory_price",
       "source": "TrendForce public price page",
       "sourceUrl": "https://www.trendforce.com/price/flash/flash_spot"
+    },
+    {
+      "id": "HYPERSCALER-BUYER-STRESS",
+      "name": "Hyperscaler Buyer Stress",
+      "help": "Microsoft、Amazon、Alphabet、Meta、OracleなどAI投資の買い手側株価と、NVIDIA/Micron/ASMLなど供給側株価の相対パフォーマンスを見ます。買い手側が弱く、供給側だけが強い状態は、AI Capex継続が前提になった歪みとして監視します。",
+      "latest": "65/100",
+      "latestRaw": 65,
+      "date": "2026-06-25",
+      "previousChange": "Buyer +12.9%",
+      "previousChangeRaw": 12.938677128833191,
+      "yoy": "Supply +76.2%",
+      "yoyRaw": 76.1714014909654,
+      "spread": "+63.2%",
+      "spreadRaw": 63.2327243621322,
+      "risk": "🟠",
+      "riskClass": "risk-high",
+      "riskScore": 65,
+      "cycleScore": 35,
+      "nextRelease": "Daily",
+      "block": "buyer_pressure"
+    },
+    {
+      "id": "BIGTECH-CAPEX-TOTAL",
+      "name": "Microsoft + Alphabet + Meta + Amazon Capex",
+      "help": "Big Tech 4社のCapex合計です。買い手側のAI投資余力を確認します。株価が重くてもCapexが維持される間は供給側の需要を支えますが、Capex減速が始まると製造側への波及を警戒します。",
+      "latest": "$129.8B",
+      "latestRaw": 129750000000.0,
+      "date": "2026Q1",
+      "previousChange": "+9.4%",
+      "previousChangeRaw": 9.371838964191781,
+      "yoy": "+80.5%",
+      "yoyRaw": 80.45395121137102,
+      "risk": "🟢",
+      "riskClass": "risk-low",
+      "riskScore": 20,
+      "nextRelease": "Quarterly",
+      "block": "buyer_pressure",
+      "cycleScore": 80.0
     },
     {
       "id": "AMD-REVENUE",
@@ -883,7 +928,7 @@
     }
   ],
   "analysis": {
-    "main": "現在地は「Capacity Expansion」寄りです。AI需要を背景に供給能力を増やす局面。AI ComputeはNVIDIA/Broadcomの既存データで確認し、Memory/HBMはTrendForceのDRAM/NAND価格とMicronの売上・粗利率・在庫で確認します。DDR5 spotは46.733、NAND 512Gb TLC spotは20.431です。FoundryはTSMC月次売上NT$417.0B、前年比+30.1%で確認します。Micronの売上前年比は+196.3%、粗利率は74.4%です。ガイダンススコアは80/100、決算後株価反応スコアは53/100です。設備投資・装置企業の売上が強い間は供給能力拡大局面ですが、在庫増と粗利率低下が重なる場合はOverbuild Riskへ警戒を引き上げます。",
+    "main": "現在地は「Capacity Expansion」寄りです。AI需要を背景に供給能力を増やす局面。AI ComputeはNVIDIA/Broadcomの既存データで確認し、Memory/HBMはTrendForceのDRAM/NAND価格とMicronの売上・粗利率・在庫で確認します。DDR5 spotは46.733、NAND 512Gb TLC spotは20.431です。FoundryはTSMC月次売上NT$417.0B、前年比+30.1%で確認します。Micronの売上前年比は+196.3%、粗利率は74.4%です。ガイダンススコアは80/100、決算後株価反応スコアは53/100です。買い手側ストレスは65/100で、ハイパースケーラー株価と供給側株価の乖離を監視します。設備投資・装置企業の売上が強い間は供給能力拡大局面ですが、在庫増と粗利率低下が重なる場合はOverbuild Riskへ警戒を引き上げます。",
     "up": [
       "AI Computeスコアは79/100",
       "Memory/HBMスコアは68/100",
@@ -894,6 +939,7 @@
     "risks": [
       "在庫圧力スコアは39/100",
       "決算後株価反応スコアは53/100",
+      "買い手側ストレスは65/100、ハイパースケーラー60日平均は+12.9%、供給側60日平均は+76.2%",
       "HBM実価格、SOX/SMH相対パフォーマンスは未接続",
       "TrendForce公開ページの構造変更時は前回成功値を維持",
       "Capex拡大が需要成長を上回る場合は将来の供給過剰に注意"
@@ -903,10 +949,11 @@
       "TrendForceのDRAM/NAND価格が7日・30日で上向き続けるか",
       "Micron在庫/売上比率が悪化しないか",
       "NVIDIA/BroadcomのAI売上ガイダンスが鈍化しないか",
+      "ハイパースケーラー株が弱いままBig Tech Capexが減速しないか",
       "AMAT/LRCX/KLACの受注・売上がピークアウトしないか",
       "TSMC月次売上とCoWoS供給制約の変化",
       "SOX/SMHが好決算に反応し続けるか"
     ]
   },
-  "source": "SEC Companyfacts + TrendForce public price pages + existing NVIDIA/Broadcom feeds"
+  "source": "SEC Companyfacts + TrendForce public price pages + Yahoo Finance chart data + existing NVIDIA/Broadcom feeds"
 }

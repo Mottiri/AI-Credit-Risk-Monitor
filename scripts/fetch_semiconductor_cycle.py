@@ -22,6 +22,24 @@ SEC_USER_AGENT = os.environ.get(
     "AI-Credit-Risk-Monitor/1.0 contact@example.com",
 )
 TSMC_TWSE_CODE = "2330"
+HYPERSCALER_STOCKS = [
+    {"ticker": "MSFT", "name": "Microsoft"},
+    {"ticker": "AMZN", "name": "Amazon"},
+    {"ticker": "GOOGL", "name": "Alphabet"},
+    {"ticker": "META", "name": "Meta"},
+    {"ticker": "ORCL", "name": "Oracle"},
+]
+AI_SUPPLY_CHAIN_STOCKS = [
+    {"ticker": "NVDA", "name": "NVIDIA"},
+    {"ticker": "AVGO", "name": "Broadcom"},
+    {"ticker": "AMD", "name": "AMD"},
+    {"ticker": "MU", "name": "Micron"},
+    {"ticker": "TSM", "name": "TSMC"},
+    {"ticker": "ASML", "name": "ASML"},
+    {"ticker": "AMAT", "name": "Applied Materials"},
+    {"ticker": "LRCX", "name": "Lam Research"},
+    {"ticker": "KLAC", "name": "KLA"},
+]
 
 TRENDFORCE_PRICE_SPECS = [
     {
@@ -371,6 +389,42 @@ def memory_price_score(change, change_7d=None, change_30d=None):
     return max(0, min(100, score))
 
 
+def buyer_stress_score(hyperscaler_change, supply_chain_change, capex_yoy, capex_qoq):
+    spread = None
+    if hyperscaler_change is not None and supply_chain_change is not None:
+        spread = supply_chain_change - hyperscaler_change
+    stress = 25
+    if hyperscaler_change is not None:
+        if hyperscaler_change <= -15:
+            stress += 28
+        elif hyperscaler_change <= -8:
+            stress += 18
+        elif hyperscaler_change < 0:
+            stress += 9
+    if spread is not None:
+        if spread >= 35:
+            stress += 28
+        elif spread >= 20:
+            stress += 18
+        elif spread >= 10:
+            stress += 9
+    if capex_yoy is not None:
+        if capex_yoy >= 50:
+            stress += 12
+        elif capex_yoy >= 20:
+            stress += 6
+        elif capex_yoy < 0:
+            stress -= 10
+    if capex_qoq is not None:
+        if capex_qoq <= -15:
+            stress += 18
+        elif capex_qoq < 0:
+            stress += 8
+        elif capex_qoq >= 10:
+            stress -= 5
+    return max(0, min(100, stress))
+
+
 def margin_score(margin, qoq):
     if margin is None:
         return 50
@@ -686,6 +740,77 @@ def price_change_after_date(closes, start_date, trading_days=5):
     return pct_change(end_close, start_close)
 
 
+def price_change_over_trading_days(closes, trading_days=60):
+    if not closes or len(closes) < 2:
+        return None
+    start_index = max(0, len(closes) - 1 - trading_days)
+    return pct_change(closes[-1]["close"], closes[start_index]["close"])
+
+
+def fetch_stock_group_performance(stocks, trading_days=60):
+    rows = []
+    for stock in stocks:
+        closes = fetch_yahoo_closes(stock["ticker"])
+        change = price_change_over_trading_days(closes, trading_days=trading_days)
+        rows.append({**stock, "change": change})
+        time.sleep(0.05)
+    return rows
+
+
+def average_change(rows):
+    return average([row.get("change") for row in rows], default=None)
+
+
+def buyer_pressure_indicators():
+    hyperscaler_rows = fetch_stock_group_performance(HYPERSCALER_STOCKS, trading_days=60)
+    supply_rows = fetch_stock_group_performance(AI_SUPPLY_CHAIN_STOCKS, trading_days=60)
+    hyperscaler_avg = average_change(hyperscaler_rows)
+    supply_avg = average_change(supply_rows)
+    spread = supply_avg - hyperscaler_avg if hyperscaler_avg is not None and supply_avg is not None else None
+    capex = existing_indicator(ROOT / "data" / "big-tech-capex.json", "BIGTECH-CAPEX-TOTAL")
+    capex_yoy = capex.get("yoyRaw") if capex else None
+    capex_qoq = capex.get("previousChangeRaw") if capex else None
+    stress = buyer_stress_score(hyperscaler_avg, supply_avg, capex_yoy, capex_qoq)
+    stress_emoji, stress_class = status_from_score(stress, positive=False)
+    latest_date = datetime.now(timezone.utc).date().isoformat()
+    pressure = {
+        "id": "HYPERSCALER-BUYER-STRESS",
+        "name": "Hyperscaler Buyer Stress",
+        "help": "Microsoft、Amazon、Alphabet、Meta、OracleなどAI投資の買い手側株価と、NVIDIA/Micron/ASMLなど供給側株価の相対パフォーマンスを見ます。買い手側が弱く、供給側だけが強い状態は、AI Capex継続が前提になった歪みとして監視します。",
+        "latest": f"{stress:.0f}/100",
+        "latestRaw": stress,
+        "date": latest_date,
+        "previousChange": f"Buyer {format_pct(hyperscaler_avg)}",
+        "previousChangeRaw": hyperscaler_avg,
+        "yoy": f"Supply {format_pct(supply_avg)}",
+        "yoyRaw": supply_avg,
+        "spread": format_pct(spread),
+        "spreadRaw": spread,
+        "risk": stress_emoji,
+        "riskClass": stress_class,
+        "riskScore": stress,
+        "cycleScore": 100 - stress,
+        "nextRelease": "Daily",
+        "block": "buyer_pressure",
+    }
+    if capex:
+        normalized_capex = normalize_existing_indicator(dict(capex), "buyer_pressure")
+        normalized_capex["help"] = (
+            "Big Tech 4社のCapex合計です。買い手側のAI投資余力を確認します。株価が重くてもCapexが維持される間は供給側の需要を支えますが、"
+            "Capex減速が始まると製造側への波及を警戒します。"
+        )
+    else:
+        normalized_capex = None
+    return [item for item in [pressure, normalized_capex] if item], {
+        "stress": stress,
+        "hyperscalerAvg": hyperscaler_avg,
+        "supplyAvg": supply_avg,
+        "spread": spread,
+        "capexYoy": capex_yoy,
+        "capexQoq": capex_qoq,
+    }
+
+
 def company_metrics(company):
     facts = fetch_companyfacts(company["cik"])
     revenue_tag, revenue = extract_quarterly_usd(facts, company["revenue_tags"])
@@ -930,6 +1055,13 @@ def build():
                 trendforce_prices.append(fallback)
                 indicators.append(fallback)
 
+    buyer_pressure = {"stress": 50, "hyperscalerAvg": None, "supplyAvg": None, "spread": None, "capexYoy": None, "capexQoq": None}
+    try:
+        buyer_pressure_items, buyer_pressure = buyer_pressure_indicators()
+        indicators.extend(buyer_pressure_items)
+    except Exception as exc:
+        print(f"Warning: hyperscaler buyer pressure skipped: {exc}")
+
     for item in metrics:
         company = item["company"]
         ticker = company["ticker"]
@@ -1090,6 +1222,8 @@ def build():
     guidance_score = average([item.get("cycleScore") for item in indicators if item.get("block") == "guidance"])
     orders_score = average([item.get("cycleScore") for item in indicators if item.get("block") == "orders"])
     market_reaction_score = average([item.get("cycleScore") for item in indicators if item.get("block") == "market_reaction"])
+    buyer_pressure_score = average([item.get("cycleScore") for item in indicators if item.get("block") == "buyer_pressure"])
+    buyer_stress = buyer_pressure.get("stress") if buyer_pressure.get("stress") is not None else 100 - buyer_pressure_score
     inventory_pressure_score = average(
         [100 - item.get("cycleScore") for item in indicators if item.get("block") == "inventory_margin" and item.get("id", "").endswith("-INVENTORY")],
         default=40,
@@ -1116,8 +1250,9 @@ def build():
         + guidance_score * 0.14
         + orders_score * 0.08
         + market_reaction_score * 0.06
-        + margin_score_avg * 0.06
-        + (100 - inventory_pressure_score) * 0.05
+        + buyer_pressure_score * 0.05
+        + margin_score_avg * 0.04
+        + (100 - inventory_pressure_score) * 0.02
     )
 
     signals = [
@@ -1177,6 +1312,13 @@ def build():
             "value": "受注残proxyを確認",
             "help": "直接の新規受注や受注残が取れない場合、SECのRPO、契約負債、繰延収益などをproxyとして使います。装置株では受注増と利益率改善が揃うかを重視します。",
         },
+        {
+            "key": "BUYER",
+            "label": "Buyer Stress",
+            "emoji": status_from_score(buyer_stress, positive=False)[0],
+            "value": f"買い手側ストレス {buyer_stress:.0f}/100",
+            "help": "ハイパースケーラーなどAI投資の買い手側が株価・FCF・Capex面で重くなっていないかを見ます。買い手が弱く、供給側だけが強い場合は、後のCapex減速・発注延期リスクを警戒します。",
+        },
     ]
 
     latest_revenue_yoy = company_by_ticker.get("MU", {}).get("revenueYoy")
@@ -1191,6 +1333,7 @@ def build():
         f"FoundryはTSMC月次売上{tsmc_monthly['latest'] if tsmc_monthly else 'n/a'}、前年比{tsmc_monthly['yoy'] if tsmc_monthly else 'n/a'}で確認します。"
         f"Micronの売上前年比は{format_pct(latest_revenue_yoy)}、粗利率は{latest_margin_text}です。"
         f"ガイダンススコアは{guidance_score:.0f}/100、決算後株価反応スコアは{market_reaction_score:.0f}/100です。"
+        f"買い手側ストレスは{buyer_stress:.0f}/100で、ハイパースケーラー株価と供給側株価の乖離を監視します。"
         "設備投資・装置企業の売上が強い間は供給能力拡大局面ですが、在庫増と粗利率低下が重なる場合はOverbuild Riskへ警戒を引き上げます。"
     )
 
@@ -1219,6 +1362,7 @@ def build():
             "risks": [
                 f"在庫圧力スコアは{inventory_pressure_score:.0f}/100",
                 f"決算後株価反応スコアは{market_reaction_score:.0f}/100",
+                f"買い手側ストレスは{buyer_stress:.0f}/100、ハイパースケーラー60日平均は{format_pct(buyer_pressure.get('hyperscalerAvg'))}、供給側60日平均は{format_pct(buyer_pressure.get('supplyAvg'))}",
                 "HBM実価格、SOX/SMH相対パフォーマンスは未接続",
                 "TrendForce公開ページの構造変更時は前回成功値を維持",
                 "Capex拡大が需要成長を上回る場合は将来の供給過剰に注意",
@@ -1228,12 +1372,13 @@ def build():
                 "TrendForceのDRAM/NAND価格が7日・30日で上向き続けるか",
                 "Micron在庫/売上比率が悪化しないか",
                 "NVIDIA/BroadcomのAI売上ガイダンスが鈍化しないか",
+                "ハイパースケーラー株が弱いままBig Tech Capexが減速しないか",
                 "AMAT/LRCX/KLACの受注・売上がピークアウトしないか",
                 "TSMC月次売上とCoWoS供給制約の変化",
                 "SOX/SMHが好決算に反応し続けるか",
             ],
         },
-        "source": "SEC Companyfacts + TrendForce public price pages + existing NVIDIA/Broadcom feeds",
+        "source": "SEC Companyfacts + TrendForce public price pages + Yahoo Finance chart data + existing NVIDIA/Broadcom feeds",
     }
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
