@@ -388,6 +388,56 @@ h3 {
   min-height: 40px;
 }
 
+.phase-map {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.phase-row {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-soft);
+}
+
+.phase-row.is-active {
+  border-color: rgba(47, 111, 237, 0.4);
+  background: #eef4ff;
+}
+
+.phase-row div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.phase-row strong {
+  font-size: 13px;
+}
+
+.phase-row span {
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.phase-row p {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.phase-row small {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .range-control {
   display: inline-flex;
   gap: 4px;

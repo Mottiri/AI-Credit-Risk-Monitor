@@ -92,7 +92,7 @@ const sampleData = {
   ]
 };
 
-const dataVersion = "17";
+const dataVersion = "18";
 
 function dataUrl(path) {
   const configuredBase = String(window.DASHBOARD_DATA_BASE ?? "").replace(/\/$/, "");
@@ -120,6 +120,15 @@ function getHypeMeta(score) {
   if (score >= 55) return { emoji: "🟡", label: "Constructive", phase: "概ね良好", className: "risk-watch" };
   if (score >= 35) return { emoji: "🟠", label: "Watch", phase: "注意局面", className: "risk-high" };
   return { emoji: "🔴", label: "Weak", phase: "弱含み", className: "risk-danger" };
+}
+
+function getSemiMeta(score, phase) {
+  if (phase === "Overbuild Risk" || phase === "Downturn") {
+    return { emoji: "🟠", label: phase, phase: "警戒局面", className: "risk-high" };
+  }
+  if (score >= 70) return { emoji: "🟢", label: phase, phase: "上昇サイクル優勢", className: "risk-low" };
+  if (score >= 50) return { emoji: "🟡", label: phase, phase: "中立から拡大", className: "risk-watch" };
+  return { emoji: "🟠", label: phase, phase: "回復待ち", className: "risk-high" };
 }
 
 const helpText = {
@@ -383,6 +392,30 @@ async function loadHypeData() {
   }
 }
 
+async function loadSemiconductorData() {
+  try {
+    const response = await fetch(dataUrl("data/semiconductor-cycle.json"), { cache: "no-store" });
+    if (!response.ok) throw new Error("semiconductor-cycle.json not found");
+    return await response.json();
+  } catch {
+    return {
+      updatedAt: new Date().toISOString(),
+      phase: "Loading",
+      phaseDescription: "半導体サイクルデータを読み込めませんでした。",
+      scoreHistory: [{ date: "Loading", score: 50 }],
+      signals: [],
+      indicators: [],
+      investmentMap: [],
+      analysis: {
+        main: "半導体サイクルデータを読み込めませんでした。",
+        up: ["データ接続後に判定します"],
+        risks: ["データ接続待ちです"],
+        watch: ["SEC/IRデータの更新状況を確認します"]
+      }
+    };
+  }
+}
+
 function mergeAiDemand(data, aiDemand) {
   const indicators = [
     ...data.indicators.filter(item => item.block !== "demand"),
@@ -563,6 +596,21 @@ function renderTable(indicators, selector = "#indicator-table") {
   `).join("");
 }
 
+function renderInvestmentMap(rows, selector = "#semi-investment-map") {
+  const root = document.querySelector(selector);
+  if (!root) return;
+  root.innerHTML = rows.map(row => `
+    <article class="phase-row ${row.active ? "is-active" : ""}">
+      <div>
+        <strong>${row.phase}</strong>
+        <span>${row.focus}</span>
+      </div>
+      <p>${row.stance}</p>
+      <small>${row.note}</small>
+    </article>
+  `).join("");
+}
+
 function renderList(selector, items) {
   document.querySelector(selector).innerHTML = items.map(item => `<li>${item}</li>`).join("");
 }
@@ -591,7 +639,8 @@ function labelIndexes(length, maxLabels) {
 }
 
 function defaultAxisLabel(label) {
-  return String(label).slice(5);
+  const value = String(label);
+  return /^\d{4}-/.test(value) ? value.slice(5) : value;
 }
 
 function compactDateTimeLabel(label) {
@@ -718,6 +767,7 @@ function initTabs() {
 async function render() {
   const data = await loadData();
   const hype = await loadHypeData();
+  const semi = await loadSemiconductorData();
   const macro = getMacroData(data);
   const latestScore = data.scoreHistory.at(-1).score;
   const meta = getRiskMeta(latestScore);
@@ -728,6 +778,9 @@ async function render() {
   const hypeScore = hype.scoreHistory.at(-1)?.score ?? 50;
   const hypeMeta = getHypeMeta(hypeScore);
   const hypeAnalysis = generateHypeAnalysis(hype);
+  const semiScore = semi.scoreHistory.at(-1)?.score ?? 50;
+  const semiMeta = getSemiMeta(semiScore, semi.phase ?? "Loading");
+  const semiAnalysis = semi.analysis ?? { main: "", up: [], risks: [], watch: [] };
 
   document.querySelector("#last-updated").textContent = formatDate(data.updatedAt);
   document.querySelector("#next-update").textContent = getNextScheduledUpdate();
@@ -761,6 +814,21 @@ async function render() {
   renderList("#macro-risk-up-list", macroAnalysis.up);
   renderList("#macro-risk-down-list", macroAnalysis.down);
   renderList("#macro-watch-list", macroAnalysis.watch);
+
+  document.querySelector("#semi-emoji").textContent = semiMeta.emoji;
+  document.querySelector("#semi-score").textContent = semiScore;
+  document.querySelector("#semi-label").textContent = semiMeta.label;
+  document.querySelector("#semi-phase-label").textContent = semiMeta.phase;
+  document.querySelector("#semi-status-summary").textContent = semiAnalysis.main.split("。").slice(0, 2).join("。") + "。";
+  document.querySelector("#semi-analysis-main").textContent = semiAnalysis.main;
+  renderSignals(semi.signals, "#semi-signal-grid");
+  renderLineChart("#semi-sparkline", semi.scoreHistory, "score", { color: "#7b68ee", label: "semiconductor cycle sparkline" });
+  renderLineChart("#semi-cycle-chart", semi.scoreHistory, "score", { color: "#7b68ee", suffix: "", thresholds: true, maxLabels: 6 });
+  renderInvestmentMap(semi.investmentMap);
+  renderTable(semi.indicators, "#semi-indicator-table");
+  renderList("#semi-up-list", semiAnalysis.up);
+  renderList("#semi-risk-list", semiAnalysis.risks);
+  renderList("#semi-watch-list", semiAnalysis.watch);
 
   document.querySelector("#hype-emoji").textContent = hypeMeta.emoji;
   document.querySelector("#hype-score").textContent = hypeScore;

@@ -67,6 +67,7 @@ The site will then request:
 ```text
 https://your-worker.your-subdomain.workers.dev/data/latest.json
 https://your-worker.your-subdomain.workers.dev/data/hype.json
+https://your-worker.your-subdomain.workers.dev/data/semiconductor-cycle.json
 ```
 
 ## Manual Refresh
@@ -99,6 +100,8 @@ curl "https://your-worker.your-subdomain.workers.dev/admin/refresh?dataset=hype"
 - `/data/ai-demand.json`
 - `/data/polymarket.json`
 - `/data/big-tech-capex.json`
+- `/data/semiconductor-cycle.json`
 - `/api/data/latest`
 - `/api/data/hype`
+- `/api/data/semiconductor-cycle`
 - `/health`

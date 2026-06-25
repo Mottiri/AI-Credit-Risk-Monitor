@@ -5,7 +5,8 @@ const DATASETS = {
   nvidia: "data/nvidia.json",
   "ai-demand": "data/ai-demand.json",
   polymarket: "data/polymarket.json",
-  "big-tech-capex": "data/big-tech-capex.json"
+  "big-tech-capex": "data/big-tech-capex.json",
+  "semiconductor-cycle": "data/semiconductor-cycle.json"
 };
 
 const DEFAULT_SOURCE_BASE = "https://raw.githubusercontent.com/Mottiri/AI-Credit-Risk-Monitor/main";
