@@ -4,25 +4,81 @@ import os
 import re
 import time
 from datetime import datetime, timezone
+from html import unescape
 from pathlib import Path
 from urllib.request import Request, urlopen
 
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT_PATH = ROOT / "data" / "semiconductor-cycle.json"
+TREND_PRICE_HISTORY_PATH = ROOT / "data" / "trendforce-memory-prices.json"
 SEC_BASE_URL = "https://data.sec.gov/api/xbrl/companyfacts"
 TWSE_MONTHLY_REVENUE_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"
+YAHOO_CHART_URL = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?range=6mo&interval=1d"
+TRENDFORCE_DRAM_URL = "https://www.trendforce.com/price/dram/dram_spot"
+TRENDFORCE_FLASH_URL = "https://www.trendforce.com/price/flash/flash_spot"
 SEC_USER_AGENT = os.environ.get(
     "SEC_USER_AGENT",
     "AI-Credit-Risk-Monitor/1.0 contact@example.com",
 )
 TSMC_TWSE_CODE = "2330"
 
+TRENDFORCE_PRICE_SPECS = [
+    {
+        "id": "TF-DRAM-DDR5-16GB-SPOT",
+        "name": "TrendForce DDR5 16Gb Spot Price",
+        "page": "dram",
+        "item": "DDR5 16Gb (2Gx8) 4800/5600",
+        "latest_index": 5,
+        "change_index": 6,
+        "help": "TrendForce公開ページのDDR5 16Gb spot priceです。DRAM価格サイクルの短期方向感を見ます。上昇が続くほどメモリメーカーの価格決定力に追い風です。",
+    },
+    {
+        "id": "TF-DRAM-DDR4-16GB-SPOT",
+        "name": "TrendForce DDR4 16Gb Spot Price",
+        "page": "dram",
+        "item": "DDR4 16Gb (2Gx8) 3200",
+        "latest_index": 5,
+        "change_index": 6,
+        "help": "TrendForce公開ページのDDR4 16Gb spot priceです。汎用DRAM価格の底打ち・上昇継続を見る補助指標です。",
+    },
+    {
+        "id": "TF-DRAM-DDR5-SODIMM-CONTRACT",
+        "name": "TrendForce DDR5 SO-DIMM Contract Price",
+        "page": "dram",
+        "item": "DDR5 8GB SO-DIMM",
+        "latest_index": 3,
+        "change_index": 4,
+        "yoy_index": 5,
+        "help": "TrendForce公開ページのDDR5 SO-DIMM contract priceです。契約価格はspotより更新頻度が低い一方、メモリメーカーの収益に効きやすい価格指標です。",
+    },
+    {
+        "id": "TF-NAND-512GB-TLC-SPOT",
+        "name": "TrendForce NAND 512Gb TLC Spot Price",
+        "page": "flash",
+        "item": "512Gb TLC",
+        "latest_index": 5,
+        "change_index": 6,
+        "help": "TrendForce公開ページのNAND 512Gb TLC spot priceです。NAND価格の短期方向感を確認します。",
+    },
+    {
+        "id": "TF-NAND-128GB-MLC-CONTRACT",
+        "name": "TrendForce NAND 128Gb MLC Contract Price",
+        "page": "flash",
+        "item": "NAND 128Gb 16Gx8 MLC",
+        "latest_index": 3,
+        "change_index": 4,
+        "yoy_index": 5,
+        "help": "TrendForce公開ページのNAND contract priceです。NANDの契約価格が上昇しているかを見ます。",
+    },
+]
+
 COMPANIES = [
     {
         "ticker": "AMD",
         "name": "Advanced Micro Devices",
         "cik": "0000002488",
+        "yahoo": "AMD",
         "group": "ai_compute",
         "revenue_tags": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"],
     },
@@ -30,6 +86,7 @@ COMPANIES = [
         "ticker": "MU",
         "name": "Micron Technology",
         "cik": "0000723125",
+        "yahoo": "MU",
         "group": "memory",
         "revenue_tags": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"],
     },
@@ -37,6 +94,7 @@ COMPANIES = [
         "ticker": "AMAT",
         "name": "Applied Materials",
         "cik": "0000006951",
+        "yahoo": "AMAT",
         "group": "equipment",
         "revenue_tags": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"],
     },
@@ -44,6 +102,7 @@ COMPANIES = [
         "ticker": "LRCX",
         "name": "Lam Research",
         "cik": "0000707549",
+        "yahoo": "LRCX",
         "group": "equipment",
         "revenue_tags": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"],
     },
@@ -51,6 +110,7 @@ COMPANIES = [
         "ticker": "KLAC",
         "name": "KLA",
         "cik": "0000319201",
+        "yahoo": "KLAC",
         "group": "equipment",
         "revenue_tags": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"],
     },
@@ -61,6 +121,18 @@ def request_json(url):
     request = Request(url, headers={"Accept": "application/json", "User-Agent": SEC_USER_AGENT})
     with urlopen(request, timeout=45) as response:
         return json.loads(response.read().decode("utf-8"))
+
+
+def request_text(url):
+    request = Request(
+        url,
+        headers={
+            "Accept": "text/html,application/xhtml+xml",
+            "User-Agent": "Mozilla/5.0 AI-Credit-Risk-Monitor/1.0",
+        },
+    )
+    with urlopen(request, timeout=45) as response:
+        return response.read().decode("utf-8", "ignore")
 
 
 def fetch_companyfacts(cik):
@@ -108,9 +180,15 @@ def extract_quarterly_usd(facts, tags):
 
 
 def pct_change(current, previous):
-    if previous in (None, 0):
+    if current is None or previous in (None, 0):
         return None
     return (current / previous - 1) * 100
+
+
+def ratio(numerator, denominator):
+    if numerator is None or denominator in (None, 0):
+        return None
+    return numerator / denominator
 
 
 def format_usd(value):
@@ -163,6 +241,20 @@ def parse_float(value):
         return None
 
 
+def parse_percent_text(value):
+    match = re.search(r"[-+]?\d+(?:\.\d+)?", str(value or ""))
+    return float(match.group(0)) if match else None
+
+
+def parse_iso_date(value):
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(str(value)).date()
+    except ValueError:
+        return None
+
+
 def growth_score(yoy, qoq):
     if yoy is None and qoq is None:
         return 50
@@ -183,6 +275,99 @@ def growth_score(yoy, qoq):
             score -= 15
         elif qoq < 0:
             score -= 7
+    return max(0, min(100, score))
+
+
+def price_reaction_score(change):
+    if change is None:
+        return 50
+    if change >= 8:
+        return 82
+    if change >= 3:
+        return 70
+    if change >= 0:
+        return 58
+    if change <= -8:
+        return 22
+    if change <= -3:
+        return 35
+    return 45
+
+
+def backlog_score(backlog_to_revenue, yoy):
+    if backlog_to_revenue is None and yoy is None:
+        return 50
+    score = 45
+    if backlog_to_revenue is not None:
+        if backlog_to_revenue >= 0.8:
+            score += 25
+        elif backlog_to_revenue >= 0.4:
+            score += 15
+        elif backlog_to_revenue < 0.15:
+            score -= 10
+    if yoy is not None:
+        if yoy >= 25:
+            score += 18
+        elif yoy >= 10:
+            score += 10
+        elif yoy < -10:
+            score -= 16
+    return max(0, min(100, score))
+
+
+def memory_price_proxy_score(revenue_qoq, gross_margin_qoq, inventory_yoy):
+    score = 50
+    if revenue_qoq is not None:
+        if revenue_qoq >= 20:
+            score += 18
+        elif revenue_qoq >= 5:
+            score += 8
+        elif revenue_qoq < 0:
+            score -= 12
+    if gross_margin_qoq is not None:
+        if gross_margin_qoq >= 8:
+            score += 22
+        elif gross_margin_qoq >= 2:
+            score += 12
+        elif gross_margin_qoq < 0:
+            score -= 15
+    if inventory_yoy is not None:
+        if inventory_yoy <= 0:
+            score += 8
+        elif inventory_yoy >= 25:
+            score -= 12
+    return max(0, min(100, score))
+
+
+def memory_price_score(change, change_7d=None, change_30d=None):
+    score = 50
+    if change is not None:
+        if change >= 3:
+            score += 14
+        elif change > 0:
+            score += 7
+        elif change <= -3:
+            score -= 14
+        elif change < 0:
+            score -= 7
+    if change_7d is not None:
+        if change_7d >= 5:
+            score += 16
+        elif change_7d > 0:
+            score += 8
+        elif change_7d <= -5:
+            score -= 16
+        elif change_7d < 0:
+            score -= 8
+    if change_30d is not None:
+        if change_30d >= 10:
+            score += 20
+        elif change_30d > 0:
+            score += 10
+        elif change_30d <= -10:
+            score -= 20
+        elif change_30d < 0:
+            score -= 10
     return max(0, min(100, score))
 
 
@@ -268,6 +453,147 @@ def status_from_score(score, positive=True):
     return "🟢", "risk-low"
 
 
+def clean_html_text(value):
+    value = re.sub(r"<[^>]+>", " ", value)
+    return re.sub(r"\s+", " ", unescape(value)).strip()
+
+
+def trendforce_last_update(document):
+    match = re.search(r"Last Update\s+([^<]+)", document)
+    return match.group(1).strip() if match else datetime.now(timezone.utc).date().isoformat()
+
+
+def trendforce_rows(document):
+    rows = {}
+    for row in re.findall(r"<tr>\s*(.*?)\s*</tr>", document, re.S):
+        cells = re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", row, re.S)
+        values = [clean_html_text(cell) for cell in cells]
+        if values:
+            rows[values[0]] = values
+    return rows
+
+
+def format_price(value):
+    if value is None:
+        return "n/a"
+    return f"{value:.3f}".rstrip("0").rstrip(".")
+
+
+def nearest_history_change(history, current_value, days):
+    if current_value is None or not history:
+        return None
+    today = datetime.now(timezone.utc).date().toordinal()
+    target = today - days
+    candidates = []
+    for row in history:
+        value = row.get("value")
+        date = parse_iso_date(row.get("date"))
+        if value is None or not date:
+            continue
+        if date.toordinal() > target:
+            continue
+        candidates.append((abs(date.toordinal() - target), value))
+    if not candidates:
+        return None
+    _, previous_value = min(candidates, key=lambda item: item[0])
+    return pct_change(current_value, previous_value)
+
+
+def update_trendforce_history(observations):
+    today = datetime.now(timezone.utc).date().isoformat()
+    history_data = load_json(TREND_PRICE_HISTORY_PATH) or {"updatedAt": None, "series": {}}
+    series = history_data.setdefault("series", {})
+    for item in observations:
+        if item.get("latestRaw") is None or item.get("stale"):
+            continue
+        rows = series.setdefault(item["id"], [])
+        rows = [row for row in rows if row.get("date") != today]
+        rows.append({"date": today, "value": item["latestRaw"], "sourceDate": item.get("date")})
+        series[item["id"]] = rows[-90:]
+    history_data["updatedAt"] = datetime.now(timezone.utc).astimezone().isoformat(timespec="minutes")
+    TREND_PRICE_HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
+    TREND_PRICE_HISTORY_PATH.write_text(json.dumps(history_data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return history_data
+
+
+def fallback_trendforce_indicator(identifier):
+    data = load_json(OUT_PATH)
+    if not data:
+        return None
+    for item in data.get("indicators", []):
+        if item.get("id") == identifier:
+            output = dict(item)
+            output["stale"] = True
+            output["previousChange"] = output.get("previousChange") or "前回成功値"
+            return output
+    return None
+
+
+def fetch_trendforce_memory_prices():
+    documents = {
+        "dram": request_text(TRENDFORCE_DRAM_URL),
+        "flash": request_text(TRENDFORCE_FLASH_URL),
+    }
+    parsed = {key: trendforce_rows(value) for key, value in documents.items()}
+    updates = {key: trendforce_last_update(value) for key, value in documents.items()}
+    observations = []
+    for spec in TRENDFORCE_PRICE_SPECS:
+        row = parsed.get(spec["page"], {}).get(spec["item"])
+        if not row:
+            fallback = fallback_trendforce_indicator(spec["id"])
+            if fallback:
+                observations.append(fallback)
+            continue
+        latest = parse_float(row[spec["latest_index"]]) if len(row) > spec["latest_index"] else None
+        page_change = parse_percent_text(row[spec["change_index"]]) if len(row) > spec["change_index"] else None
+        yoy = parse_percent_text(row[spec["yoy_index"]]) if spec.get("yoy_index") is not None and len(row) > spec["yoy_index"] else None
+        observations.append(
+            {
+                "id": spec["id"],
+                "name": spec["name"],
+                "help": spec["help"],
+                "latest": format_price(latest),
+                "latestRaw": latest,
+                "date": updates.get(spec["page"]),
+                "previousChange": format_pct(page_change),
+                "previousChangeRaw": page_change,
+                "yoy": format_pct(yoy) if yoy is not None else "n/a",
+                "yoyRaw": yoy,
+                "risk": "🟡",
+                "riskClass": "risk-watch",
+                "riskScore": 50,
+                "cycleScore": 50,
+                "nextRelease": "Daily",
+                "block": "memory_price",
+                "source": "TrendForce public price page",
+                "sourceUrl": TRENDFORCE_DRAM_URL if spec["page"] == "dram" else TRENDFORCE_FLASH_URL,
+            }
+        )
+
+    history_data = update_trendforce_history(observations)
+    for item in observations:
+        if item.get("latestRaw") is None:
+            continue
+        rows = history_data.get("series", {}).get(item["id"], [])
+        change_7d = nearest_history_change(rows, item["latestRaw"], 7)
+        change_30d = nearest_history_change(rows, item["latestRaw"], 30)
+        if change_7d is not None:
+            item["sevenDayChange"] = format_pct(change_7d)
+            item["sevenDayChangeRaw"] = change_7d
+        if change_30d is not None:
+            item["thirtyDayChange"] = format_pct(change_30d)
+            item["thirtyDayChangeRaw"] = change_30d
+            item["yoy"] = format_pct(change_30d)
+            item["yoyRaw"] = change_30d
+        score = memory_price_score(item.get("previousChangeRaw"), item.get("sevenDayChangeRaw"), item.get("thirtyDayChangeRaw"))
+        emoji, risk_class = status_from_score(score, positive=True)
+        item["cycleScore"] = score
+        item["riskScore"] = 100 - score
+        item["risk"] = emoji
+        item["riskClass"] = risk_class
+    return observations
+
+
 def indicator(identifier, name, help_text, latest, latest_raw, previous, previous_raw, yoy, yoy_raw, score, block, date):
     emoji, risk_class = status_from_score(score, positive=True)
     return {
@@ -323,6 +649,43 @@ def fetch_tsmc_monthly_revenue():
     return item
 
 
+def fetch_yahoo_closes(symbol):
+    data = request_json(YAHOO_CHART_URL.format(symbol=symbol))
+    result = (data.get("chart", {}).get("result") or [None])[0]
+    if not result:
+        return []
+    timestamps = result.get("timestamp") or []
+    quote = (result.get("indicators", {}).get("quote") or [{}])[0]
+    closes = quote.get("close") or []
+    rows = []
+    for timestamp, close in zip(timestamps, closes):
+        if close is None:
+            continue
+        date = datetime.fromtimestamp(timestamp, tz=timezone.utc).date().isoformat()
+        rows.append({"date": date, "close": float(close)})
+    return rows
+
+
+def price_change_after_date(closes, start_date, trading_days=5):
+    if not closes or not start_date:
+        return None
+    start = parse_iso_date(start_date)
+    if not start:
+        return None
+    start_index = None
+    for index, row in enumerate(closes):
+        row_date = parse_iso_date(row["date"])
+        if row_date and row_date >= start:
+            start_index = index
+            break
+    if start_index is None:
+        return None
+    end_index = min(start_index + trading_days, len(closes) - 1)
+    start_close = closes[start_index]["close"]
+    end_close = closes[end_index]["close"]
+    return pct_change(end_close, start_close)
+
+
 def company_metrics(company):
     facts = fetch_companyfacts(company["cik"])
     revenue_tag, revenue = extract_quarterly_usd(facts, company["revenue_tags"])
@@ -330,6 +693,16 @@ def company_metrics(company):
     operating_tag, operating = extract_quarterly_usd(facts, ["OperatingIncomeLoss"])
     inventory_tag, inventory = extract_quarterly_usd(facts, ["InventoryNet", "InventoryFinishedGoodsNetOfReserves"])
     capex_tag, capex = extract_quarterly_usd(facts, ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"])
+    backlog_tag, backlog = extract_quarterly_usd(
+        facts,
+        [
+            "RemainingPerformanceObligation",
+            "ContractWithCustomerLiabilityCurrent",
+            "ContractWithCustomerLiability",
+            "DeferredRevenueCurrent",
+            "DeferredRevenue",
+        ],
+    )
 
     labels = sorted(revenue.keys(), key=quarter_sort_key)
     if len(labels) < 2:
@@ -345,14 +718,18 @@ def company_metrics(company):
 
     latest_gross = gross.get(latest_label, {}).get("value")
     previous_gross = gross.get(previous_label, {}).get("value")
-    gross_margin = latest_gross / latest_revenue * 100 if latest_gross is not None else None
-    previous_margin = previous_gross / previous_revenue * 100 if previous_gross is not None else None
+    gross_margin = ratio(latest_gross, latest_revenue)
+    gross_margin = gross_margin * 100 if gross_margin is not None else None
+    previous_margin = ratio(previous_gross, previous_revenue)
+    previous_margin = previous_margin * 100 if previous_margin is not None else None
     gross_margin_qoq = gross_margin - previous_margin if gross_margin is not None and previous_margin is not None else None
 
     latest_operating = operating.get(latest_label, {}).get("value")
     previous_operating = operating.get(previous_label, {}).get("value")
-    operating_margin = latest_operating / latest_revenue * 100 if latest_operating is not None else None
-    previous_operating_margin = previous_operating / previous_revenue * 100 if previous_operating is not None else None
+    operating_margin = ratio(latest_operating, latest_revenue)
+    operating_margin = operating_margin * 100 if operating_margin is not None else None
+    previous_operating_margin = ratio(previous_operating, previous_revenue)
+    previous_operating_margin = previous_operating_margin * 100 if previous_operating_margin is not None else None
     operating_margin_qoq = (
         operating_margin - previous_operating_margin
         if operating_margin is not None and previous_operating_margin is not None
@@ -362,15 +739,21 @@ def company_metrics(company):
     latest_inventory = inventory.get(latest_label, {}).get("value")
     year_ago_inventory = inventory.get(year_ago_label, {}).get("value")
     inventory_yoy = pct_change(latest_inventory, year_ago_inventory)
-    inventory_to_revenue = latest_inventory / latest_revenue if latest_inventory is not None else None
+    inventory_to_revenue = ratio(latest_inventory, latest_revenue)
 
     latest_capex = capex.get(latest_label, {}).get("value")
     year_ago_capex = capex.get(year_ago_label, {}).get("value")
     capex_yoy = pct_change(latest_capex, year_ago_capex)
 
+    latest_backlog = backlog.get(latest_label, {}).get("value")
+    year_ago_backlog = backlog.get(year_ago_label, {}).get("value")
+    backlog_yoy = pct_change(latest_backlog, year_ago_backlog)
+    backlog_to_revenue = ratio(latest_backlog, latest_revenue)
+
     return {
         "company": company,
         "date": latest_label,
+        "filed": revenue[latest_label].get("filed"),
         "revenue": latest_revenue,
         "revenueQoq": revenue_qoq,
         "revenueYoy": revenue_yoy,
@@ -383,12 +766,16 @@ def company_metrics(company):
         "inventoryToRevenue": inventory_to_revenue,
         "capex": latest_capex,
         "capexYoy": capex_yoy,
+        "backlog": latest_backlog,
+        "backlogYoy": backlog_yoy,
+        "backlogToRevenue": backlog_to_revenue,
         "tags": {
             "revenue": revenue_tag,
             "gross": gross_tag,
             "operating": operating_tag,
             "inventory": inventory_tag,
             "capex": capex_tag,
+            "backlog": backlog_tag,
         },
     }
 
@@ -507,7 +894,19 @@ def build():
         existing_indicator(ROOT / "data" / "broadcom.json", "AVGO-AI-REVENUE"),
         "ai_compute",
     )
-    for item in [nvidia_dc, broadcom_ai]:
+    nvidia_outlook = normalize_existing_indicator(
+        existing_indicator(ROOT / "data" / "ai-demand.json", "NVDA-REVENUE-OUTLOOK"),
+        "guidance",
+    )
+    broadcom_ai_guidance = normalize_existing_indicator(
+        existing_indicator(ROOT / "data" / "broadcom.json", "AVGO-AI-GUIDANCE"),
+        "guidance",
+    )
+    broadcom_revenue_guidance = normalize_existing_indicator(
+        existing_indicator(ROOT / "data" / "broadcom.json", "AVGO-REVENUE-GUIDANCE"),
+        "guidance",
+    )
+    for item in [nvidia_dc, broadcom_ai, nvidia_outlook, broadcom_ai_guidance, broadcom_revenue_guidance]:
         if item:
             indicators.append(item)
 
@@ -518,6 +917,18 @@ def build():
             indicators.append(tsmc_monthly)
     except Exception as exc:
         print(f"Warning: TSMC monthly revenue skipped: {exc}")
+
+    trendforce_prices = []
+    try:
+        trendforce_prices = fetch_trendforce_memory_prices()
+        indicators.extend(trendforce_prices)
+    except Exception as exc:
+        print(f"Warning: TrendForce memory prices skipped: {exc}")
+        for spec in TRENDFORCE_PRICE_SPECS:
+            fallback = fallback_trendforce_indicator(spec["id"])
+            if fallback:
+                trendforce_prices.append(fallback)
+                indicators.append(fallback)
 
     for item in metrics:
         company = item["company"]
@@ -611,12 +1022,74 @@ def build():
                     item["date"],
                 )
             )
+        if item["backlog"] is not None:
+            backlog_cycle_score = backlog_score(item["backlogToRevenue"], item["backlogYoy"])
+            indicators.append(
+                indicator(
+                    f"{ticker}-ORDER-BACKLOG-PROXY",
+                    f"{company['name']} Order Backlog Proxy",
+                    f"{company['name']}の受注残・新規受注を直接取れない場合のproxyです。Remaining performance obligation、契約負債、繰延収益などSECで取得できる受注関連残高を売上比率と前年比で見ます。",
+                    f"{item['backlogToRevenue']:.2f}x revenue" if item["backlogToRevenue"] is not None else format_usd(item["backlog"]),
+                    item["backlogToRevenue"],
+                    "n/a",
+                    None,
+                    format_pct(item["backlogYoy"]),
+                    item["backlogYoy"],
+                    backlog_cycle_score,
+                    "orders",
+                    item["date"],
+                )
+            )
+        if ticker == "MU":
+            proxy_score = memory_price_proxy_score(item["revenueQoq"], item["grossMarginQoq"], item["inventoryYoy"])
+            indicators.append(
+                indicator(
+                    "MU-MEMORY-PRICE-PROXY",
+                    "Micron Memory Price Cycle Proxy",
+                    "DRAM/NAND/HBMのうち、HBM実価格は無料APIでは安定取得しづらいため、Micronの売上前期比、粗利率変化、在庫前年比からHBMを含むメモリ価格サイクルをproxyします。売上増と粗利率改善、在庫抑制が重なるほど価格環境は強いと見ます。",
+                    f"{proxy_score:.0f}/100",
+                    proxy_score,
+                    f"GM {format_point(item['grossMarginQoq'])}",
+                    item["grossMarginQoq"],
+                    f"Rev QoQ {format_pct(item['revenueQoq'])}",
+                    item["revenueQoq"],
+                    proxy_score,
+                    "memory_price",
+                    item["date"],
+                )
+            )
+        try:
+            closes = fetch_yahoo_closes(company["yahoo"])
+            reaction = price_change_after_date(closes, item["filed"], trading_days=5)
+        except Exception as exc:
+            print(f"Warning: {ticker} price reaction skipped: {exc}")
+            reaction = None
+        reaction_score = price_reaction_score(reaction)
+        indicators.append(
+            indicator(
+                f"{ticker}-POST-FILING-REACTION",
+                f"{company['name']} Post-Filing Price Reaction",
+                f"{company['name']}の決算・10-Q/10-K提出後5営業日の株価反応です。好決算でも株価が上がらない場合は、期待値が高すぎる、またはサイクル後半の警戒サインとして見ます。",
+                format_pct(reaction),
+                reaction,
+                "5 trading days",
+                None,
+                f"filed {item['filed'] or 'n/a'}",
+                None,
+                reaction_score,
+                "market_reaction",
+                item["filed"] or item["date"],
+            )
+        )
 
     ai_compute_score = average([item.get("cycleScore") for item in indicators if item.get("block") == "ai_compute"])
-    memory_items = [item for item in indicators if item.get("id", "").startswith("MU-")]
+    memory_items = [item for item in indicators if item.get("id", "").startswith("MU-") or item.get("block") == "memory_price"]
     memory_score = average([item.get("cycleScore") for item in memory_items])
     equipment_score = average([item.get("cycleScore") for item in indicators if item.get("block") in ("equipment", "capacity")])
     foundry_score = average([item.get("cycleScore") for item in indicators if item.get("block") == "foundry_packaging"])
+    guidance_score = average([item.get("cycleScore") for item in indicators if item.get("block") == "guidance"])
+    orders_score = average([item.get("cycleScore") for item in indicators if item.get("block") == "orders"])
+    market_reaction_score = average([item.get("cycleScore") for item in indicators if item.get("block") == "market_reaction"])
     inventory_pressure_score = average(
         [100 - item.get("cycleScore") for item in indicators if item.get("block") == "inventory_margin" and item.get("id", "").endswith("-INVENTORY")],
         default=40,
@@ -636,12 +1109,15 @@ def build():
         inventory_pressure_score,
     )
     cycle_score = round(
-        ai_compute_score * 0.25
-        + memory_score * 0.22
-        + equipment_score * 0.17
-        + foundry_score * 0.11
-        + margin_score_avg * 0.13
-        + (100 - inventory_pressure_score) * 0.12
+        ai_compute_score * 0.20
+        + memory_score * 0.18
+        + equipment_score * 0.14
+        + foundry_score * 0.09
+        + guidance_score * 0.14
+        + orders_score * 0.08
+        + market_reaction_score * 0.06
+        + margin_score_avg * 0.06
+        + (100 - inventory_pressure_score) * 0.05
     )
 
     signals = [
@@ -656,8 +1132,8 @@ def build():
             "key": "MEMORY",
             "label": "Memory / HBM",
             "emoji": status_from_score(memory_score)[0],
-            "value": "Micronでメモリサイクルを確認",
-            "help": "Micronの売上、粗利率、在庫でHBM/DRAMサイクルの方向感を見ます。HBMの詳細コメントは今後追加対象です。",
+            "value": "TrendForce + Micronを確認",
+            "help": "TrendForceのDRAM/NAND公開価格、Micronの売上、粗利率、在庫でメモリサイクルの方向感を見ます。HBM実価格は公開性が弱いためMicron指標でproxyします。",
         },
         {
             "key": "EQUIPMENT",
@@ -682,20 +1158,39 @@ def build():
         },
         {
             "key": "MARKET",
-            "label": "Market Signal",
-            "emoji": "⚪",
-            "value": "SOX/SMHは次段階で接続",
-            "help": "SOX、SMH、NVDA、MU、TSM、ASMLなどの相対パフォーマンスを今後接続します。",
+            "label": "Market Reaction",
+            "emoji": status_from_score(market_reaction_score)[0],
+            "value": "決算後5営業日反応を確認",
+            "help": "好決算・決算提出後に株価が素直に上がるかを見ます。好材料でも上がらない場合は、期待値が高すぎるサイクル後半の警戒材料です。",
+        },
+        {
+            "key": "GUIDANCE",
+            "label": "Guidance",
+            "emoji": status_from_score(guidance_score)[0],
+            "value": "NVIDIA/Broadcom見通しを確認",
+            "help": "次四半期売上、AI semiconductor revenue、粗利率やCapex見通しを重視します。半導体株は過去決算より今後のガイダンスで動きやすいです。",
+        },
+        {
+            "key": "ORDERS",
+            "label": "Orders / Backlog",
+            "emoji": status_from_score(orders_score)[0],
+            "value": "受注残proxyを確認",
+            "help": "直接の新規受注や受注残が取れない場合、SECのRPO、契約負債、繰延収益などをproxyとして使います。装置株では受注増と利益率改善が揃うかを重視します。",
         },
     ]
 
     latest_revenue_yoy = company_by_ticker.get("MU", {}).get("revenueYoy")
     latest_margin = company_by_ticker.get("MU", {}).get("grossMargin")
+    latest_margin_text = f"{latest_margin:.1f}%" if latest_margin is not None else "n/a"
+    dram_ddr5 = next((item for item in trendforce_prices if item.get("id") == "TF-DRAM-DDR5-16GB-SPOT"), None)
+    nand_tlc = next((item for item in trendforce_prices if item.get("id") == "TF-NAND-512GB-TLC-SPOT"), None)
     main = (
         f"現在地は「{current_phase}」寄りです。{phase_description}。"
-        f"AI ComputeはNVIDIA/Broadcomの既存データで確認し、Memory/HBMはMicronの売上・粗利率・在庫でproxyします。"
+        f"AI ComputeはNVIDIA/Broadcomの既存データで確認し、Memory/HBMはTrendForceのDRAM/NAND価格とMicronの売上・粗利率・在庫で確認します。"
+        f"DDR5 spotは{dram_ddr5['latest'] if dram_ddr5 else 'n/a'}、NAND 512Gb TLC spotは{nand_tlc['latest'] if nand_tlc else 'n/a'}です。"
         f"FoundryはTSMC月次売上{tsmc_monthly['latest'] if tsmc_monthly else 'n/a'}、前年比{tsmc_monthly['yoy'] if tsmc_monthly else 'n/a'}で確認します。"
-        f"Micronの売上前年比は{format_pct(latest_revenue_yoy)}、粗利率は{latest_margin:.1f}%です。"
+        f"Micronの売上前年比は{format_pct(latest_revenue_yoy)}、粗利率は{latest_margin_text}です。"
+        f"ガイダンススコアは{guidance_score:.0f}/100、決算後株価反応スコアは{market_reaction_score:.0f}/100です。"
         "設備投資・装置企業の売上が強い間は供給能力拡大局面ですが、在庫増と粗利率低下が重なる場合はOverbuild Riskへ警戒を引き上げます。"
     )
 
@@ -719,14 +1214,18 @@ def build():
                 f"Memory/HBMスコアは{memory_score:.0f}/100",
                 f"Equipment/Capacityスコアは{equipment_score:.0f}/100",
                 f"Foundry/Packagingスコアは{foundry_score:.0f}/100",
+                f"Guidanceスコアは{guidance_score:.0f}/100",
             ],
             "risks": [
                 f"在庫圧力スコアは{inventory_pressure_score:.0f}/100",
-                "HBM価格、SOX相対パフォーマンスは未接続",
+                f"決算後株価反応スコアは{market_reaction_score:.0f}/100",
+                "HBM実価格、SOX/SMH相対パフォーマンスは未接続",
+                "TrendForce公開ページの構造変更時は前回成功値を維持",
                 "Capex拡大が需要成長を上回る場合は将来の供給過剰に注意",
             ],
             "watch": [
                 "Micronの粗利率改善が続くか",
+                "TrendForceのDRAM/NAND価格が7日・30日で上向き続けるか",
                 "Micron在庫/売上比率が悪化しないか",
                 "NVIDIA/BroadcomのAI売上ガイダンスが鈍化しないか",
                 "AMAT/LRCX/KLACの受注・売上がピークアウトしないか",
@@ -734,7 +1233,7 @@ def build():
                 "SOX/SMHが好決算に反応し続けるか",
             ],
         },
-        "source": "SEC Companyfacts + existing NVIDIA/Broadcom feeds",
+        "source": "SEC Companyfacts + TrendForce public price pages + existing NVIDIA/Broadcom feeds",
     }
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
