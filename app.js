@@ -559,6 +559,124 @@ function getNextScheduledUpdate(now = new Date()) {
   return `${formatDate(candidate.toISOString())}頃`;
 }
 
+const semiCyclePhases = [
+  {
+    key: "Recovery",
+    title: "Recovery",
+    subtitle: "回復初期",
+    note: "在庫調整後の底打ち",
+    tailwinds: [
+      ["Memory", "価格底打ちの先取り"],
+      ["Equipment", "次サイクル受注"],
+      ["Cyclical Leaders", "戻りの初動"]
+    ],
+    watches: ["需要回復が一時的で終わらないか", "在庫調整が再燃しないか", "粗利率が底打ちを続けるか", "受注回復が売上に波及するか"]
+  },
+  {
+    key: "Demand Acceleration",
+    title: "Demand Acceleration",
+    subtitle: "需要加速",
+    note: "AI需要が売上を押し上げる",
+    tailwinds: [
+      ["AI Compute", "GPU / ASIC需要"],
+      ["HBM", "メモリ高付加価値化"],
+      ["Networking", "AIクラスタ拡大"]
+    ],
+    watches: ["AI売上ガイダンスが鈍化しないか", "価格上昇だけでなく数量も伸びるか", "顧客集中リスクが高まらないか", "市場期待が先行しすぎないか"]
+  },
+  {
+    key: "Supply Shortage",
+    title: "Supply Shortage",
+    subtitle: "供給制約",
+    note: "希少能力の価格決定力",
+    tailwinds: [
+      ["GPU", "供給制約の中心"],
+      ["HBM", "DRAMサイクル牽引"],
+      ["Foundry / Packaging", "CoWoSなどの制約"]
+    ],
+    watches: ["供給制約が急に緩和しないか", "粗利率ピークアウトの兆候", "代替供給が増えないか", "受注残と実需にズレがないか"]
+  },
+  {
+    key: "Capacity Expansion",
+    title: "Capacity Expansion",
+    subtitle: "能力拡大",
+    note: "装置・素材・検査に追い風",
+    tailwinds: [
+      ["製造装置", "AMAT / LRCX / KLAC"],
+      ["素材", "供給能力拡大の受益"],
+      ["検査", "先端工程の歩留まり"],
+      ["先端パッケージ", "AI供給制約の解消"],
+      ["HBM供給", "メモリ投資の中心"]
+    ],
+    watches: ["在庫/売上比率の悪化", "粗利率低下", "Capexが需要成長を上回る", "AI売上ガイダンス鈍化"]
+  },
+  {
+    key: "Overbuild Risk",
+    title: "Overbuild Risk",
+    subtitle: "供給過剰警戒",
+    note: "在庫と粗利率を優先監視",
+    tailwinds: [
+      ["Quality Leaders", "高粗利・高シェア"],
+      ["Cash Flow", "守りの強さ"],
+      ["Defensive AI", "実需が強い領域"]
+    ],
+    watches: ["在庫増と粗利率低下が同時に出るか", "装置売上のピークアウト", "価格下落が始まらないか", "顧客のCapex計画が下がらないか"]
+  },
+  {
+    key: "Downturn",
+    title: "Downturn",
+    subtitle: "調整局面",
+    note: "次サイクルの底打ち待ち",
+    tailwinds: [
+      ["Cash", "無理に追わない"],
+      ["Next Watchlist", "次の回復候補"],
+      ["Survivors", "財務の強い企業"]
+    ],
+    watches: ["需要減速が深掘りしないか", "在庫調整が終わる兆候", "粗利率の下げ止まり", "次の受注回復サイン"]
+  }
+];
+
+function getSemiPhaseIndex(phase) {
+  const normalized = String(phase ?? "").toLowerCase();
+  const index = semiCyclePhases.findIndex(item => normalized.includes(item.key.toLowerCase()));
+  return index >= 0 ? index : 0;
+}
+
+function renderSemiCycleDashboard(semi, semiMeta) {
+  const activeIndex = getSemiPhaseIndex(semi.phase);
+  const activePhase = semiCyclePhases[activeIndex];
+  const rail = document.querySelector("#semi-cycle-rail");
+  if (rail) {
+    rail.innerHTML = semiCyclePhases.map((phase, index) => `
+      <article class="cycle-step ${index < activeIndex ? "is-past" : ""} ${index === activeIndex ? "is-active" : ""}">
+        <div class="cycle-step-marker">${index + 1}</div>
+        <div class="cycle-step-title">${phase.title}</div>
+        <div class="cycle-step-subtitle">${phase.subtitle}</div>
+        <p class="cycle-step-note">${phase.note}</p>
+      </article>
+    `).join("");
+  }
+
+  const tailwindRoot = document.querySelector("#semi-tailwind-list");
+  if (tailwindRoot) {
+    tailwindRoot.innerHTML = activePhase.tailwinds.map(([label, note]) => `
+      <div class="semi-pill">${label}<small>${note}</small></div>
+    `).join("");
+  }
+
+  const watchRoot = document.querySelector("#semi-cycle-watch-signals");
+  if (watchRoot) {
+    watchRoot.innerHTML = activePhase.watches.map((item, index) => `
+      <div class="semi-watch-item"><span>${index + 1}</span>${item}</div>
+    `).join("");
+  }
+
+  document.querySelector("#semi-emoji").textContent = semiMeta.emoji;
+  document.querySelector("#semi-label").textContent = semiMeta.label;
+  document.querySelector("#semi-phase-name").textContent = semi.phase ?? "Loading";
+  document.querySelector("#semi-phase-label").textContent = semiMeta.phase;
+}
+
 function renderSignals(signals, selector = "#signal-grid") {
   document.querySelector(selector).innerHTML = signals.map(signal => `
     <article class="signal-card">
@@ -815,10 +933,7 @@ async function render() {
   renderList("#macro-risk-down-list", macroAnalysis.down);
   renderList("#macro-watch-list", macroAnalysis.watch);
 
-  document.querySelector("#semi-emoji").textContent = semiMeta.emoji;
-  document.querySelector("#semi-label").textContent = semiMeta.label;
-  document.querySelector("#semi-phase-name").textContent = semi.phase ?? "Loading";
-  document.querySelector("#semi-phase-label").textContent = semiMeta.phase;
+  renderSemiCycleDashboard(semi, semiMeta);
   document.querySelector("#semi-status-summary").textContent = semiAnalysis.main.split("。").slice(0, 2).join("。") + "。";
   document.querySelector("#semi-analysis-main").textContent = semiAnalysis.main;
   renderSignals(semi.signals, "#semi-signal-grid");

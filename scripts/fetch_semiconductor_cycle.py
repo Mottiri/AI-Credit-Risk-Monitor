@@ -11,10 +11,12 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[1]
 OUT_PATH = ROOT / "data" / "semiconductor-cycle.json"
 SEC_BASE_URL = "https://data.sec.gov/api/xbrl/companyfacts"
+TWSE_MONTHLY_REVENUE_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"
 SEC_USER_AGENT = os.environ.get(
     "SEC_USER_AGENT",
     "AI-Credit-Risk-Monitor/1.0 contact@example.com",
 )
+TSMC_TWSE_CODE = "2330"
 
 COMPANIES = [
     {
@@ -66,7 +68,7 @@ def fetch_companyfacts(cik):
 
 
 def calendar_frame_to_label(frame):
-    match = re.fullmatch(r"CY(\d{4})Q([1-4])", frame or "")
+    match = re.fullmatch(r"CY(\d{4})Q([1-4])I?", frame or "")
     if not match:
         return None
     return f"{match.group(1)}Q{match.group(2)}"
@@ -128,11 +130,37 @@ def format_pct(value):
     return f"{sign}{value:.1f}%"
 
 
+def format_ntd(value):
+    if value is None:
+        return "n/a"
+    if abs(value) >= 1_000_000_000_000:
+        return f"NT${value / 1_000_000_000_000:.2f}T"
+    if abs(value) >= 1_000_000_000:
+        return f"NT${value / 1_000_000_000:.1f}B"
+    return f"NT${value / 1_000_000:.0f}M"
+
+
 def format_point(value):
     if value is None:
         return "n/a"
     sign = "+" if value > 0 else ""
     return f"{sign}{value:.1f}pt"
+
+
+def parse_roc_month(value):
+    raw = str(value or "")
+    if len(raw) != 5:
+        return raw or "n/a"
+    year = int(raw[:3]) + 1911
+    month = int(raw[3:])
+    return f"{year}-{month:02d}"
+
+
+def parse_float(value):
+    try:
+        return float(str(value).replace(",", ""))
+    except (TypeError, ValueError):
+        return None
 
 
 def growth_score(yoy, qoq):
@@ -179,6 +207,28 @@ def margin_score(margin, qoq):
             score -= 12
         elif qoq < 0:
             score -= 6
+    return max(0, min(100, score))
+
+
+def operating_margin_score(margin, qoq):
+    if margin is None:
+        return 50
+    score = 45
+    if margin >= 40:
+        score += 30
+    elif margin >= 25:
+        score += 20
+    elif margin >= 12:
+        score += 10
+    elif margin < 0:
+        score -= 20
+    if qoq is not None:
+        if qoq >= 3:
+            score += 10
+        elif qoq <= -3:
+            score -= 10
+        elif qoq < 0:
+            score -= 5
     return max(0, min(100, score))
 
 
@@ -240,10 +290,44 @@ def indicator(identifier, name, help_text, latest, latest_raw, previous, previou
     }
 
 
+def fetch_tsmc_monthly_revenue():
+    rows = request_json(TWSE_MONTHLY_REVENUE_URL)
+    row = next((item for item in rows if item.get("公司代號") == TSMC_TWSE_CODE), None)
+    if not row:
+        return None
+
+    latest_thousand_ntd = parse_float(row.get("營業收入-當月營收"))
+    mom = parse_float(row.get("營業收入-上月比較增減(%)"))
+    yoy = parse_float(row.get("營業收入-去年同月增減(%)"))
+    ytd_yoy = parse_float(row.get("累計營業收入-前期比較增減(%)"))
+    latest = latest_thousand_ntd * 1000 if latest_thousand_ntd is not None else None
+    score = growth_score(yoy, mom)
+    item = indicator(
+        "TSMC-MONTHLY-REVENUE",
+        "TSMC Monthly Revenue",
+        "TSMCの月次売上です。GPU/HBM/AI acceleratorを支える先端ファウンドリ需要の先行確認に使います。前年比の鈍化や前月比マイナスが続く場合は、AI半導体サイクルの勢い低下に注意します。",
+        format_ntd(latest),
+        latest,
+        format_pct(mom),
+        mom,
+        format_pct(yoy),
+        yoy,
+        score,
+        "foundry_packaging",
+        parse_roc_month(row.get("資料年月")),
+    )
+    item["source"] = "TWSE OpenAPI"
+    item["sourceUrl"] = TWSE_MONTHLY_REVENUE_URL
+    item["ytdYoy"] = format_pct(ytd_yoy)
+    item["ytdYoyRaw"] = ytd_yoy
+    return item
+
+
 def company_metrics(company):
     facts = fetch_companyfacts(company["cik"])
     revenue_tag, revenue = extract_quarterly_usd(facts, company["revenue_tags"])
     gross_tag, gross = extract_quarterly_usd(facts, ["GrossProfit"])
+    operating_tag, operating = extract_quarterly_usd(facts, ["OperatingIncomeLoss"])
     inventory_tag, inventory = extract_quarterly_usd(facts, ["InventoryNet", "InventoryFinishedGoodsNetOfReserves"])
     capex_tag, capex = extract_quarterly_usd(facts, ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"])
 
@@ -265,6 +349,16 @@ def company_metrics(company):
     previous_margin = previous_gross / previous_revenue * 100 if previous_gross is not None else None
     gross_margin_qoq = gross_margin - previous_margin if gross_margin is not None and previous_margin is not None else None
 
+    latest_operating = operating.get(latest_label, {}).get("value")
+    previous_operating = operating.get(previous_label, {}).get("value")
+    operating_margin = latest_operating / latest_revenue * 100 if latest_operating is not None else None
+    previous_operating_margin = previous_operating / previous_revenue * 100 if previous_operating is not None else None
+    operating_margin_qoq = (
+        operating_margin - previous_operating_margin
+        if operating_margin is not None and previous_operating_margin is not None
+        else None
+    )
+
     latest_inventory = inventory.get(latest_label, {}).get("value")
     year_ago_inventory = inventory.get(year_ago_label, {}).get("value")
     inventory_yoy = pct_change(latest_inventory, year_ago_inventory)
@@ -282,6 +376,8 @@ def company_metrics(company):
         "revenueYoy": revenue_yoy,
         "grossMargin": gross_margin,
         "grossMarginQoq": gross_margin_qoq,
+        "operatingMargin": operating_margin,
+        "operatingMarginQoq": operating_margin_qoq,
         "inventory": latest_inventory,
         "inventoryYoy": inventory_yoy,
         "inventoryToRevenue": inventory_to_revenue,
@@ -290,6 +386,7 @@ def company_metrics(company):
         "tags": {
             "revenue": revenue_tag,
             "gross": gross_tag,
+            "operating": operating_tag,
             "inventory": inventory_tag,
             "capex": capex_tag,
         },
@@ -414,6 +511,14 @@ def build():
         if item:
             indicators.append(item)
 
+    tsmc_monthly = None
+    try:
+        tsmc_monthly = fetch_tsmc_monthly_revenue()
+        if tsmc_monthly:
+            indicators.append(tsmc_monthly)
+    except Exception as exc:
+        print(f"Warning: TSMC monthly revenue skipped: {exc}")
+
     for item in metrics:
         company = item["company"]
         ticker = company["ticker"]
@@ -451,6 +556,23 @@ def build():
                 "n/a",
                 None,
                 mar_score,
+                "inventory_margin",
+                item["date"],
+            )
+        )
+        op_score = operating_margin_score(item["operatingMargin"], item["operatingMarginQoq"])
+        indicators.append(
+            indicator(
+                f"{ticker}-OPERATING-MARGIN",
+                f"{company['name']} Operating Margin",
+                f"{company['name']}の営業利益率です。AI/半導体需要が売上だけでなく利益にも波及しているかを見ます。粗利率と同時に低下するとサイクル鈍化の警戒材料です。",
+                f"{item['operatingMargin']:.1f}%" if item["operatingMargin"] is not None else "n/a",
+                item["operatingMargin"],
+                format_point(item["operatingMarginQoq"]),
+                item["operatingMarginQoq"],
+                "n/a",
+                None,
+                op_score,
                 "inventory_margin",
                 item["date"],
             )
@@ -494,11 +616,18 @@ def build():
     memory_items = [item for item in indicators if item.get("id", "").startswith("MU-")]
     memory_score = average([item.get("cycleScore") for item in memory_items])
     equipment_score = average([item.get("cycleScore") for item in indicators if item.get("block") in ("equipment", "capacity")])
+    foundry_score = average([item.get("cycleScore") for item in indicators if item.get("block") == "foundry_packaging"])
     inventory_pressure_score = average(
         [100 - item.get("cycleScore") for item in indicators if item.get("block") == "inventory_margin" and item.get("id", "").endswith("-INVENTORY")],
         default=40,
     )
-    margin_score_avg = average([item.get("cycleScore") for item in indicators if item.get("id", "").endswith("-GROSS-MARGIN")])
+    margin_score_avg = average(
+        [
+            item.get("cycleScore")
+            for item in indicators
+            if item.get("id", "").endswith("-GROSS-MARGIN") or item.get("id", "").endswith("-OPERATING-MARGIN")
+        ]
+    )
 
     current_phase, phase_description = phase_from_scores(
         ai_compute_score,
@@ -507,11 +636,12 @@ def build():
         inventory_pressure_score,
     )
     cycle_score = round(
-        ai_compute_score * 0.28
-        + memory_score * 0.24
-        + equipment_score * 0.18
-        + margin_score_avg * 0.15
-        + (100 - inventory_pressure_score) * 0.15
+        ai_compute_score * 0.25
+        + memory_score * 0.22
+        + equipment_score * 0.17
+        + foundry_score * 0.11
+        + margin_score_avg * 0.13
+        + (100 - inventory_pressure_score) * 0.12
     )
 
     signals = [
@@ -546,9 +676,9 @@ def build():
         {
             "key": "FOUNDRY",
             "label": "Foundry / Packaging",
-            "emoji": "⚪",
-            "value": "TSMC/CoWoSは次段階で接続",
-            "help": "TSMC月次売上、HPC比率、CoWoS能力を今後接続します。GPU/HBMの供給制約を見る重要領域です。",
+            "emoji": status_from_score(foundry_score)[0],
+            "value": f"TSMC月次売上 {tsmc_monthly['yoy']}" if tsmc_monthly else "TSMC/CoWoSは次段階で接続",
+            "help": "TSMC月次売上で先端ファウンドリ需要を見ます。HPC比率、CoWoS能力は今後追加対象です。GPU/HBMの供給制約を見る重要領域です。",
         },
         {
             "key": "MARKET",
@@ -564,6 +694,7 @@ def build():
     main = (
         f"現在地は「{current_phase}」寄りです。{phase_description}。"
         f"AI ComputeはNVIDIA/Broadcomの既存データで確認し、Memory/HBMはMicronの売上・粗利率・在庫でproxyします。"
+        f"FoundryはTSMC月次売上{tsmc_monthly['latest'] if tsmc_monthly else 'n/a'}、前年比{tsmc_monthly['yoy'] if tsmc_monthly else 'n/a'}で確認します。"
         f"Micronの売上前年比は{format_pct(latest_revenue_yoy)}、粗利率は{latest_margin:.1f}%です。"
         "設備投資・装置企業の売上が強い間は供給能力拡大局面ですが、在庫増と粗利率低下が重なる場合はOverbuild Riskへ警戒を引き上げます。"
     )
@@ -587,10 +718,11 @@ def build():
                 f"AI Computeスコアは{ai_compute_score:.0f}/100",
                 f"Memory/HBMスコアは{memory_score:.0f}/100",
                 f"Equipment/Capacityスコアは{equipment_score:.0f}/100",
+                f"Foundry/Packagingスコアは{foundry_score:.0f}/100",
             ],
             "risks": [
                 f"在庫圧力スコアは{inventory_pressure_score:.0f}/100",
-                "TSMC月次売上、HBM価格、SOX相対パフォーマンスは未接続",
+                "HBM価格、SOX相対パフォーマンスは未接続",
                 "Capex拡大が需要成長を上回る場合は将来の供給過剰に注意",
             ],
             "watch": [

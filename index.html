@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Credit Risk Monitor</title>
-    <link rel="stylesheet" href="styles.css?v=13" />
+    <link rel="stylesheet" href="styles.css?v=14" />
   </head>
   <body>
     <div class="app-shell">
@@ -242,8 +242,8 @@
         </div>
 
         <div class="tab-panel" id="semi-panel">
-          <section class="semi-phase-layout" aria-label="半導体サイクル現在地">
-            <article class="panel semi-phase-panel">
+          <section class="semi-cycle-layout" aria-label="半導体サイクル現在地">
+            <article class="panel semi-cycle-panel">
               <div class="panel-title-row">
                 <div>
                   <p class="section-label">Current Position</p>
@@ -251,14 +251,33 @@
                 </div>
                 <span class="risk-badge" id="semi-label">Loading</span>
               </div>
-              <div class="cycle-position">
-                <span id="semi-emoji">🟡</span>
-                <strong id="semi-phase-name">--</strong>
+              <div class="semi-current-row">
+                <div class="cycle-position">
+                  <span id="semi-emoji">🟡</span>
+                  <div>
+                    <small>現在地</small>
+                    <strong id="semi-phase-name">--</strong>
+                  </div>
+                </div>
+                <p class="status-text" id="semi-status-summary">データを読み込んでいます。</p>
               </div>
-              <p class="status-text" id="semi-status-summary">データを読み込んでいます。</p>
+              <div class="semi-cycle-rail" id="semi-cycle-rail" aria-label="半導体サイクルフェーズ"></div>
             </article>
 
-            <div class="signal-grid macro-signal-grid" id="semi-signal-grid"></div>
+            <div class="semi-insight-grid">
+              <article class="panel semi-insight-panel">
+                <p class="section-label">What Leads Now</p>
+                <h2>この局面で追い風の領域</h2>
+                <div class="semi-pill-grid" id="semi-tailwind-list"></div>
+              </article>
+              <article class="panel semi-insight-panel">
+                <p class="section-label">Watch Signals</p>
+                <h2>ピークアウト警戒シグナル</h2>
+                <div class="semi-watch-grid" id="semi-cycle-watch-signals"></div>
+              </article>
+            </div>
+
+            <div class="signal-grid semi-signal-grid" id="semi-signal-grid"></div>
           </section>
 
           <section class="analysis-grid">
