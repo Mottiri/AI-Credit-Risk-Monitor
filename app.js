@@ -92,7 +92,7 @@ const sampleData = {
   ]
 };
 
-const dataVersion = "18";
+const dataVersion = "19";
 
 function dataUrl(path) {
   const configuredBase = String(window.DASHBOARD_DATA_BASE ?? "").replace(/\/$/, "");
