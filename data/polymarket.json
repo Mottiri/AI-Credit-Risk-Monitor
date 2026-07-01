@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-06-30T23:37+00:00",
+  "updatedAt": "2026-07-01T23:43+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟢",
-    "value": "AIバブル崩壊予測 19.0%",
+    "value": "AIバブル崩壊予測 18.9%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "19.0%",
-      "latestRaw": 19.0,
-      "date": "2026-06-30T23:35:47.433599Z",
-      "previousChange": "-0.9pt / 24h",
-      "previousChangeRaw": -0.8999999999999999,
-      "yoy": "-0.4pt / 7d",
-      "yoyRaw": -0.35000000000000003,
+      "latest": "18.9%",
+      "latestRaw": 18.85,
+      "date": "2026-07-01T23:38:54.973396Z",
+      "previousChange": "-0.1pt / 24h",
+      "previousChangeRaw": -0.15,
+      "yoy": "-0.8pt / 7d",
+      "yoyRaw": -0.75,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$115",
-      "volume1wk": "$4.2K",
+      "volume24h": "$1.4K",
+      "volume1wk": "$3.7K",
       "totalVolume": "$2.3M",
-      "liquidity": "$19.5K",
+      "liquidity": "$20.8K",
       "bestBid": 0.187,
-      "bestAsk": 0.193,
-      "spread": 0.006,
-      "oneMonthChange": -3.4000000000000004
+      "bestAsk": 0.19,
+      "spread": 0.003,
+      "oneMonthChange": -5.800000000000001
     }
   ],
   "history": [
@@ -146,6 +146,11 @@
       "date": "2026-06-30",
       "probability": 19.0,
       "volume24h": 114.73
+    },
+    {
+      "date": "2026-07-01",
+      "probability": 18.85,
+      "volume24h": 1445.39
     }
   ]
 }
