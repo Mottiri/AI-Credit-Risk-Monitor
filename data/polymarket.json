@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-07-03T23:18+00:00",
+  "updatedAt": "2026-07-06T23:32+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟢",
-    "value": "AIバブル崩壊予測 15.7%",
+    "value": "AIバブル崩壊予測 15.1%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "15.7%",
-      "latestRaw": 15.7,
-      "date": "2026-07-03T23:15:18.89519Z",
-      "previousChange": "-2.5pt / 24h",
-      "previousChangeRaw": -2.45,
-      "yoy": "-2.9pt / 7d",
-      "yoyRaw": -2.9000000000000004,
+      "latest": "15.1%",
+      "latestRaw": 15.1,
+      "date": "2026-07-06T23:25:42.657355Z",
+      "previousChange": "-0.1pt / 24h",
+      "previousChangeRaw": -0.05,
+      "yoy": "-4.8pt / 7d",
+      "yoyRaw": -4.8,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$2.3K",
-      "volume1wk": "$6.7K",
+      "volume24h": "$1.5K",
+      "volume1wk": "$6.8K",
       "totalVolume": "$2.3M",
-      "liquidity": "$21.2K",
-      "bestBid": 0.151,
-      "bestAsk": 0.163,
-      "spread": 0.012,
-      "oneMonthChange": -7.049999999999999
+      "liquidity": "$18.9K",
+      "bestBid": 0.15,
+      "bestAsk": 0.152,
+      "spread": 0.002,
+      "oneMonthChange": -7.75
     }
   ],
   "history": [
@@ -161,6 +161,11 @@
       "date": "2026-07-03",
       "probability": 15.7,
       "volume24h": 2295.58
+    },
+    {
+      "date": "2026-07-06",
+      "probability": 15.1,
+      "volume24h": 1455.97
     }
   ]
 }
