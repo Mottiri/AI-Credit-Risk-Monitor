@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-10T23:13+00:00",
+  "updatedAt": "2026-07-13T23:13+00:00",
   "phase": "Capacity Expansion",
   "phaseDescription": "AI需要を背景に供給能力を増やす局面",
   "scoreHistory": [
@@ -17,7 +17,7 @@
     },
     {
       "date": "Capacity",
-      "score": 68
+      "score": 67
     }
   ],
   "signals": [
@@ -53,7 +53,7 @@
       "key": "FOUNDRY",
       "label": "Foundry / Packaging",
       "emoji": "🟡",
-      "value": "TSMC月次売上 +30.1%",
+      "value": "TSMC/CoWoSは次段階で接続",
       "help": "TSMC月次売上で先端ファウンドリ需要を見ます。HPC比率、CoWoS能力は今後追加対象です。GPU/HBMの供給制約を見る重要領域です。"
     },
     {
@@ -183,36 +183,14 @@
       "cycleScore": 80.0
     },
     {
-      "id": "TSMC-MONTHLY-REVENUE",
-      "name": "TSMC Monthly Revenue",
-      "help": "TSMCの月次売上です。GPU/HBM/AI acceleratorを支える先端ファウンドリ需要の先行確認に使います。前年比の鈍化や前月比マイナスが続く場合は、AI半導体サイクルの勢い低下に注意します。",
-      "latest": "NT$417.0B",
-      "latestRaw": 416975163000.0,
-      "date": "2026-05",
-      "previousChange": "+1.5%",
-      "previousChangeRaw": 1.5217099529812539,
-      "yoy": "+30.1%",
-      "yoyRaw": 30.09498020271696,
-      "risk": "🟡",
-      "riskClass": "risk-watch",
-      "riskScore": 32,
-      "cycleScore": 68,
-      "nextRelease": "Quarterly",
-      "block": "foundry_packaging",
-      "source": "TWSE OpenAPI",
-      "sourceUrl": "https://openapi.twse.com.tw/v1/opendata/t187ap05_L",
-      "ytdYoy": "+30.0%",
-      "ytdYoyRaw": 29.977884289697073
-    },
-    {
       "id": "TF-DRAM-DDR5-16GB-SPOT",
       "name": "TrendForce DDR5 16Gb Spot Price",
       "help": "TrendForce公開ページのDDR5 16Gb spot priceです。DRAM価格サイクルの短期方向感を見ます。上昇が続くほどメモリメーカーの価格決定力に追い風です。",
-      "latest": "47.8",
-      "latestRaw": 47.8,
-      "date": "2026-07-10 18:10 (GMT+8)",
-      "previousChange": "+0.1%",
-      "previousChangeRaw": 0.07,
+      "latest": "48.333",
+      "latestRaw": 48.333,
+      "date": "2026-07-13 18:10 (GMT+8)",
+      "previousChange": "+1.1%",
+      "previousChangeRaw": 1.12,
       "yoy": "n/a",
       "yoyRaw": null,
       "risk": "🟡",
@@ -223,18 +201,18 @@
       "block": "memory_price",
       "source": "TrendForce public price page",
       "sourceUrl": "https://www.trendforce.com/price/dram/dram_spot",
-      "sevenDayChange": "+2.4%",
-      "sevenDayChangeRaw": 2.4278398011442714
+      "sevenDayChange": "+2.8%",
+      "sevenDayChangeRaw": 2.836170212765965
     },
     {
       "id": "TF-DRAM-DDR4-16GB-SPOT",
       "name": "TrendForce DDR4 16Gb Spot Price",
       "help": "TrendForce公開ページのDDR4 16Gb spot priceです。汎用DRAM価格の底打ち・上昇継続を見る補助指標です。",
-      "latest": "77.625",
-      "latestRaw": 77.625,
-      "date": "2026-07-10 18:10 (GMT+8)",
-      "previousChange": "+0.7%",
-      "previousChangeRaw": 0.65,
+      "latest": "78.125",
+      "latestRaw": 78.125,
+      "date": "2026-07-13 18:10 (GMT+8)",
+      "previousChange": "+0.6%",
+      "previousChangeRaw": 0.64,
       "yoy": "n/a",
       "yoyRaw": null,
       "risk": "🟡",
@@ -245,8 +223,8 @@
       "block": "memory_price",
       "source": "TrendForce public price page",
       "sourceUrl": "https://www.trendforce.com/price/dram/dram_spot",
-      "sevenDayChange": "+1.6%",
-      "sevenDayChangeRaw": 1.6366612111292866
+      "sevenDayChange": "+2.0%",
+      "sevenDayChangeRaw": 1.9575856443719397
     },
     {
       "id": "TF-DRAM-DDR5-SODIMM-CONTRACT",
@@ -254,7 +232,7 @@
       "help": "TrendForce公開ページのDDR5 SO-DIMM contract priceです。契約価格はspotより更新頻度が低い一方、メモリメーカーの収益に効きやすい価格指標です。",
       "latest": "112",
       "latestRaw": 112.0,
-      "date": "2026-07-10 18:10 (GMT+8)",
+      "date": "2026-07-13 18:10 (GMT+8)",
       "previousChange": "+2.8%",
       "previousChangeRaw": 2.75,
       "yoy": "+3.1%",
@@ -274,11 +252,11 @@
       "id": "TF-NAND-512GB-TLC-SPOT",
       "name": "TrendForce NAND 512Gb TLC Spot Price",
       "help": "TrendForce公開ページのNAND 512Gb TLC spot priceです。NAND価格の短期方向感を確認します。",
-      "latest": "19.862",
-      "latestRaw": 19.862,
-      "date": "2026-06-29 14:40 (GMT+8)",
-      "previousChange": "-1.0%",
-      "previousChangeRaw": -1.03,
+      "latest": "19.293",
+      "latestRaw": 19.293,
+      "date": "2026-07-06 14:40 (GMT+8)",
+      "previousChange": "-2.9%",
+      "previousChangeRaw": -2.87,
       "yoy": "n/a",
       "yoyRaw": null,
       "risk": "🟠",
@@ -289,8 +267,8 @@
       "block": "memory_price",
       "source": "TrendForce public price page",
       "sourceUrl": "https://www.trendforce.com/price/flash/flash_spot",
-      "sevenDayChange": "-1.0%",
-      "sevenDayChangeRaw": -1.0314415267327792
+      "sevenDayChange": "-2.9%",
+      "sevenDayChangeRaw": -2.8647668915517066
     },
     {
       "id": "TF-NAND-128GB-MLC-CONTRACT",
@@ -298,7 +276,7 @@
       "help": "TrendForce公開ページのNAND contract priceです。NANDの契約価格が上昇しているかを見ます。",
       "latest": "26.508",
       "latestRaw": 26.508,
-      "date": "2026-06-29 14:40 (GMT+8)",
+      "date": "2026-07-06 14:40 (GMT+8)",
       "previousChange": "+9.7%",
       "previousChangeRaw": 9.73,
       "yoy": "+9.8%",
@@ -320,13 +298,13 @@
       "help": "Microsoft、Amazon、Alphabet、Meta、OracleなどAI投資の買い手側株価と、NVIDIA/Micron/ASMLなど供給側株価の相対パフォーマンスを見ます。買い手側が弱く、供給側だけが強い状態は、AI Capex継続が前提になった歪みとして監視します。",
       "latest": "74/100",
       "latestRaw": 74,
-      "date": "2026-07-10",
-      "previousChange": "Buyer -1.8%",
-      "previousChangeRaw": -1.7857130646534984,
-      "yoy": "Supply +42.7%",
-      "yoyRaw": 42.65229226918601,
-      "spread": "+44.4%",
-      "spreadRaw": 44.43800533383951,
+      "date": "2026-07-13",
+      "previousChange": "Buyer -5.1%",
+      "previousChangeRaw": -5.116280999369431,
+      "yoy": "Supply +37.5%",
+      "yoyRaw": 37.54871871886313,
+      "spread": "+42.7%",
+      "spreadRaw": 42.66499971823256,
       "risk": "🔴",
       "riskClass": "risk-danger",
       "riskScore": 74,
@@ -938,18 +916,18 @@
     }
   ],
   "analysis": {
-    "main": "現在地は「Capacity Expansion」寄りです。AI需要を背景に供給能力を増やす局面。AI ComputeはNVIDIA/Broadcomの既存データで確認し、Memory/HBMはTrendForceのDRAM/NAND価格とMicronの売上・粗利率・在庫で確認します。DDR5 spotは47.8、NAND 512Gb TLC spotは19.862です。FoundryはTSMC月次売上NT$417.0B、前年比+30.1%で確認します。Micronの売上前年比は+345.7%、粗利率は84.6%です。ガイダンススコアは80/100、決算後株価反応スコアは53/100です。買い手側ストレスは74/100で、ハイパースケーラー株価と供給側株価の乖離を監視します。設備投資・装置企業の売上が強い間は供給能力拡大局面ですが、在庫増と粗利率低下が重なる場合はOverbuild Riskへ警戒を引き上げます。",
+    "main": "現在地は「Capacity Expansion」寄りです。AI需要を背景に供給能力を増やす局面。AI ComputeはNVIDIA/Broadcomの既存データで確認し、Memory/HBMはTrendForceのDRAM/NAND価格とMicronの売上・粗利率・在庫で確認します。DDR5 spotは48.333、NAND 512Gb TLC spotは19.293です。FoundryはTSMC月次売上n/a、前年比n/aで確認します。Micronの売上前年比は+345.7%、粗利率は84.6%です。ガイダンススコアは80/100、決算後株価反応スコアは53/100です。買い手側ストレスは74/100で、ハイパースケーラー株価と供給側株価の乖離を監視します。設備投資・装置企業の売上が強い間は供給能力拡大局面ですが、在庫増と粗利率低下が重なる場合はOverbuild Riskへ警戒を引き上げます。",
     "up": [
       "AI Computeスコアは79/100",
       "Memory/HBMスコアは68/100",
       "Equipment/Capacityスコアは66/100",
-      "Foundry/Packagingスコアは68/100",
+      "Foundry/Packagingスコアは50/100",
       "Guidanceスコアは80/100"
     ],
     "risks": [
       "在庫圧力スコアは39/100",
       "決算後株価反応スコアは53/100",
-      "買い手側ストレスは74/100、ハイパースケーラー60日平均は-1.8%、供給側60日平均は+42.7%",
+      "買い手側ストレスは74/100、ハイパースケーラー60日平均は-5.1%、供給側60日平均は+37.5%",
       "HBM実価格、SOX/SMH相対パフォーマンスは未接続",
       "TrendForce公開ページの構造変更時は前回成功値を維持",
       "Capex拡大が需要成長を上回る場合は将来の供給過剰に注意"
