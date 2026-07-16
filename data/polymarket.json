@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-07-15T23:16+00:00",
+  "updatedAt": "2026-07-16T23:10+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟢",
-    "value": "AIバブル崩壊予測 16.8%",
+    "value": "AIバブル崩壊予測 16.9%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "16.8%",
-      "latestRaw": 16.75,
-      "date": "2026-07-15T23:14:39.596843Z",
-      "previousChange": "+0.8pt / 24h",
-      "previousChangeRaw": 0.75,
-      "yoy": "+1.2pt / 7d",
-      "yoyRaw": 1.2,
+      "latest": "16.9%",
+      "latestRaw": 16.900000000000002,
+      "date": "2026-07-16T23:02:57.16415Z",
+      "previousChange": "0.0pt / 24h",
+      "previousChangeRaw": 0,
+      "yoy": "+1.7pt / 7d",
+      "yoyRaw": 1.6500000000000001,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$93",
-      "volume1wk": "$4.1K",
+      "volume24h": "$612",
+      "volume1wk": "$4.4K",
       "totalVolume": "$2.3M",
-      "liquidity": "$14.6K",
-      "bestBid": 0.154,
-      "bestAsk": 0.181,
-      "spread": 0.027,
-      "oneMonthChange": -3.6999999999999997
+      "liquidity": "$16.5K",
+      "bestBid": 0.156,
+      "bestAsk": 0.182,
+      "spread": 0.026,
+      "oneMonthChange": -3.75
     }
   ],
   "history": [
@@ -201,6 +201,11 @@
       "date": "2026-07-15",
       "probability": 16.75,
       "volume24h": 93.08
+    },
+    {
+      "date": "2026-07-16",
+      "probability": 16.9,
+      "volume24h": 612.14
     }
   ]
 }
