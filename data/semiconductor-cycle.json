@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-23T23:11+00:00",
+  "updatedAt": "2026-07-24T23:16+00:00",
   "phase": "Capacity Expansion",
   "phaseDescription": "AI需要を背景に供給能力を増やす局面",
   "scoreHistory": [
@@ -208,11 +208,11 @@
       "id": "TF-DRAM-DDR5-16GB-SPOT",
       "name": "TrendForce DDR5 16Gb Spot Price",
       "help": "TrendForce公開ページのDDR5 16Gb spot priceです。DRAM価格サイクルの短期方向感を見ます。上昇が続くほどメモリメーカーの価格決定力に追い風です。",
-      "latest": "50.5",
-      "latestRaw": 50.5,
-      "date": "2026-07-23 18:10 (GMT+8)",
-      "previousChange": "+0.3%",
-      "previousChangeRaw": 0.33,
+      "latest": "50.833",
+      "latestRaw": 50.833,
+      "date": "2026-07-24 18:10 (GMT+8)",
+      "previousChange": "+0.7%",
+      "previousChangeRaw": 0.66,
       "yoy": "n/a",
       "yoyRaw": null,
       "risk": "🟡",
@@ -223,18 +223,18 @@
       "block": "memory_price",
       "source": "TrendForce public price page",
       "sourceUrl": "https://www.trendforce.com/price/dram/dram_spot",
-      "sevenDayChange": "+2.4%",
-      "sevenDayChangeRaw": 2.3655565240305654
+      "sevenDayChange": "+2.3%",
+      "sevenDayChangeRaw": 2.3476352507701304
     },
     {
       "id": "TF-DRAM-DDR4-16GB-SPOT",
       "name": "TrendForce DDR4 16Gb Spot Price",
       "help": "TrendForce公開ページのDDR4 16Gb spot priceです。汎用DRAM価格の底打ち・上昇継続を見る補助指標です。",
-      "latest": "82.125",
-      "latestRaw": 82.125,
-      "date": "2026-07-23 18:10 (GMT+8)",
-      "previousChange": "+1.1%",
-      "previousChangeRaw": 1.08,
+      "latest": "83.25",
+      "latestRaw": 83.25,
+      "date": "2026-07-24 18:10 (GMT+8)",
+      "previousChange": "+1.4%",
+      "previousChangeRaw": 1.37,
       "yoy": "n/a",
       "yoyRaw": null,
       "risk": "🟡",
@@ -245,8 +245,8 @@
       "block": "memory_price",
       "source": "TrendForce public price page",
       "sourceUrl": "https://www.trendforce.com/price/dram/dram_spot",
-      "sevenDayChange": "+2.5%",
-      "sevenDayChangeRaw": 2.4960998439937487
+      "sevenDayChange": "+3.8%",
+      "sevenDayChangeRaw": 3.802992518703241
     },
     {
       "id": "TF-DRAM-DDR5-SODIMM-CONTRACT",
@@ -254,7 +254,7 @@
       "help": "TrendForce公開ページのDDR5 SO-DIMM contract priceです。契約価格はspotより更新頻度が低い一方、メモリメーカーの収益に効きやすい価格指標です。",
       "latest": "112",
       "latestRaw": 112.0,
-      "date": "2026-07-23 18:10 (GMT+8)",
+      "date": "2026-07-24 18:10 (GMT+8)",
       "previousChange": "+2.8%",
       "previousChangeRaw": 2.75,
       "yoy": "+3.1%",
@@ -320,13 +320,13 @@
       "help": "Microsoft、Amazon、Alphabet、Meta、OracleなどAI投資の買い手側株価と、NVIDIA/Micron/ASMLなど供給側株価の相対パフォーマンスを見ます。買い手側が弱く、供給側だけが強い状態は、AI Capex継続が前提になった歪みとして監視します。",
       "latest": "83/100",
       "latestRaw": 83,
-      "date": "2026-07-23",
-      "previousChange": "Buyer -14.3%",
-      "previousChangeRaw": -14.259450454225908,
-      "yoy": "Supply +27.3%",
-      "yoyRaw": 27.34831484867467,
-      "spread": "+41.6%",
-      "spreadRaw": 41.607765302900575,
+      "date": "2026-07-24",
+      "previousChange": "Buyer -14.5%",
+      "previousChangeRaw": -14.468945840258641,
+      "yoy": "Supply +27.2%",
+      "yoyRaw": 27.217837733247237,
+      "spread": "+41.7%",
+      "spreadRaw": 41.68678357350588,
       "risk": "🔴",
       "riskClass": "risk-danger",
       "riskScore": 83,
@@ -938,7 +938,7 @@
     }
   ],
   "analysis": {
-    "main": "現在地は「Capacity Expansion」寄りです。AI需要を背景に供給能力を増やす局面。AI ComputeはNVIDIA/Broadcomの既存データで確認し、Memory/HBMはTrendForceのDRAM/NAND価格とMicronの売上・粗利率・在庫で確認します。DDR5 spotは50.5、NAND 512Gb TLC spotは19.176です。FoundryはTSMC月次売上NT$442.7B、前年比+67.9%で確認します。Micronの売上前年比は+345.7%、粗利率は84.6%です。ガイダンススコアは80/100、決算後株価反応スコアは53/100です。買い手側ストレスは83/100で、ハイパースケーラー株価と供給側株価の乖離を監視します。設備投資・装置企業の売上が強い間は供給能力拡大局面ですが、在庫増と粗利率低下が重なる場合はOverbuild Riskへ警戒を引き上げます。",
+    "main": "現在地は「Capacity Expansion」寄りです。AI需要を背景に供給能力を増やす局面。AI ComputeはNVIDIA/Broadcomの既存データで確認し、Memory/HBMはTrendForceのDRAM/NAND価格とMicronの売上・粗利率・在庫で確認します。DDR5 spotは50.833、NAND 512Gb TLC spotは19.176です。FoundryはTSMC月次売上NT$442.7B、前年比+67.9%で確認します。Micronの売上前年比は+345.7%、粗利率は84.6%です。ガイダンススコアは80/100、決算後株価反応スコアは53/100です。買い手側ストレスは83/100で、ハイパースケーラー株価と供給側株価の乖離を監視します。設備投資・装置企業の売上が強い間は供給能力拡大局面ですが、在庫増と粗利率低下が重なる場合はOverbuild Riskへ警戒を引き上げます。",
     "up": [
       "AI Computeスコアは79/100",
       "Memory/HBMスコアは68/100",
@@ -949,7 +949,7 @@
     "risks": [
       "在庫圧力スコアは39/100",
       "決算後株価反応スコアは53/100",
-      "買い手側ストレスは83/100、ハイパースケーラー60日平均は-14.3%、供給側60日平均は+27.3%",
+      "買い手側ストレスは83/100、ハイパースケーラー60日平均は-14.5%、供給側60日平均は+27.2%",
       "HBM実価格、SOX/SMH相対パフォーマンスは未接続",
       "TrendForce公開ページの構造変更時は前回成功値を維持",
       "Capex拡大が需要成長を上回る場合は将来の供給過剰に注意"

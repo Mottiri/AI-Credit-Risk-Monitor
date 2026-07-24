@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-07-23T23:10+00:00",
+  "updatedAt": "2026-07-24T23:16+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟢",
-    "value": "AIバブル崩壊予測 16.8%",
+    "value": "AIバブル崩壊予測 16.4%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "16.8%",
-      "latestRaw": 16.8,
-      "date": "2026-07-23T23:03:49.166923Z",
-      "previousChange": "+0.2pt / 24h",
-      "previousChangeRaw": 0.2,
+      "latest": "16.4%",
+      "latestRaw": 16.45,
+      "date": "2026-07-24T23:13:02.520837Z",
+      "previousChange": "-0.4pt / 24h",
+      "previousChangeRaw": -0.35000000000000003,
       "yoy": "-0.1pt / 7d",
-      "yoyRaw": -0.05,
+      "yoyRaw": -0.1,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$310",
-      "volume1wk": "$6.2K",
+      "volume24h": "$325",
+      "volume1wk": "$1.9K",
       "totalVolume": "$2.3M",
-      "liquidity": "$17.8K",
-      "bestBid": 0.166,
-      "bestAsk": 0.17,
-      "spread": 0.004,
-      "oneMonthChange": -2.5
+      "liquidity": "$16.5K",
+      "bestBid": 0.16,
+      "bestAsk": 0.169,
+      "spread": 0.009,
+      "oneMonthChange": -3.15
     }
   ],
   "history": [
@@ -231,6 +231,11 @@
       "date": "2026-07-23",
       "probability": 16.8,
       "volume24h": 309.79
+    },
+    {
+      "date": "2026-07-24",
+      "probability": 16.45,
+      "volume24h": 325.36
     }
   ]
 }
