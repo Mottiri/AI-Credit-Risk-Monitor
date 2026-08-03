@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-07-31T23:15+00:00",
+  "updatedAt": "2026-08-03T23:18+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟢",
-    "value": "AIバブル崩壊予測 19.7%",
+    "value": "AIバブル崩壊予測 17.8%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "19.7%",
-      "latestRaw": 19.7,
-      "date": "2026-07-31T23:12:51.737768Z",
-      "previousChange": "-0.1pt / 24h",
-      "previousChangeRaw": -0.05,
-      "yoy": "+3.2pt / 7d",
-      "yoyRaw": 3.25,
+      "latest": "17.8%",
+      "latestRaw": 17.849999999999998,
+      "date": "2026-08-03T23:12:53.982724Z",
+      "previousChange": "-1.0pt / 24h",
+      "previousChangeRaw": -1.0,
+      "yoy": "-2.0pt / 7d",
+      "yoyRaw": -2.0,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$245",
-      "volume1wk": "$10.3K",
+      "volume24h": "$393",
+      "volume1wk": "$9.8K",
       "totalVolume": "$2.3M",
-      "liquidity": "$25.5K",
-      "bestBid": 0.19,
-      "bestAsk": 0.204,
-      "spread": 0.014,
-      "oneMonthChange": 0.8500000000000001
+      "liquidity": "$26.9K",
+      "bestBid": 0.177,
+      "bestAsk": 0.18,
+      "spread": 0.003,
+      "oneMonthChange": 1.15
     }
   ],
   "history": [
@@ -261,6 +261,11 @@
       "date": "2026-07-31",
       "probability": 19.7,
       "volume24h": 245.27
+    },
+    {
+      "date": "2026-08-03",
+      "probability": 17.85,
+      "volume24h": 393.24
     }
   ]
 }
