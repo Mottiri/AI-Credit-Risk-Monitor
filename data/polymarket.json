@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-08-13T23:03+00:00",
+  "updatedAt": "2026-08-14T22:40+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟢",
-    "value": "AIバブル崩壊予測 14.5%",
+    "value": "AIバブル崩壊予測 14.4%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "14.5%",
-      "latestRaw": 14.499999999999998,
-      "date": "2026-08-13T22:58:05.110969Z",
-      "previousChange": "-0.4pt / 24h",
-      "previousChangeRaw": -0.4,
-      "yoy": "-0.4pt / 7d",
-      "yoyRaw": -0.35000000000000003,
+      "latest": "14.4%",
+      "latestRaw": 14.399999999999999,
+      "date": "2026-08-14T22:34:03.986045Z",
+      "previousChange": "-0.1pt / 24h",
+      "previousChangeRaw": -0.1,
+      "yoy": "+0.4pt / 7d",
+      "yoyRaw": 0.4,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$1.0K",
-      "volume1wk": "$3.5K",
+      "volume24h": "$343",
+      "volume1wk": "$1.2K",
       "totalVolume": "$2.3M",
-      "liquidity": "$21.1K",
+      "liquidity": "$15.5K",
       "bestBid": 0.135,
-      "bestAsk": 0.155,
-      "spread": 0.02,
-      "oneMonthChange": -1.55
+      "bestAsk": 0.153,
+      "spread": 0.018,
+      "oneMonthChange": -2.65
     }
   ],
   "history": [
@@ -301,6 +301,11 @@
       "date": "2026-08-13",
       "probability": 14.5,
       "volume24h": 1034.32
+    },
+    {
+      "date": "2026-08-14",
+      "probability": 14.4,
+      "volume24h": 342.75
     }
   ]
 }
