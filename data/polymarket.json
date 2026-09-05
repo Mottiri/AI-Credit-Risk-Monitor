@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-09-04T00:06+00:00",
+  "updatedAt": "2026-09-05T00:06+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
-    "emoji": "🟢",
-    "value": "AIバブル崩壊予測 11.2%",
+    "emoji": "🟡",
+    "value": "AIバブル崩壊予測 15.4%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "11.2%",
-      "latestRaw": 11.25,
-      "date": "2026-09-04T00:02:11.353744Z",
-      "previousChange": "+2.0pt / 24h",
-      "previousChangeRaw": 2.0,
-      "yoy": "-0.3pt / 7d",
-      "yoyRaw": -0.3,
-      "risk": "🟢",
-      "riskClass": "risk-low",
-      "riskScore": 20,
+      "latest": "15.4%",
+      "latestRaw": 15.4,
+      "date": "2026-09-05T00:00:14.683763Z",
+      "previousChange": "+4.0pt / 24h",
+      "previousChangeRaw": 4.0,
+      "yoy": "+4.2pt / 7d",
+      "yoyRaw": 4.15,
+      "risk": "🟡",
+      "riskClass": "risk-watch",
+      "riskScore": 45,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$2.2K",
-      "volume1wk": "$8.7K",
+      "volume24h": "$10.3K",
+      "volume1wk": "$19.0K",
       "totalVolume": "$2.4M",
-      "liquidity": "$12.3K",
-      "bestBid": 0.086,
-      "bestAsk": 0.139,
-      "spread": 0.053,
-      "oneMonthChange": -5.45
+      "liquidity": "$16.7K",
+      "bestBid": 0.141,
+      "bestAsk": 0.167,
+      "spread": 0.026,
+      "oneMonthChange": 1.5
     }
   ],
   "history": [
@@ -376,6 +376,11 @@
       "date": "2026-09-04",
       "probability": 11.25,
       "volume24h": 2172.8
+    },
+    {
+      "date": "2026-09-05",
+      "probability": 15.4,
+      "volume24h": 10309.64
     }
   ]
 }
