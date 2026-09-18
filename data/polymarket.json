@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-09-17T00:34+00:00",
+  "updatedAt": "2026-09-18T00:19+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟢",
-    "value": "AIバブル崩壊予測 14.8%",
+    "value": "AIバブル崩壊予測 9.7%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "14.8%",
-      "latestRaw": 14.799999999999999,
-      "date": "2026-09-17T00:31:08.357673Z",
-      "previousChange": "-1.0pt / 24h",
-      "previousChangeRaw": -1.0,
-      "yoy": "+3.5pt / 7d",
-      "yoyRaw": 3.55,
+      "latest": "9.7%",
+      "latestRaw": 9.700000000000001,
+      "date": "2026-09-18T00:14:23.088386Z",
+      "previousChange": "-5.1pt / 24h",
+      "previousChangeRaw": -5.1,
+      "yoy": "-3.1pt / 7d",
+      "yoyRaw": -3.1,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$36",
-      "volume1wk": "$4.2K",
+      "volume24h": "$4.4K",
+      "volume1wk": "$7.8K",
       "totalVolume": "$2.4M",
-      "liquidity": "$15.6K",
-      "bestBid": 0.124,
-      "bestAsk": 0.172,
-      "spread": 0.048,
-      "oneMonthChange": 1.35
+      "liquidity": "$15.8K",
+      "bestBid": 0.084,
+      "bestAsk": 0.11,
+      "spread": 0.026,
+      "oneMonthChange": -2.1999999999999997
     }
   ],
   "history": [
@@ -421,6 +421,11 @@
       "date": "2026-09-17",
       "probability": 14.8,
       "volume24h": 35.77
+    },
+    {
+      "date": "2026-09-18",
+      "probability": 9.7,
+      "volume24h": 4421.81
     }
   ]
 }
