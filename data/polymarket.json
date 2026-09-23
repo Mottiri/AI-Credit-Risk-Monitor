@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-09-22T00:50+00:00",
+  "updatedAt": "2026-09-23T00:33+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟢",
-    "value": "AIバブル崩壊予測 10.6%",
+    "value": "AIバブル崩壊予測 10.2%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,26 +14,26 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "10.6%",
-      "latestRaw": 10.6,
-      "date": "2026-09-22T00:45:01.713597Z",
-      "previousChange": "-1.7pt / 24h",
-      "previousChangeRaw": -1.6500000000000001,
-      "yoy": "-1.7pt / 7d",
-      "yoyRaw": -1.6500000000000001,
+      "latest": "10.2%",
+      "latestRaw": 10.15,
+      "date": "2026-09-23T00:30:23.905622Z",
+      "previousChange": "-0.4pt / 24h",
+      "previousChangeRaw": -0.44999999999999996,
+      "yoy": "-5.7pt / 7d",
+      "yoyRaw": -5.65,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$262",
-      "volume1wk": "$10.5K",
+      "volume24h": "$2.9K",
+      "volume1wk": "$11.7K",
       "totalVolume": "$2.4M",
-      "liquidity": "$25.0K",
-      "bestBid": 0.102,
-      "bestAsk": 0.11,
-      "spread": 0.008,
-      "oneMonthChange": -1.7999999999999998
+      "liquidity": "$45.0K",
+      "bestBid": 0.101,
+      "bestAsk": 0.102,
+      "spread": 0.001,
+      "oneMonthChange": -1.7000000000000002
     }
   ],
   "history": [
@@ -436,6 +436,11 @@
       "date": "2026-09-22",
       "probability": 10.6,
       "volume24h": 261.91
+    },
+    {
+      "date": "2026-09-23",
+      "probability": 10.15,
+      "volume24h": 2885.43
     }
   ]
 }
