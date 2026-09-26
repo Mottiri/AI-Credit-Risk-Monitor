@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-25T00:33+00:00",
+  "updatedAt": "2026-09-26T00:38+00:00",
   "phase": "Supply Shortage",
   "phaseDescription": "需要が供給を上回り、価格決定力が強い局面",
   "scoreHistory": [
@@ -213,8 +213,8 @@
       "date": "2026-09-24 18:10 (GMT+8)",
       "previousChange": "+0.3%",
       "previousChangeRaw": 0.29,
-      "yoy": "+6.5%",
-      "yoyRaw": 6.461498698469548,
+      "yoy": "+6.8%",
+      "yoyRaw": 6.790740740740753,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 25,
@@ -223,10 +223,10 @@
       "block": "memory_price",
       "source": "TrendForce public price page",
       "sourceUrl": "https://www.trendforce.com/price/dram/dram_spot",
-      "sevenDayChange": "+4.4%",
-      "sevenDayChangeRaw": 4.406785798345192,
-      "thirtyDayChange": "+6.5%",
-      "thirtyDayChangeRaw": 6.461498698469548
+      "sevenDayChange": "+3.0%",
+      "sevenDayChangeRaw": 2.9767857142857235,
+      "thirtyDayChange": "+6.8%",
+      "thirtyDayChangeRaw": 6.790740740740753
     },
     {
       "id": "TF-DRAM-DDR4-16GB-SPOT",
@@ -237,8 +237,8 @@
       "date": "2026-09-24 18:10 (GMT+8)",
       "previousChange": "-0.7%",
       "previousChangeRaw": -0.7,
-      "yoy": "-7.5%",
-      "yoyRaw": -7.483353761552991,
+      "yoy": "-8.0%",
+      "yoyRaw": -7.979219980450091,
       "risk": "🟠",
       "riskClass": "risk-high",
       "riskScore": 75,
@@ -247,10 +247,10 @@
       "block": "memory_price",
       "source": "TrendForce public price page",
       "sourceUrl": "https://www.trendforce.com/price/dram/dram_spot",
-      "sevenDayChange": "-2.6%",
-      "sevenDayChangeRaw": -2.576744186046509,
-      "thirtyDayChange": "-7.5%",
-      "thirtyDayChangeRaw": -7.483353761552991
+      "sevenDayChange": "-2.3%",
+      "sevenDayChangeRaw": -2.292711370262379,
+      "thirtyDayChange": "-8.0%",
+      "thirtyDayChangeRaw": -7.979219980450091
     },
     {
       "id": "TF-DRAM-DDR5-SODIMM-CONTRACT",
@@ -330,13 +330,13 @@
       "help": "Microsoft、Amazon、Alphabet、Meta、OracleなどAI投資の買い手側株価と、NVIDIA/Micron/ASMLなど供給側株価の相対パフォーマンスを見ます。買い手側が弱く、供給側だけが強い状態は、AI Capex継続が前提になった歪みとして監視します。",
       "latest": "32/100",
       "latestRaw": 32,
-      "date": "2026-09-25",
-      "previousChange": "Buyer +13.0%",
-      "previousChangeRaw": 13.04867501952442,
-      "yoy": "Supply -7.5%",
-      "yoyRaw": -7.50474397210025,
-      "spread": "-20.6%",
-      "spreadRaw": -20.55341899162467,
+      "date": "2026-09-26",
+      "previousChange": "Buyer +13.4%",
+      "previousChangeRaw": 13.435810467342339,
+      "yoy": "Supply -12.6%",
+      "yoyRaw": -12.614822165187986,
+      "spread": "-26.1%",
+      "spreadRaw": -26.050632632530323,
       "risk": "🟡",
       "riskClass": "risk-watch",
       "riskScore": 32,
@@ -941,7 +941,7 @@
     "risks": [
       "在庫圧力スコアは39/100",
       "決算後株価反応スコアは46/100",
-      "買い手側ストレスは32/100、ハイパースケーラー60日平均は+13.0%、供給側60日平均は-7.5%",
+      "買い手側ストレスは32/100、ハイパースケーラー60日平均は+13.4%、供給側60日平均は-12.6%",
       "HBM実価格、SOX/SMH相対パフォーマンスは未接続",
       "TrendForce公開ページの構造変更時は前回成功値を維持",
       "Capex拡大が需要成長を上回る場合は将来の供給過剰に注意"
