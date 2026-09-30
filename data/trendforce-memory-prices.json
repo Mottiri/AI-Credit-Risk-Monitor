@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-29T01:58+00:00",
+  "updatedAt": "2026-09-30T01:18+00:00",
   "series": {
     "TF-DRAM-DDR5-16GB-SPOT": [
       {
@@ -336,6 +336,11 @@
         "date": "2026-09-29",
         "value": 57.833,
         "sourceDate": "2026-09-28 18:10 (GMT+8)"
+      },
+      {
+        "date": "2026-09-30",
+        "value": 57.833,
+        "sourceDate": "2026-09-29 18:10 (GMT+8)"
       }
     ],
     "TF-DRAM-DDR4-16GB-SPOT": [
@@ -673,6 +678,11 @@
         "date": "2026-09-29",
         "value": 83.66,
         "sourceDate": "2026-09-28 18:10 (GMT+8)"
+      },
+      {
+        "date": "2026-09-30",
+        "value": 83.66,
+        "sourceDate": "2026-09-29 18:10 (GMT+8)"
       }
     ],
     "TF-DRAM-DDR5-SODIMM-CONTRACT": [
@@ -1010,6 +1020,11 @@
         "date": "2026-09-29",
         "value": 130.0,
         "sourceDate": "2026-09-28 18:10 (GMT+8)"
+      },
+      {
+        "date": "2026-09-30",
+        "value": 130.0,
+        "sourceDate": "2026-09-29 18:10 (GMT+8)"
       }
     ],
     "TF-NAND-512GB-TLC-SPOT": [
@@ -1347,6 +1362,11 @@
         "date": "2026-09-29",
         "value": 19.883,
         "sourceDate": "2026-09-21 14:40 (GMT+8)"
+      },
+      {
+        "date": "2026-09-30",
+        "value": 19.883,
+        "sourceDate": "2026-09-21 14:40 (GMT+8)"
       }
     ],
     "TF-NAND-128GB-MLC-CONTRACT": [
@@ -1682,6 +1702,11 @@
       },
       {
         "date": "2026-09-29",
+        "value": 30.048,
+        "sourceDate": "2026-09-21 14:40 (GMT+8)"
+      },
+      {
+        "date": "2026-09-30",
         "value": 30.048,
         "sourceDate": "2026-09-21 14:40 (GMT+8)"
       }
