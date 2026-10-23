@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-10-21T00:37+00:00",
+  "updatedAt": "2026-10-23T00:39+00:00",
   "source": "Polymarket Gamma API",
   "sourceUrl": "https://polymarket.com/event/ai-bubble-burst-by?outcomeIndex=0",
   "signal": {
     "key": "prediction",
     "label": "Prediction Market",
     "emoji": "🟢",
-    "value": "AIバブル崩壊予測 10.7%",
+    "value": "AIバブル崩壊予測 9.4%",
     "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
   },
   "indicators": [
@@ -14,34 +14,29 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "10.7%",
-      "latestRaw": 10.7,
-      "date": "2026-10-21T00:32:58.358797Z",
-      "previousChange": "+2.3pt / 24h",
-      "previousChangeRaw": 2.3,
-      "yoy": "+4.5pt / 7d",
-      "yoyRaw": 4.5,
+      "latest": "9.4%",
+      "latestRaw": 9.45,
+      "date": "2026-10-23T00:38:05.914057Z",
+      "previousChange": "+0.1pt / 24h",
+      "previousChangeRaw": 0.1,
+      "yoy": "+2.9pt / 7d",
+      "yoyRaw": 2.85,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$3.7K",
-      "volume1wk": "$49.5K",
+      "volume24h": "$4.7K",
+      "volume1wk": "$54.4K",
       "totalVolume": "$2.5M",
-      "liquidity": "$29.9K",
-      "bestBid": 0.102,
-      "bestAsk": 0.112,
-      "spread": 0.01,
-      "oneMonthChange": 1.55
+      "liquidity": "$40.2K",
+      "bestBid": 0.09,
+      "bestAsk": 0.099,
+      "spread": 0.009,
+      "oneMonthChange": -0.75
     }
   ],
   "history": [
-    {
-      "date": "2026-06-12",
-      "probability": 21.4,
-      "volume24h": 1953.63
-    },
     {
       "date": "2026-06-16",
       "probability": 20.65,
@@ -486,6 +481,11 @@
       "date": "2026-10-21",
       "probability": 10.7,
       "volume24h": 3677.64
+    },
+    {
+      "date": "2026-10-23",
+      "probability": 9.45,
+      "volume24h": 4746.45
     }
   ]
 }
