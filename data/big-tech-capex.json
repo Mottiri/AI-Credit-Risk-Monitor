@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-10-30T01:57+00:00",
+  "updatedAt": "2026-10-31T01:35+00:00",
   "source": "SEC Companyfacts API",
   "sourceUrl": "https://www.sec.gov/edgar/sec-api-documentation",
-  "latestQuarter": "2026Q2",
+  "latestQuarter": "2026Q3",
   "fundamentalsLatestQuarter": "2025Q1",
   "signal": {
     "key": "demand",
@@ -16,13 +16,13 @@
       "id": "BIGTECH-CAPEX-TOTAL",
       "name": "Microsoft + Alphabet + Meta + Amazon Capex",
       "help": "Big Tech 4社の設備投資合計です。AIデータセンター投資の大きなproxyです。前年比が強ければAIインフラ需要はまだ強いと見ます。前年比0%割れ、または前四半期比-15%超の急減速はAI投資サイクル減速の警戒です。",
-      "latest": "$165.1B",
-      "latestRaw": 165050000000.0,
-      "date": "2026Q2",
-      "previousChange": "+27.2%",
-      "previousChangeRaw": 27.20616570327552,
-      "yoy": "+87.0%",
-      "yoyRaw": 87.03397321125037,
+      "latest": "$201.9B",
+      "latestRaw": 201923000000.0,
+      "date": "2026Q3",
+      "previousChange": "+22.3%",
+      "previousChangeRaw": 22.34050287791578,
+      "yoy": "+107.6%",
+      "yoyRaw": 107.58807866681744,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
@@ -33,33 +33,33 @@
       "id": "MSFT-CAPEX",
       "name": "Microsoft Capital Expenditures",
       "help": "Microsoftの設備投資です。AIデータセンター投資のproxyとして見ます。前年比が強い間はAI需要を支える材料ですが、前年比が0%割れ、または前四半期比で大きく落ちる場合はAI投資減速の警戒です。",
-      "latest": "$35.8B",
-      "latestRaw": 35802000000.0,
-      "date": "2026Q2",
-      "previousChange": "+16.0%",
-      "previousChangeRaw": 15.954139137193945,
-      "yoy": "+109.6%",
-      "yoyRaw": 109.6258563147725,
+      "latest": "$39.4B",
+      "latestRaw": 39367000000.0,
+      "date": "2026Q3",
+      "previousChange": "+10.0%",
+      "previousChangeRaw": 9.957544271269757,
+      "yoy": "+103.0%",
+      "yoyRaw": 102.98545942043931,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
       "nextRelease": "Quarterly",
       "block": "demand",
       "sourceTag": "PaymentsToAcquirePropertyPlantAndEquipment",
-      "sourceType": "derived-ytd",
-      "filed": "2026-07-29"
+      "sourceType": "direct",
+      "filed": "2026-10-28"
     },
     {
       "id": "GOOGL-CAPEX",
       "name": "Alphabet Capital Expenditures",
       "help": "Alphabetの設備投資です。AIデータセンター投資のproxyとして見ます。前年比が強い間はAI需要を支える材料ですが、前年比が0%割れ、または前四半期比で大きく落ちる場合はAI投資減速の警戒です。",
-      "latest": "$44.9B",
-      "latestRaw": 44924000000.0,
-      "date": "2026Q2",
-      "previousChange": "+25.9%",
-      "previousChangeRaw": 25.92924819196054,
-      "yoy": "+100.1%",
-      "yoyRaw": 100.14256437672637,
+      "latest": "$51.4B",
+      "latestRaw": 51355000000.0,
+      "date": "2026Q3",
+      "previousChange": "+14.3%",
+      "previousChangeRaw": 14.31528804202653,
+      "yoy": "+114.4%",
+      "yoyRaw": 114.39903143656326,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
@@ -67,19 +67,19 @@
       "block": "demand",
       "sourceTag": "PaymentsToAcquirePropertyPlantAndEquipment",
       "sourceType": "derived-ytd",
-      "filed": "2026-07-23"
+      "filed": "2026-10-29"
     },
     {
       "id": "META-CAPEX",
       "name": "Meta Platforms Capital Expenditures",
       "help": "Meta Platformsの設備投資です。AIデータセンター投資のproxyとして見ます。前年比が強い間はAI需要を支える材料ですが、前年比が0%割れ、または前四半期比で大きく落ちる場合はAI投資減速の警戒です。",
-      "latest": "$30.1B",
-      "latestRaw": 30116000000.0,
-      "date": "2026Q2",
-      "previousChange": "+58.5%",
-      "previousChangeRaw": 58.53029425698794,
-      "yoy": "+82.1%",
-      "yoyRaw": 82.1018260974725,
+      "latest": "$33.9B",
+      "latestRaw": 33942000000.0,
+      "date": "2026Q3",
+      "previousChange": "+12.7%",
+      "previousChangeRaw": 12.70421038650551,
+      "yoy": "+80.3%",
+      "yoyRaw": 80.26448563386266,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
@@ -87,19 +87,19 @@
       "block": "demand",
       "sourceTag": "PaymentsToAcquirePropertyPlantAndEquipment",
       "sourceType": "derived-ytd",
-      "filed": "2026-07-30"
+      "filed": "2026-10-22"
     },
     {
       "id": "AMZN-CAPEX",
       "name": "Amazon Capital Expenditures",
       "help": "Amazonの設備投資です。AIデータセンター投資のproxyとして見ます。前年比が強い間はAI需要を支える材料ですが、前年比が0%割れ、または前四半期比で大きく落ちる場合はAI投資減速の警戒です。",
-      "latest": "$54.2B",
-      "latestRaw": 54208000000.0,
-      "date": "2026Q2",
-      "previousChange": "+22.6%",
-      "previousChangeRaw": 22.634210347713957,
-      "yoy": "+68.4%",
-      "yoyRaw": 68.43675232265483,
+      "latest": "$77.3B",
+      "latestRaw": 77259000000.0,
+      "date": "2026Q3",
+      "previousChange": "+42.5%",
+      "previousChangeRaw": 42.52324380165289,
+      "yoy": "+120.1%",
+      "yoyRaw": 120.14247043738426,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
@@ -107,7 +107,7 @@
       "block": "demand",
       "sourceTag": "PaymentsToAcquireProductiveAssets",
       "sourceType": "direct",
-      "filed": "2026-07-31"
+      "filed": "2026-10-30"
     }
   ],
   "macroIndicators": [
@@ -147,10 +147,6 @@
     }
   ],
   "history": [
-    {
-      "date": "2023Q3",
-      "value": 36947000000.0
-    },
     {
       "date": "2023Q4",
       "value": 42934000000.0
@@ -194,6 +190,10 @@
     {
       "date": "2026Q2",
       "value": 165050000000.0
+    },
+    {
+      "date": "2026Q3",
+      "value": 201923000000.0
     }
   ],
   "fundamentalsHistory": [
