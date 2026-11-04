@@ -1,53 +1,53 @@
 {
-  "updatedAt": "2026-11-03T03:27+00:00",
+  "updatedAt": "2026-11-04T02:19+00:00",
   "scoreHistory": [
     {
       "date": "2025-10",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2025-11",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2025-12",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-01",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-02",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-03",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-04",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-05",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-06",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-07",
-      "score": 51
+      "score": 54
     },
     {
       "date": "2026-08",
-      "score": 51
+      "score": 54
     },
     {
       "date": "2026-09",
-      "score": 47
+      "score": 49
     }
   ],
   "creditYoy": [
@@ -140,7 +140,7 @@
       "key": "prediction",
       "label": "Prediction Market",
       "emoji": "🟢",
-      "value": "AIバブル崩壊予測 9.1%",
+      "value": "AIバブル崩壊予測 8.5%",
       "help": "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。"
     }
   ],
@@ -166,13 +166,13 @@
       "id": "BAMLH0A0HYM2",
       "name": "ICE BofA High Yield OAS",
       "help": "信用力が低めの企業が借りる時の追加金利です。4%超で投資家がリスクを意識、5.5%超で信用不安がはっきり、7%超でデフォルトや景気悪化を強く織り込む水準です。",
-      "latest": "3.44%",
-      "latestRaw": 3.44,
-      "date": "2026-10-30",
-      "previousChange": "+0.18pt",
-      "previousChangeRaw": 0.18000000000000016,
-      "yoy": "+17.0%",
-      "yoyRaw": 17.006802721088434,
+      "latest": "3.43%",
+      "latestRaw": 3.43,
+      "date": "2026-11-02",
+      "previousChange": "-0.01pt",
+      "previousChangeRaw": -0.009999999999999787,
+      "yoy": "+17.5%",
+      "yoyRaw": 17.46575342465755,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
@@ -200,16 +200,16 @@
       "id": "VIXCLS",
       "name": "CBOE Volatility Index",
       "help": "株式市場の不安度を見る指数です。20超で不安定、30超で投資家がかなり警戒、40超で急落・危機局面に近い水準です。HYスプレッドや金融ストレスと同時に上がると重要です。",
-      "latest": "19.42",
-      "latestRaw": 19.42,
-      "date": "2026-10-30",
-      "previousChange": "+2.22",
-      "previousChangeRaw": 2.2200000000000024,
-      "yoy": "+11.4%",
-      "yoyRaw": 11.353211009174323,
-      "risk": "🟢",
-      "riskClass": "risk-low",
-      "riskScore": 20,
+      "latest": "21.15",
+      "latestRaw": 21.15,
+      "date": "2026-11-02",
+      "previousChange": "+1.73",
+      "previousChangeRaw": 1.7299999999999969,
+      "yoy": "+29.4%",
+      "yoyRaw": 29.357798165137595,
+      "risk": "🟡",
+      "riskClass": "risk-watch",
+      "riskScore": 45,
       "nextRelease": "Daily",
       "block": "stress"
     },
@@ -217,13 +217,13 @@
       "id": "DGS10",
       "name": "10-Year Treasury Yield",
       "help": "米10年国債利回りです。長期の借入コストの目安です。4.5%超で資金調達が重くなり始め、5%超でデータセンター投資の採算に圧力、5.5%超で借金依存の成長にかなり厳しい水準です。",
-      "latest": "4.94%",
-      "latestRaw": 4.94,
-      "date": "2026-10-30",
-      "previousChange": "-0.04pt",
-      "previousChangeRaw": -0.040000000000000036,
-      "yoy": "+20.2%",
-      "yoyRaw": 20.19464720194648,
+      "latest": "4.91%",
+      "latestRaw": 4.91,
+      "date": "2026-11-02",
+      "previousChange": "-0.03pt",
+      "previousChangeRaw": -0.03000000000000025,
+      "yoy": "+22.1%",
+      "yoyRaw": 22.13930348258708,
       "risk": "🟡",
       "riskClass": "risk-watch",
       "riskScore": 45,
@@ -234,13 +234,13 @@
       "id": "DGS2",
       "name": "2-Year Treasury Yield",
       "help": "米2年国債利回りです。今後数年の高金利見通しに敏感です。高止まりすると短期借入や借り換えコストが重くなり、AIインフラやprivate creditの負担になります。",
-      "latest": "4.56%",
-      "latestRaw": 4.56,
-      "date": "2026-10-30",
-      "previousChange": "-0.05pt",
-      "previousChangeRaw": -0.05000000000000071,
-      "yoy": "+26.7%",
-      "yoyRaw": 26.66666666666666,
+      "latest": "4.59%",
+      "latestRaw": 4.59,
+      "date": "2026-11-02",
+      "previousChange": "+0.03pt",
+      "previousChangeRaw": 0.03000000000000025,
+      "yoy": "+32.3%",
+      "yoyRaw": 32.27665706051872,
       "risk": "🟡",
       "riskClass": "risk-watch",
       "riskScore": 45,
@@ -268,13 +268,13 @@
       "id": "RRPONTSYD",
       "name": "Overnight Reverse Repurchase Agreements",
       "help": "マネーマーケット資金がFRBに退避している残高です。多い時は余剰流動性のクッションになります。250B割れで注意、100B割れで高リスク、25B割れでクッション枯渇を警戒します。",
-      "latest": "5B",
-      "latestRaw": 5.087,
-      "date": "2026-11-02",
-      "previousChange": "+0.7B",
-      "previousChangeRaw": 0.7119999999999997,
-      "yoy": "-32.7%",
-      "yoyRaw": -32.72053961116255,
+      "latest": "0B",
+      "latestRaw": 0.427,
+      "date": "2026-11-03",
+      "previousChange": "-4.7B",
+      "previousChangeRaw": -4.66,
+      "yoy": "-94.4%",
+      "yoyRaw": -94.35259886258432,
       "risk": "🔴",
       "riskClass": "risk-danger",
       "riskScore": 90,
@@ -543,77 +543,77 @@
       "id": "POLYMARKET-AI-BUBBLE",
       "name": "AI bubble burst by Dec 31, 2026",
       "help": "Polymarket上のAIバブル崩壊予測です。Yes確率が上がるほど、市場参加者がAI関連の急な調整を意識していることを示します。20%超で注意、35%超で高めの警戒、50%超で予測市場も本格警戒と見ます。24hで+5pt、7日で+10ptのような急上昇は特に重要です。",
-      "latest": "9.1%",
-      "latestRaw": 9.1,
-      "date": "2026-11-03T03:25:57.56376Z",
-      "previousChange": "-0.6pt / 24h",
-      "previousChangeRaw": -0.6,
-      "yoy": "-0.4pt / 7d",
-      "yoyRaw": -0.35000000000000003,
+      "latest": "8.5%",
+      "latestRaw": 8.5,
+      "date": "2026-11-04T02:17:57.981189Z",
+      "previousChange": "-0.9pt / 24h",
+      "previousChangeRaw": -0.8999999999999999,
+      "yoy": "+0.8pt / 7d",
+      "yoyRaw": 0.8,
       "risk": "🟢",
       "riskClass": "risk-low",
       "riskScore": 20,
       "nextRelease": "Scheduled",
       "block": "prediction",
-      "volume24h": "$11.4K",
-      "volume1wk": "$33.9K",
+      "volume24h": "$811",
+      "volume1wk": "$21.7K",
       "totalVolume": "$2.5M",
-      "liquidity": "$18.9K",
-      "bestBid": 0.082,
-      "bestAsk": 0.1,
-      "spread": 0.018,
-      "oneMonthChange": 2.0500000000000003
+      "liquidity": "$26.1K",
+      "bestBid": 0.083,
+      "bestAsk": 0.087,
+      "spread": 0.004,
+      "oneMonthChange": 1.0999999999999999
     }
   ],
   "macro": {
     "scoreHistory": [
       {
         "date": "2025-09",
-        "score": 35
+        "score": 38
       },
       {
         "date": "2025-11",
-        "score": 26
+        "score": 30
       },
       {
         "date": "2025-12",
-        "score": 35
+        "score": 38
       },
       {
         "date": "2026-01",
-        "score": 26
+        "score": 30
       },
       {
         "date": "2026-02",
-        "score": 26
+        "score": 30
       },
       {
         "date": "2026-03",
-        "score": 35
+        "score": 38
       },
       {
         "date": "2026-04",
-        "score": 35
+        "score": 38
       },
       {
         "date": "2026-05",
-        "score": 43
+        "score": 47
       },
       {
         "date": "2026-06",
-        "score": 35
+        "score": 38
       },
       {
         "date": "2026-07",
-        "score": 35
+        "score": 38
       },
       {
         "date": "2026-08",
-        "score": 35
+        "score": 38
       },
       {
         "date": "2026-09",
-        "score": 33
+        "score": 36
       }
     ],
     "cpiYoy": [
@@ -691,8 +691,8 @@
       {
         "key": "volatility",
         "label": "Market Volatility",
-        "emoji": "🟢",
-        "value": "株式に比較的落ち着き",
+        "emoji": "🟡",
+        "value": "注意シグナル",
         "help": "VIXで株式市場の不安度を見ます。急上昇は市場がリスクを再評価しているサインです。"
       },
       {
@@ -759,13 +759,13 @@
         "id": "DGS10",
         "name": "10-Year Treasury Yield",
         "help": "株式の割引率に効く長期金利です。4.5%超でバリュエーションの重荷、5%超で成長株に強い圧力、5.5%超でかなり厳しい金利環境と見ます。",
-        "latest": "4.94%",
-        "latestRaw": 4.94,
-        "date": "2026-10-30",
-        "previousChange": "-0.04pt",
-        "previousChangeRaw": -0.040000000000000036,
-        "yoy": "+20.2%",
-        "yoyRaw": 20.19464720194648,
+        "latest": "4.91%",
+        "latestRaw": 4.91,
+        "date": "2026-11-02",
+        "previousChange": "-0.03pt",
+        "previousChangeRaw": -0.03000000000000025,
+        "yoy": "+22.1%",
+        "yoyRaw": 22.13930348258708,
         "risk": "🟡",
         "riskClass": "risk-watch",
         "riskScore": 45,
@@ -776,13 +776,13 @@
         "id": "DGS2",
         "name": "2-Year Treasury Yield",
         "help": "政策金利見通しに敏感な短期金利です。高止まりすると利下げ期待が後退し、株式市場には逆風です。4.5%超で注意、5%超で高リスク、5.5%超で危険水準と見ます。",
-        "latest": "4.56%",
-        "latestRaw": 4.56,
-        "date": "2026-10-30",
-        "previousChange": "-0.05pt",
-        "previousChangeRaw": -0.05000000000000071,
-        "yoy": "+26.7%",
-        "yoyRaw": 26.66666666666666,
+        "latest": "4.59%",
+        "latestRaw": 4.59,
+        "date": "2026-11-02",
+        "previousChange": "+0.03pt",
+        "previousChangeRaw": 0.03000000000000025,
+        "yoy": "+32.3%",
+        "yoyRaw": 32.27665706051872,
         "risk": "🟡",
         "riskClass": "risk-watch",
         "riskScore": 45,
@@ -895,13 +895,13 @@
         "id": "T10YIE",
         "name": "10-Year Breakeven Inflation Rate",
         "help": "市場が織り込む10年期待インフレ率です。2.5%超でインフレ期待の高まりに注意、3%超で高リスク、3.5%超で金利上昇圧力を強く警戒します。",
-        "latest": "2.29%",
-        "latestRaw": 2.29,
-        "date": "2026-11-02",
-        "previousChange": "-0.05pt",
-        "previousChangeRaw": -0.04999999999999982,
-        "yoy": "+2.7%",
-        "yoyRaw": 2.6905829596412634,
+        "latest": "2.30%",
+        "latestRaw": 2.3,
+        "date": "2026-11-03",
+        "previousChange": "+0.01pt",
+        "previousChangeRaw": 0.009999999999999787,
+        "yoy": "+3.1%",
+        "yoyRaw": 3.139013452914785,
         "risk": "🟢",
         "riskClass": "risk-low",
         "riskScore": 20,
@@ -912,16 +912,16 @@
         "id": "VIXCLS",
         "name": "CBOE Volatility Index",
         "help": "株式市場の不安度を見る指数です。20超で不安定、30超で投資家がかなり警戒、40超で急落・危機局面に近い水準です。",
-        "latest": "19.42",
-        "latestRaw": 19.42,
-        "date": "2026-10-30",
-        "previousChange": "+2.22",
-        "previousChangeRaw": 2.2200000000000024,
-        "yoy": "+11.4%",
-        "yoyRaw": 11.353211009174323,
-        "risk": "🟢",
-        "riskClass": "risk-low",
-        "riskScore": 20,
+        "latest": "21.15",
+        "latestRaw": 21.15,
+        "date": "2026-11-02",
+        "previousChange": "+1.73",
+        "previousChangeRaw": 1.7299999999999969,
+        "yoy": "+29.4%",
+        "yoyRaw": 29.357798165137595,
+        "risk": "🟡",
+        "riskClass": "risk-watch",
+        "riskScore": 45,
         "nextRelease": "Daily",
         "block": "volatility"
       },
@@ -964,51 +964,51 @@
   "baseScoreHistory": [
     {
       "date": "2025-10",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2025-11",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2025-12",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-01",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-02",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-03",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-04",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-05",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-06",
-      "score": 60
+      "score": 63
     },
     {
       "date": "2026-07",
-      "score": 51
+      "score": 54
     },
     {
       "date": "2026-08",
-      "score": 51
+      "score": 54
     },
     {
       "date": "2026-09",
-      "score": 51
+      "score": 54
     }
   ],
   "externalDataMerged": [
