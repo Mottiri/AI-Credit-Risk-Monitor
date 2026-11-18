@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-11-17T04:28+00:00",
+  "updatedAt": "2026-11-18T03:42+00:00",
   "source": "Broadcom IR release",
-  "sourceUrl": "https://www.prnewswire.com/news-releases/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial-results-and-quarterly-dividend-302790698.html",
+  "sourceUrl": "https://investors.broadcom.com/news-releases/news-release-details/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial",
   "latestQuarter": "Q2 FY2026",
   "signal": {
     "key": "demand",
@@ -28,7 +28,7 @@
       "nextRelease": "Quarterly",
       "block": "demand",
       "source": "ir-release",
-      "sourceUrl": "https://www.prnewswire.com/news-releases/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial-results-and-quarterly-dividend-302790698.html"
+      "sourceUrl": "https://investors.broadcom.com/news-releases/news-release-details/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial"
     },
     {
       "id": "AVGO-REVENUE",
@@ -46,7 +46,7 @@
       "riskScore": 20,
       "nextRelease": "Quarterly",
       "block": "demand",
-      "sourceUrl": "https://www.prnewswire.com/news-releases/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial-results-and-quarterly-dividend-302790698.html"
+      "sourceUrl": "https://investors.broadcom.com/news-releases/news-release-details/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial"
     },
     {
       "id": "AVGO-ADJUSTED-EBITDA-MARGIN",
@@ -64,7 +64,7 @@
       "riskScore": 20,
       "nextRelease": "Quarterly",
       "block": "demand",
-      "sourceUrl": "https://www.prnewswire.com/news-releases/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial-results-and-quarterly-dividend-302790698.html"
+      "sourceUrl": "https://investors.broadcom.com/news-releases/news-release-details/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial"
     },
     {
       "id": "AVGO-AI-GUIDANCE",
@@ -82,7 +82,7 @@
       "riskScore": 20,
       "nextRelease": "Quarterly",
       "block": "demand",
-      "sourceUrl": "https://www.prnewswire.com/news-releases/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial-results-and-quarterly-dividend-302790698.html"
+      "sourceUrl": "https://investors.broadcom.com/news-releases/news-release-details/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial"
     },
     {
       "id": "AVGO-REVENUE-GUIDANCE",
@@ -100,7 +100,7 @@
       "riskScore": 20,
       "nextRelease": "Quarterly",
       "block": "demand",
-      "sourceUrl": "https://www.prnewswire.com/news-releases/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial-results-and-quarterly-dividend-302790698.html"
+      "sourceUrl": "https://investors.broadcom.com/news-releases/news-release-details/broadcom-inc-announces-second-quarter-fiscal-year-2026-financial"
     }
   ]
 }
