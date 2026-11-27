@@ -76,6 +76,20 @@ python3 scripts/fetch_semiconductor_cycle.py
 
 This writes `data/semiconductor-cycle.json` with AI Compute, Memory/HBM, Equipment, Inventory/Margin, current cycle phase, and phase-based investment-area guidance.
 
+## Fetch market price data
+
+Market prices (Yahoo Finance chart API, no key required) for the major AI
+names and CoreWeave, scored by drawdown from 52-week highs. This adds a
+daily "market" block that reacts to selloffs weeks before the quarterly
+SEC fundamentals and monthly FRED series can.
+
+```
+python3 scripts/fetch_market.py
+```
+
+This writes `data/market.json`, which `scripts/merge_external_data.py`
+merges into `data/latest.json` (15% weight on the composite score).
+
 ## Automate data updates
 
 GitHub Actions automation is included:

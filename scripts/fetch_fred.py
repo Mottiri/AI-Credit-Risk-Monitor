@@ -448,6 +448,98 @@ def build_indicator(config, observations):
     }
 
 
+def build_hy_momentum_indicator(observations):
+    """Score the 3-month change in the HY OAS, not just its level.
+
+    Spread levels stay deceptively calm until stress is obvious; the speed
+    of widening is the earlier signal. Thresholds are in basis points of
+    widening over roughly 63 trading days.
+    """
+    latest = observations[-1]
+
+    def change_bp(days_back):
+        if len(observations) <= days_back:
+            return None
+        return (latest["value"] - observations[-1 - days_back]["value"]) * 100
+
+    momentum_3m = change_bp(63)
+    momentum_1m = change_bp(21)
+    if momentum_3m is None:
+        return None
+    risk, risk_class, score = risk_for_value(
+        momentum_3m, {"watch": 25, "high": 50, "danger": 100}
+    )
+    return {
+        "id": "HY-OAS-MOMENTUM-3M",
+        "name": "High Yield OAS 3M Change",
+        "help": "ハイイールドスプレッドの直近3か月の拡大速度（bp）です。スプレッドの水準は危機が表面化するまで低く出やすいため、拡大の速さ自体を先行シグナルとして見ます。+25bpで注意、+50bpで高リスク、+100bpで危険水準です。",
+        "latest": f"{momentum_3m:+.0f}bp / 3M",
+        "latestRaw": round(momentum_3m, 1),
+        "date": latest["date"],
+        "previousChange": f"{momentum_1m:+.0f}bp / 1M" if momentum_1m is not None else "n/a",
+        "previousChangeRaw": round(momentum_1m, 1) if momentum_1m is not None else None,
+        "yoy": "n/a",
+        "yoyRaw": None,
+        "risk": risk,
+        "riskClass": risk_class,
+        "riskScore": score,
+        "nextRelease": "Daily",
+        "block": "stress",
+    }
+
+
+def build_nonbank_share_indicator(nonbank_obs, total_obs):
+    """Score the LEVEL of bank lending to nonbanks as a share of all bank loans.
+
+    The YoY growth rate (LNFACBM027SBOG indicator) decelerates long before
+    the stock of credit shrinks, which made the composite score fall while
+    the exposure kept hitting record highs. This companion indicator scores
+    the share itself: nonbank loans / total loans & leases (TOTLL).
+    """
+
+    def share_at(index):
+        obs = nonbank_obs[index]
+        candidates = [item for item in total_obs if item["date"] <= obs["date"]]
+        if not candidates:
+            return None
+        return obs["value"] / candidates[-1]["value"] * 100
+
+    latest_share = share_at(-1)
+    if latest_share is None:
+        return None
+    previous_share = share_at(-2) if len(nonbank_obs) >= 2 else None
+    yoy_share = share_at(-13) if len(nonbank_obs) >= 13 else None
+    risk, risk_class, score = risk_for_value(
+        latest_share, {"watch": 12, "high": 14, "danger": 16}
+    )
+
+    def pt_change(current, base):
+        if current is None or base is None:
+            return "n/a", None
+        diff = current - base
+        return f"{diff:+.1f}pt", round(diff, 2)
+
+    previous_text, previous_raw = pt_change(latest_share, previous_share)
+    yoy_text, yoy_raw = pt_change(latest_share, yoy_share)
+    return {
+        "id": "NONBANK-SHARE",
+        "name": "Nonbank Loans Share of Bank Loans",
+        "help": "銀行貸出全体（TOTLL）に占めるノンバンク向け貸出の比率です。伸び率ではなく残高の水準そのものを見ます。12%超で注意、14%超で高リスク、16%超で危険水準です。2024年時点では約9%でした。",
+        "latest": f"{latest_share:.1f}%",
+        "latestRaw": round(latest_share, 2),
+        "date": nonbank_obs[-1]["date"],
+        "previousChange": previous_text,
+        "previousChangeRaw": previous_raw,
+        "yoy": yoy_text,
+        "yoyRaw": yoy_raw,
+        "risk": risk,
+        "riskClass": risk_class,
+        "riskScore": score,
+        "nextRelease": "Monthly",
+        "block": "credit",
+    }
+
+
 def build_credit_yoy(observations):
     points = []
     for index, obs in enumerate(observations):
@@ -585,9 +677,31 @@ def main():
         else:
             macro_indicators.append(indicator)
 
+    # Companion indicators built from series pairs / history shapes that the
+    # single-series configs above cannot express.
+    try:
+        if "TOTLL" not in fetched:
+            fetched["TOTLL"] = fred_observations("TOTLL", api_key)
+        share_indicator = build_nonbank_share_indicator(
+            fetched["LNFACBM027SBOG"], fetched["TOTLL"]
+        )
+        if share_indicator:
+            indicators.append(share_indicator)
+    except Exception as exc:
+        print(f"Warning: nonbank share indicator failed: {exc}", file=sys.stderr)
+    momentum_indicator = build_hy_momentum_indicator(fetched["BAMLH0A0HYM2"])
+    if momentum_indicator:
+        indicators.append(momentum_indicator)
+
     credit_yoy = build_credit_yoy(fetched["LNFACBM027SBOG"])
     current_score = weighted_score(indicators)
-    non_credit_score = round((current_score - indicators[0]["riskScore"] * 0.45) / 0.55)
+    credit_block_items = [item for item in indicators if item["block"] == "credit"]
+    credit_block_score = (
+        sum(item["riskScore"] for item in credit_block_items) / len(credit_block_items)
+        if credit_block_items
+        else indicators[0]["riskScore"]
+    )
+    non_credit_score = round((current_score - credit_block_score * 0.45) / 0.55)
     score_history = [
         {"date": point["date"], "score": score_from_credit_yoy(point["value"], non_credit_score)}
         for point in credit_yoy

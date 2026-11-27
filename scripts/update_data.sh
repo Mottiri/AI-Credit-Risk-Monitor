@@ -8,6 +8,7 @@ python3 scripts/fetch_big_tech_capex.py
 python3 scripts/fetch_broadcom.py
 python3 scripts/fetch_hype.py
 python3 scripts/fetch_semiconductor_cycle.py
+python3 scripts/fetch_market.py
 python3 scripts/merge_external_data.py
 
-printf '%s\n' 'Updated data/latest.json, data/polymarket.json, data/nvidia.json, data/big-tech-capex.json, data/broadcom.json, data/hype.json, data/trendforce-memory-prices.json, and data/semiconductor-cycle.json.'
+printf '%s\n' 'Updated data/latest.json, data/polymarket.json, data/nvidia.json, data/big-tech-capex.json, data/broadcom.json, data/hype.json, data/trendforce-memory-prices.json, data/semiconductor-cycle.json, and data/market.json.'

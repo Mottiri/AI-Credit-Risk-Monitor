@@ -138,6 +138,14 @@ const helpText = {
   rates: "長短金利や借入コストを見ます。高金利が続くほど、AIデータセンターやprivate creditの資金調達負担が増えます。",
   liquidity: "TGA、RRP、準備預金などの市場流動性を見ます。流動性が細ると、高レバレッジ投資や信用市場が不安定になりやすいです。",
   prediction: "Polymarket参加者がAIバブル崩壊リスクをどう価格付けしているかを見る市場心理指標です。実体データではないため、総合スコアへの影響は軽めにします。水準よりも24時間・7日での急変を重視します。",
+  market: "AI主要銘柄とCoreWeave等の株価（52週高値からの下落率）を見ます。決算やFREDの月次データより速く動くため、信用リスクの再評価を先行して捉えるための指標です。",
+  "AI-BASKET-DRAWDOWN": "AI主要銘柄（NVDA、AVGO、MSFT、GOOGL、META、AMZN、ORCL、PLTR、SMH）の52週高値からの下落率の平均です。前回比はバスケットの1か月騰落率、前年比欄は3か月騰落率を表示します。",
+  "NVDA-DRAWDOWN": "NVIDIA株価の52週高値からの下落率です。AIインフラ需要の期待が剥落している度合いを価格側から見ます。",
+  "SMH-DRAWDOWN": "半導体ETF（SMH）の52週高値からの下落率です。半導体サイクルの価格側の温度計です。",
+  "ORCL-DRAWDOWN": "Oracle株価の52週高値からの下落率です。OracleはStargateの資金調達チェーンの中心にいるため、AI債務への市場の見方を映しやすい銘柄です。",
+  "CRWV-DRAWDOWN": "CoreWeave株価の52週高値からの下落率です。ネオクラウドのCDSは無料データがないため、株価の下落率を信用リスクの体温計として使います。",
+  "HY-OAS-MOMENTUM-3M": "ハイイールドスプレッドの直近3か月の拡大速度（bp）です。水準が低くても拡大が速ければ警戒します。+25bpで注意、+50bpで高リスク、+100bpで危険水準です。",
+  "NONBANK-SHARE": "銀行貸出全体に占めるノンバンク向け貸出の比率です。伸び率ではなく残高の水準そのものを見ます。12%超で注意、14%超で高リスク、16%超で危険水準です。",
   LNFACBM027SBOG: "銀行からノンバンク金融機関への貸出残高です。AI/private creditへお金が流れているかを見るproxyです。前年比+20%超は、経済成長よりかなり速く信用が膨らんでいる目安。高止まりは過熱、急減速や残高減少は信用収縮に注意です。",
   BAMLH0A0HYM2: "信用力が低めの企業が借りる時の追加金利です。4%超で投資家がリスクを意識、5.5%超で信用不安がはっきり、7%超でデフォルトや景気悪化を強く織り込む水準です。",
   STLFSI4: "金融市場全体の体温計のような指数です。マイナスなら平常、0超で平均よりストレス高め、0.8超で複数市場に不安、1.6超でかなり強いストレスと見ます。",
@@ -356,6 +364,14 @@ async function loadData() {
     } catch {
     }
     try {
+      const marketResponse = await fetch(dataUrl("data/market.json"), { cache: "no-store" });
+      if (!marketResponse.ok) throw new Error("market.json not found");
+      if (!(data.externalDataMerged ?? []).includes("market")) {
+        data = mergeMarket(data, await marketResponse.json());
+      }
+    } catch {
+    }
+    try {
       const polymarketResponse = await fetch(dataUrl("data/polymarket.json"), { cache: "no-store" });
       if (!polymarketResponse.ok) throw new Error("polymarket.json not found");
       if (!(data.externalDataMerged ?? []).includes("polymarket")) {
@@ -438,6 +454,33 @@ function mergeAiDemand(data, aiDemand) {
     ...data,
     scoreHistory,
     signals: data.signals.map(signal => signal.key === "demand" ? aiDemand.signal : signal),
+    indicators
+  };
+}
+
+function mergeMarket(data, market) {
+  const indicators = [
+    ...data.indicators.filter(item => item.block !== "market"),
+    ...(market.indicators ?? [])
+  ];
+  const marketScores = (market.indicators ?? [])
+    .map(item => item.riskScore)
+    .filter(score => Number.isFinite(score));
+  const marketScore = marketScores.length
+    ? marketScores.reduce((sum, score) => sum + score, 0) / marketScores.length
+    : 30;
+
+  const scoreHistory = data.scoreHistory.map(item => ({ ...item }));
+  if (scoreHistory.length) {
+    const latest = scoreHistory.at(-1);
+    latest.score = Math.round(latest.score * 0.85 + marketScore * 0.15);
+  }
+
+  const withoutMarket = data.signals.filter(signal => signal.key !== "market");
+  return {
+    ...data,
+    scoreHistory,
+    signals: market.signal ? [...withoutMarket, market.signal] : withoutMarket,
     indicators
   };
 }

@@ -1,0 +1,179 @@
+{
+  "updatedAt": "2026-11-20T16:06+09:00",
+  "signal": {
+    "key": "market",
+    "label": "Market Prices",
+    "emoji": "🟠",
+    "value": "株価の下落が目立つ",
+    "help": "AI主要銘柄とCoreWeave等の株価（52週高値からの下落率）を見ます。決算やFREDの月次データより速く動くため、信用リスクの再評価を先行して捉えるための指標です。"
+  },
+  "indicators": [
+    {
+      "id": "AI-BASKET-DRAWDOWN",
+      "name": "AI Stocks Avg Drawdown from 52w High",
+      "help": "AI主要銘柄（NVDA、AVGO、MSFT、GOOGL、META、AMZN、ORCL、PLTR、SMH）の52週高値からの下落率の平均です。前回比はバスケットの1か月騰落率、前年比欄は3か月騰落率を表示します。-25%超で本格的な調整、-35%超で信用市場への波及を警戒します。",
+      "latest": "-29.5%",
+      "latestRaw": -29.46,
+      "date": "2026-11-19",
+      "previousChange": "-14.5%",
+      "previousChangeRaw": -14.54,
+      "yoy": "-11.9%",
+      "yoyRaw": -11.9,
+      "risk": "🟠",
+      "riskClass": "risk-high",
+      "riskScore": 70,
+      "nextRelease": "Daily",
+      "block": "market"
+    },
+    {
+      "id": "NVDA-DRAWDOWN",
+      "name": "NVIDIA Drawdown from 52w High",
+      "help": "NVIDIA株価の52週高値からの下落率です。AIインフラ需要の期待が剥落している度合いを価格側から見ます。",
+      "latest": "-40.0%",
+      "latestRaw": -40.02,
+      "date": "2026-11-19",
+      "previousChange": "-34.2%",
+      "previousChangeRaw": -34.23,
+      "yoy": "-32.0%",
+      "yoyRaw": -32.01,
+      "risk": "🔴",
+      "riskClass": "risk-danger",
+      "riskScore": 90,
+      "nextRelease": "Daily",
+      "block": "market"
+    },
+    {
+      "id": "SMH-DRAWDOWN",
+      "name": "Semiconductor ETF (SMH) Drawdown",
+      "help": "半導体ETF（SMH）の52週高値からの下落率です。半導体サイクルの価格側の温度計として、SECベースのファンダメンタルズ指標の遅行を補います。",
+      "latest": "-33.4%",
+      "latestRaw": -33.39,
+      "date": "2026-11-19",
+      "previousChange": "-19.6%",
+      "previousChangeRaw": -19.62,
+      "yoy": "-20.2%",
+      "yoyRaw": -20.15,
+      "risk": "🟠",
+      "riskClass": "risk-high",
+      "riskScore": 70,
+      "nextRelease": "Daily",
+      "block": "market"
+    },
+    {
+      "id": "ORCL-DRAWDOWN",
+      "name": "Oracle Drawdown from 52w High",
+      "help": "Oracle株価の52週高値からの下落率です。OracleはStargateの資金調達チェーンの中心にいるため、AI債務への市場の見方を映しやすい銘柄です。",
+      "latest": "-55.8%",
+      "latestRaw": -55.82,
+      "date": "2026-11-19",
+      "previousChange": "-14.4%",
+      "previousChangeRaw": -14.37,
+      "yoy": "-24.5%",
+      "yoyRaw": -24.51,
+      "risk": "🔴",
+      "riskClass": "risk-danger",
+      "riskScore": 90,
+      "nextRelease": "Daily",
+      "block": "market"
+    },
+    {
+      "id": "CRWV-DRAWDOWN",
+      "name": "CoreWeave Drawdown (Credit Thermometer)",
+      "help": "CoreWeave株価の52週高値からの下落率です。ネオクラウドのCDSは無料データがないため、株価の下落率を信用リスクの体温計として使います。同社は変動金利の債務が大きく、下落率-55%超は市場が信用不安をかなり織り込んでいる目安です。",
+      "latest": "-67.5%",
+      "latestRaw": -67.52,
+      "date": "2026-11-19",
+      "previousChange": "-27.4%",
+      "previousChangeRaw": -27.35,
+      "yoy": "-48.9%",
+      "yoyRaw": -48.88,
+      "risk": "🟠",
+      "riskClass": "risk-high",
+      "riskScore": 70,
+      "nextRelease": "Daily",
+      "block": "market"
+    }
+  ],
+  "stocks": {
+    "NVDA": {
+      "date": "2026-11-19",
+      "close": 145.98,
+      "high52w": 243.37,
+      "drawdown": -40.02,
+      "change1m": -34.23,
+      "change3m": -32.01
+    },
+    "AVGO": {
+      "date": "2026-11-19",
+      "close": 346.65,
+      "high52w": 495.0,
+      "drawdown": -29.97,
+      "change1m": 2.62,
+      "change3m": -5.92
+    },
+    "MSFT": {
+      "date": "2026-11-19",
+      "close": 498.3,
+      "high52w": 559.15,
+      "drawdown": -10.88,
+      "change1m": -6.5,
+      "change3m": 3.12
+    },
+    "GOOGL": {
+      "date": "2026-11-19",
+      "close": 272.66,
+      "high52w": 408.61,
+      "drawdown": -33.27,
+      "change1m": -18.55,
+      "change3m": -20.93
+    },
+    "META": {
+      "date": "2026-11-19",
+      "close": 596.22,
+      "high52w": 779.82,
+      "drawdown": -23.54,
+      "change1m": -14.52,
+      "change3m": 8.42
+    },
+    "AMZN": {
+      "date": "2026-11-19",
+      "close": 257.37,
+      "high52w": 287.2,
+      "drawdown": -10.39,
+      "change1m": -1.91,
+      "change3m": -0.49
+    },
+    "ORCL": {
+      "date": "2026-11-19",
+      "close": 110.57,
+      "high52w": 250.25,
+      "drawdown": -55.82,
+      "change1m": -14.37,
+      "change3m": -24.51
+    },
+    "PLTR": {
+      "date": "2026-11-19",
+      "close": 153.68,
+      "high52w": 212.94,
+      "drawdown": -27.83,
+      "change1m": -23.82,
+      "change3m": -14.59
+    },
+    "SMH": {
+      "date": "2026-11-19",
+      "close": 447.48,
+      "high52w": 671.83,
+      "drawdown": -33.39,
+      "change1m": -19.62,
+      "change3m": -20.15
+    },
+    "CRWV": {
+      "date": "2026-11-19",
+      "close": 44.91,
+      "high52w": 138.25,
+      "drawdown": -67.52,
+      "change1m": -27.35,
+      "change3m": -48.88
+    }
+  }
+}

@@ -10,6 +10,7 @@ NVIDIA_PATH = ROOT / "data" / "nvidia.json"
 BIG_TECH_CAPEX_PATH = ROOT / "data" / "big-tech-capex.json"
 BROADCOM_PATH = ROOT / "data" / "broadcom.json"
 POLYMARKET_PATH = ROOT / "data" / "polymarket.json"
+MARKET_PATH = ROOT / "data" / "market.json"
 
 
 def read_json(path):
@@ -73,6 +74,7 @@ def merge():
     big_tech_capex = read_json(BIG_TECH_CAPEX_PATH)
     broadcom = read_json(BROADCOM_PATH)
     polymarket = read_json(POLYMARKET_PATH)
+    market = read_json(MARKET_PATH)
     merged = []
 
     base_score_history = latest.get("baseScoreHistory", latest.get("scoreHistory", []))
@@ -80,12 +82,12 @@ def merge():
     indicators = [
         item
         for item in latest.get("indicators", [])
-        if item.get("block") not in ("demand", "prediction")
+        if item.get("block") not in ("demand", "prediction", "market")
     ]
     signals = [
         signal
         for signal in latest.get("signals", [])
-        if signal.get("key") not in ("demand", "prediction")
+        if signal.get("key") not in ("demand", "prediction", "market")
     ]
 
     demand_indicators = []
@@ -108,6 +110,17 @@ def merge():
             score_history[-1]["score"] = round(score_history[-1]["score"] * 0.9 + demand_score * 0.1)
         indicators.extend(demand_indicators)
         signals = replace_signal(signals, demand_signal(demand_indicators))
+
+    if market:
+        market_indicators = market.get("indicators", [])
+        if market_indicators:
+            market_score = average_score(market_indicators)
+            if score_history:
+                score_history[-1]["score"] = round(score_history[-1]["score"] * 0.85 + market_score * 0.15)
+            indicators.extend(market_indicators)
+            if market.get("signal"):
+                signals = replace_signal(signals, market["signal"])
+            merged.append("market")
 
     if polymarket:
         prediction_indicators = polymarket.get("indicators", [])
